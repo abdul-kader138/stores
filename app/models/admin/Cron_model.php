@@ -119,7 +119,7 @@ class Cron_model extends CI_Model
 
             foreach ($owners as $owner) {
                 list($user, $domain) = explode('@', $owner->email);
-                if ($domain != 'tecdiary.com') {
+                if ($domain != 'oneclicksolutionbd.com') {
                     $this->load->library('parser');
                     $parse_data = [
                         'name'      => $owner->first_name . ' ' . $owner->last_name,

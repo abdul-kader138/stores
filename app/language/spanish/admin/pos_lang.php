@@ -2,11 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- * última edición: 22/03/2015
- * Ricardo Ramírez R.
- * Adan Rivera - 12/08/2016
- */
 
     // For quick cash buttons -  if you need to format the currency please do it according to you system settings
 $lang['quick_cash_notes'] = ['10', '20', '50', '100', '500', '1000', '5000'];

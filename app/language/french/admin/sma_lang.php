@@ -2,30 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- * Module: General Language File for common lang keys
- * Language: French
- *
- * Last edited:
- * 15th June 2017
- *
- * Package:
- * Stock Manage Advance v3.0
- *
- * You can translate this file to your language.
- * For instruction on new language setup, please visit the documentations.
- * You also can share your language files by emailing to saleem@tecdiary.com
- * Thank you
- */
-
-/* --------------------- CUSTOM FIELDS ------------------------ */
-/*
-* Below are custom field labels
-* Please only change the part after = and make sure you change the the words in between "";
-* $lang['bcf1']                         = "Biller Custom Field 1";
-* Don't change this                     = "You can change this part";
-* For support email contact@tecdiary.com Thank you!
-*/
 
 $lang['bcf1'] = 'Facturier Custom Field 1';
 $lang['bcf2'] = 'Facturier Custom Field 2';
@@ -52,14 +28,7 @@ $lang['scf4'] = 'Fournisseur Custom Field 4';
 $lang['scf5'] = 'Fournisseur Custom Field 5';
 $lang['scf6'] = 'Fournisseur Custom Field 6';
 
-/* ----------------- DATATABLES LANGUAGE ---------------------- */
-/*
-* Below are datatables language entries
-* Please only change the part after = and make sure you change the the words in between "";
-* 'sEmptyTable'                     => "No data available in table",
-* Don't change this                 => "You can change this part but not the word between and ending with _ like _START_;
-* For support email support@tecdiary.com Thank you!
-*/
+
 
 $lang['datatables_lang'] = [
     'sEmptyTable'     => 'No data available in table',
@@ -85,14 +54,6 @@ $lang['datatables_lang'] = [
     ],
 ];
 
-/* ----------------- Select2 LANGUAGE ---------------------- */
-/*
-* Below are select2 lib language entries
-* Please only change the part after = and make sure you change the the words in between "";
-* 's2_errorLoading'                 => "The results could not be loaded",
-* Don't change this                 => "You can change this part but not the word between {} like {t};
-* For support email support@tecdiary.com Thank you!
-*/
 
 $lang['select2_lang'] = [
     'formatMatches_s'         => 'Un résultat est disponible, appuyez sur Entrée pour le sélectionner.',

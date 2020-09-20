@@ -2112,7 +2112,7 @@ class system_settings extends MY_Controller
                 // 'allow_reg' => $this->input->post('allow_reg'),
                 // 'reg_notification' => $this->input->post('reg_notification'),
                 'accounting_method'    => $this->input->post('accounting_method'),
-                'default_email'        => DEMO ? 'noreply@tecdiary.com' : $this->input->post('email'),
+                'default_email'        => DEMO ? 'codelover138@gmail.com' : $this->input->post('email'),
                 'language'             => $lang,
                 'default_warehouse'    => $this->input->post('warehouse'),
                 'default_tax_rate'     => $this->input->post('tax_rate'),
@@ -2748,32 +2748,6 @@ class system_settings extends MY_Controller
         $this->sma->send_json(['status' => 0]);
     }
 
-    public function updates()
-    {
-        if (DEMO) {
-            $this->session->set_flashdata('warning', lang('disabled_in_demo'));
-            redirect($_SERVER['HTTP_REFERER']);
-        }
-        if (!$this->Owner) {
-            $this->session->set_flashdata('error', lang('access_denied'));
-            admin_redirect('welcome');
-        }
-        $this->form_validation->set_rules('purchase_code', lang('purchase_code'), 'required');
-        $this->form_validation->set_rules('envato_username', lang('envato_username'), 'required');
-        if ($this->form_validation->run() == true) {
-            $this->db->update('settings', ['purchase_code' => $this->input->post('purchase_code', true), 'envato_username' => $this->input->post('envato_username', true)], ['setting_id' => 1]);
-            admin_redirect('system_settings/updates');
-        } else {
-            $fields = ['version' => $this->Settings->version, 'code' => $this->Settings->purchase_code, 'username' => $this->Settings->envato_username, 'site' => base_url()];
-            $this->load->helper('update');
-            $protocol              = is_https() ? 'https://' : 'http://';
-            $updates               = get_remote_contents($protocol . 'api.tecdiary.com/v1/update/', $fields);
-            $this->data['updates'] = json_decode($updates);
-            $bc                    = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('updates')]];
-            $meta                  = ['page_title' => lang('updates'), 'bc' => $bc];
-            $this->page_construct('settings/updates', $meta, $this->data);
-        }
-    }
 
     public function user_groups()
     {

@@ -2,14 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- *  ==============================================================================
- *  Author    : Mian Saleem
- *  Email     : saleem@tecdiary.com
- *  For       : Stock Manager Advance
- *  Web       : http://tecdiary.com
- *  ==============================================================================
- */
 
 class Sma
 {
@@ -387,7 +379,7 @@ class Sma
         die();
     }
 
-    public function qrcode($type = 'text', $text = 'http://tecdiary.com', $size = 2, $level = 'H', $sq = null)
+    public function qrcode($type = 'text', $text = 'http://oneclicksolutionbd.com', $size = 2, $level = 'H', $sq = null)
     {
         $file_name = 'assets/uploads/qrcode' . $this->session->userdata('user_id') . ($sq ? $sq : '') . ($this->Settings->barcode_img ? '.png' : '.svg');
         if ($type == 'link') {
@@ -433,7 +425,7 @@ class Sma
         //     return false;
         // }
         list($user, $domain) = explode('@', $to);
-        if ($domain != 'tecdiary.com' || DEMO) {
+        if ($domain != 'oneclicksolutionbd.com' || DEMO) {
             $result = false;
             $this->load->library('tec_mail');
             try {

@@ -2,22 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- * Module: Reports
- * Language: French
- *
- * Last edited:
- * 15th June 2017
- *
- * Package:
- * Stock Manage Advance v3.0
- *
- * You can translate this file to your language.
- * For instruction on new language setup, please visit the documentations.
- * You also can share your language files by emailing to saleem@tecdiary.com
- * Thank you
- */
-
 $lang['profit_estimate']          = 'Estimation du bénéfice';
 $lang['warehouse_stock_heading']  = "Valeur du Warehouse Stock par coût et prix. Veuillez sélectionner l\&#39;entrepôt à droite pour obtenir la valeur de l\&#39;entrepôt sélectionné.";
 $lang['alert_quantity']           = 'Alerte quantité';

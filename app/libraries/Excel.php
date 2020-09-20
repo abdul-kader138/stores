@@ -1,16 +1,6 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-/*
- *  ==============================================================================
- *  Author  : Mian Saleem
- *  Email   : saleem@tecdiary.com
- *  For     : PhpSpreadsheet
- *  Web     : https://github.com/PHPOffice/PhpSpreadsheet
- *  License : MIT
- *          : https://github.com/PHPOffice/PhpSpreadsheet/blob/master/LICENSE
- *  ==============================================================================
- */
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;

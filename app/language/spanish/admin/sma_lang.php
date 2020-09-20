@@ -2,11 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- * última edición: 22/03/2015
- * Ricardo Ramírez R.
- * Adan Rivera - 12/08/2016
- */
 
     /*  CUSTOM FIELDS  */
 $lang['bcf1'] = 'Vendedor Campo personalizado 1';

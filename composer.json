@@ -1,7 +1,7 @@
 {
-	"name": "tecdiary/sma",
+	"name": "oneclicksolutionbd/sales",
 	"version": "3.4.40",
-	"description": "Stock Manager Advance",
+	"description": "Sales",
 	"type": "project",
 	"require": {
 		"php": "^7.1.3",
@@ -20,8 +20,8 @@
 	"license": "Commercial License",
 	"authors": [
 		{
-			"name": "Mian Saleem",
-			"email": "saleem@tecdiary.com"
+			"name": "Abdul Kader",
+			"email": "codelover@gmail.com"
 		}
 	]
 }

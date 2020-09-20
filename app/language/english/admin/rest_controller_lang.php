@@ -1,8 +1,5 @@
 <?php
 
-/*
- * English language
- */
 
 $lang['text_rest_invalid_api_key']       = 'No API key provided or the key is invalid';
 $lang['text_rest_invalid_credentials']   = 'Invalid credentials';

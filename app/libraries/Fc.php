@@ -2,12 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- *  ==============================================================================
- *  Author	: Mian Saleem
- *  Email	: saleem@tecdiary.com
- *  ==============================================================================
- */
 
 class Fc
 {

@@ -2,23 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- * Module: POS
- * Language: French
- *
- * Last edited:
- * 15th June 2017
- *
- * Package:
- * Stock Manage Advance v3.0
- *
- * You can translate this file to your language.
- * For instruction on new language setup, please visit the documentations.
- * You also can share your language files by emailing to saleem@tecdiary.com
- * Thank you
- */
-
-// For quick cash buttons -  if you need to format the currency please do it according to you system settings
 $lang['quick_cash_notes'] = ['10', '20', '50', '100', '500', '1000', '5000'];
 
 $lang['pos_module']                         = 'POS Module';

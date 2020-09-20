@@ -151,7 +151,6 @@
                             ?>
                             <?= form_dropdown('remote_printing', $opts, $pos->remote_printing, 'class="form-control select2" id="remote_printing" style="width:100%;" required="required"'); ?>
                             <span class="help-block"><?= lang('print_recommandations'); ?></span>
-                            <span class="help-block"><?= lang('download') . ': <a href="https://github.com/Tecdiary/ppp" target="_blank">PHP Pos Print Server</a>'; ?></span>
                             <?php if (DEMO) {
                                 ?>
                             <span class="help-block">On demo, you can test web printing only.</span>

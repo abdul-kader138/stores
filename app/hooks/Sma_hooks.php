@@ -7,7 +7,6 @@ class Sma_hooks {
     }
     public function check() {
         if(! ($this->CI->db->conn_id)) {
-            header("Location: install/index.php");
             die();
         }
     }

@@ -2,21 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- * Module: Cron Job
- * Language: French
- *
- * Last edited:
- * 15th April 2017
- *
- * Package:
- * Stock Manage Advance v3.0
- *
- * The %d, %s will replaced. You can translate this file to your language.
- * For instruction on new language setup, please visit the documentations.
- * You also can share your language files by emailing to saleem@tecdiary.com
- * Thank you
- */
 
 $lang['cron_job']             = 'CRON JOB';
 $lang['order_ref_updated']    = 'Les numéros de référence des commandes ont été réinitialisés.';

@@ -1,13 +1,6 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-/*
-*  ==============================================================================
-*  Author   : Mian Saleem
-*  Email    : saleem@tecdiary.com
-*  Web      : http://tecdiary.com
-*  ==============================================================================
-*/
 
 use PHPMailer\PHPMailer\OAuth;
 use PHPMailer\PHPMailer\Exception;

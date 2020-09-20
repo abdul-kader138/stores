@@ -2,12 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- * última edición: 22/03/2015
- * Ricardo Ramírez R.
- * Adan Rivera - 12/08/2016
- */
-
 $lang['add_user']                                               = 'Añadir Usuario';
 $lang['notify_user_by_email']                                   = 'Notificar al Usuario por Correo';
 $lang['group']                                                  = 'Grupo';

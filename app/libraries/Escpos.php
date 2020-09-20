@@ -2,14 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- *  ==============================================================================
- *  Author  : Mian Saleem
- *  Email   : saleem@tecdiary.com
- *  For     : ESC/POS Print Driver for PHP
- *  License : MIT License
- *  ==============================================================================
- */
 
 use Mike42\Escpos\Printer;
 use Mike42\Escpos\EscposImage;

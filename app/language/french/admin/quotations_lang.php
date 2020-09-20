@@ -2,22 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- * Module: Quotations
- * Language: French
- *
- * Last edited:
- * 15th June 2017
- *
- * Package:
- * Stock Manage Advance v3.0
- *
- * You can translate this file to your language.
- * For instruction on new language setup, please visit the documentations.
- * You also can share your language files by emailing to saleem@tecdiary.com
- * Thank you
- */
-
 $lang['add_quote']          = 'Ajouter un devis';
 $lang['edit_quote']         = 'Modifier un devis';
 $lang['delete_quote']       = 'Supprimer un devis';

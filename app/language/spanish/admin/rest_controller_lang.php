@@ -1,8 +1,5 @@
 <?php
 
-/*
- * Spanish language
- */
 
 $lang['text_rest_invalid_api_key']       = 'API key %s No valida'; // %s is the REST API key
 $lang['text_rest_invalid_credentials']   = 'Credenciales Invalidas';

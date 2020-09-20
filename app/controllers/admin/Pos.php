@@ -1521,32 +1521,6 @@ class Pos extends MY_Controller
         $this->load->view($this->theme . 'pos/today_sale', $this->data);
     }
 
-    public function updates()
-    {
-        if (DEMO) {
-            $this->session->set_flashdata('warning', lang('disabled_in_demo'));
-            redirect($_SERVER['HTTP_REFERER']);
-        }
-        if (!$this->Owner) {
-            $this->session->set_flashdata('error', lang('access_denied'));
-            admin_redirect('welcome');
-        }
-        $this->form_validation->set_rules('purchase_code', lang('purchase_code'), 'required');
-        $this->form_validation->set_rules('envato_username', lang('envato_username'), 'required');
-        if ($this->form_validation->run() == true) {
-            $this->db->update('pos_settings', ['purchase_code' => $this->input->post('purchase_code', true), 'envato_username' => $this->input->post('envato_username', true)], ['pos_id' => 1]);
-            admin_redirect('pos/updates');
-        } else {
-            $fields = ['version' => $this->pos_settings->version, 'code' => $this->pos_settings->purchase_code, 'username' => $this->pos_settings->envato_username, 'site' => base_url()];
-            $this->load->helper('update');
-            $protocol              = is_https() ? 'https://' : 'http://';
-            $updates               = get_remote_contents($protocol . 'api.tecdiary.com/v1/update/', $fields);
-            $this->data['updates'] = json_decode($updates);
-            $bc                    = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('updates')]];
-            $meta                  = ['page_title' => lang('updates'), 'bc' => $bc];
-            $this->page_construct('pos/updates', $meta, $this->data);
-        }
-    }
 
     /* ------------------------------------------------------------------------------------ */
 

@@ -2,11 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- * última edición: 22/03/2015
- * Ricardo Ramírez R.
- * Adan Rivera - 12/08/2016
- */
 
 $lang['profit_estimate']          = 'Perfil Estimado';
 $lang['warehouse_stock_heading']  = 'Valores de ecistencia en Almacén por Costo y Precio Por favor, seleccione el almacén en la derecha a mostrar/ocultar.';

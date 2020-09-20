@@ -26,8 +26,6 @@ if (!function_exists('get_remote_contents')) {
 if (!function_exists('save_remote_file')) {
     function save_remote_file($file)
     {
-        $protocol = is_https() ? 'https://' : 'http://';
-        file_put_contents('./files/updates/' . $file, fopen($protocol . 'api.tecdiary.com/v1/download/file/' . $file, 'r'));
         return true;
     }
 }

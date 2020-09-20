@@ -1,16 +1,6 @@
 <?php
 
 defined('BASEPATH') or exit('No direct script access allowed');
-/*
- *  ==============================================================================
- *  Author  : Mian Saleem
- *  Email   : saleem@tecdiary.com
- *  For     : DOMPDF
- *  Web     : https://github.com/dompdf/dompdf
- *  License : LGPL-2.1
- *      : https://github.com/dompdf/dompdf/blob/master/LICENSE.LGPL
- *  ==============================================================================
- */
 
 use Dompdf\Dompdf;
 

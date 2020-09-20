@@ -2,14 +2,6 @@
 
 defined('BASEPATH') or exit('No direct script access allowed');
 
-/*
- *  ==============================================================================
- *  Author  : Mian Saleem
- *  Email   : saleem@tecdiary.com
- *  Package : zend-barcode
- *  License : New BSD License
- *  ==============================================================================
- */
 
 use Laminas\Barcode\Barcode;
 

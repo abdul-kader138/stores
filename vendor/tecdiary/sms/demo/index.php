@@ -23,7 +23,7 @@ $result = $sms->send(['+919090909090', '009190909090901'], 'This is test message
 <body>
     <pre/>
 
-    TECDIARY/SMS DEMO
+
     <?php var_dump($result); ?>
 </body>
 </html>
