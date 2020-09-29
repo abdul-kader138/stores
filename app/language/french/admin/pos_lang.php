@@ -285,3 +285,5 @@ $lang['pos_print_error']                    = 'Impossible de se connecter à la 
 $lang['printer_port_tip']                   = 'La plupart des imprimantes sont ouvertes sur le port <strong>9100</strong>';
 $lang['print_recommandations']              = "Sur l\&#39;installation locale <strong>PHP Server</strong> sera le meilleur choix et pour le serveur en direct, vous pouvez installer <strong>PHP Pos Print Server</strong> localement (recommended) ou utiliser la fonction d\&#39;impression par navigateur Web.";
 $lang['printer_path_tip']                   = "<strong>Pour Windows:</strong> (Local USB, Imprimante série ou parallèle): Partagez l\&#39;imprimante et entrez le nom de partage de votre imprimante ici ou pour SMB (Server Message Block): entrez en tant que smb:// url format tel que <code>smb://computername/Receipt Printer</code><br><strong>Pour Linux:</strong> Parallèle comme<code>/dev/lp0</code>, USB as <code>/dev/usb/lp1</code>, USB-Serial as <code>/dev/ttyUSB0</code>, Serial as <code>/dev/ttyS0</code><br>";
+$lang['view_qr']                            = 'Afficher le code QR';
+$lang['product_name']                     = 'Nom du produit';

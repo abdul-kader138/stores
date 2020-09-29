@@ -146,19 +146,19 @@
                                     <tbody>
                                     <?php
                                     if ($product->cf1) {
-                                        echo '<tr><td>' . lang('pcf1') . '</td><td>' . $product->cf1 . '</td></tr>';
+                                        echo '<tr><td>' . lang('recipe_one') . '</td><td>' . $product->cf1 . '</td></tr>';
                                     }
                             if ($product->cf2) {
-                                echo '<tr><td>' . lang('pcf2') . '</td><td>' . $product->cf2 . '</td></tr>';
+                                echo '<tr><td>' . lang('recipe_two') . '</td><td>' . $product->cf2 . '</td></tr>';
                             }
                             if ($product->cf3) {
-                                echo '<tr><td>' . lang('pcf3') . '</td><td>' . $product->cf3 . '</td></tr>';
+                                echo '<tr><td>' . lang('origin') . '</td><td>' . $product->cf3 . '</td></tr>';
                             }
-                            if ($product->cf4) {
-                                echo '<tr><td>' . lang('pcf4') . '</td><td>' . $product->cf4 . '</td></tr>';
+                            if ($product->cf4 && $allergy_fact) {
+                                echo '<tr><td>' . lang('food_allergy') . '</td><td>' . $allergy_fact . '</td></tr>';
                             }
                             if ($product->cf5) {
-                                echo '<tr><td>' . lang('pcf5') . '</td><td>' . $product->cf5 . '</td></tr>';
+                                echo '<tr><td>' . lang('nutrition_facts') . '</td><td>' . $product->cf5 . '</td></tr>';
                             }
                             if ($product->cf6) {
                                 echo '<tr><td>' . lang('pcf6') . '</td><td>' . $product->cf6 . '</td></tr>';

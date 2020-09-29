@@ -243,3 +243,4 @@ $lang['bill']                         = 'Factura';
 $lang['payment_is_required']          = 'Pago no encontrado, agregue el pago';
 $lang['payment_is_wrong']             = 'El monto del pago es incorrecto, debe ser igual o mayor que el total';
 $lang['deposit']                      = 'Deposito';
+$lang['view_qr']                      = 'Ver código QR';

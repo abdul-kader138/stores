@@ -348,3 +348,17 @@ $lang['update_cost_with_purchase']                                   = "Mettre �
 $lang['edit_price_on_sale']                                          = 'Modifier le prix en vente';
 $lang['login_logo']                                                  = 'Login Logo';
 $lang['unit_has_subunit']                                            = "L\&#39;unité ne peut pas être supprimée car elle comporte des sous-unités";
+
+
+$lang['allergy_facts']                            = 'Faits d\'allergie';
+$lang['add_allergy_fact']                                            = 'Ajouter un fait d\'allergie';
+$lang['edit_allergy_fact']                                           = 'Modifier le fait d\'allergie';
+$lang['delete_allergy_fact']                                         = 'Supprimer le fait d\'allergie';
+$lang['import_allergy_facts']                                        = 'Importer le fait d\'allergie';
+
+
+$lang['allergy_fact_added']                                                 = 'Allergy Fact ajouté avec succès';
+$lang['allergy_facts_added']                                                = 'Faits sur les allergies ajoutés avec succès';
+$lang['allergy_fact_updated']                                               = 'Allergy Fact mis à jour avec succès';
+$lang['allergy_fact_deleted']                                               = 'Le fait d\'allergie a bien été supprimé';
+$lang['allergy_fact_has_products']                                                 = 'Le fait d\'allergie ne peut pas être supprimé car il a une pièce jointe de produits, veuillez attribuer des produits à un fait d\'allergie différent, puis réessayer.';

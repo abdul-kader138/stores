@@ -15,12 +15,12 @@ class Products extends MY_Controller
         $this->load->library('form_validation');
         $this->load->admin_model('products_model');
         $this->digital_upload_path = 'files/';
-        $this->upload_path         = 'assets/uploads/';
-        $this->thumbs_path         = 'assets/uploads/thumbs/';
-        $this->image_types         = 'gif|jpg|jpeg|png|tif';
-        $this->digital_file_types  = 'zip|psd|ai|rar|pdf|doc|docx|xls|xlsx|ppt|pptx|gif|jpg|jpeg|png|tif|txt';
-        $this->allowed_file_size   = '1024';
-        $this->popup_attributes    = ['width' => '900', 'height' => '600', 'window_name' => 'sma_popup', 'menubar' => 'yes', 'scrollbars' => 'yes', 'status' => 'no', 'resizable' => 'yes', 'screenx' => '0', 'screeny' => '0'];
+        $this->upload_path = 'assets/uploads/';
+        $this->thumbs_path = 'assets/uploads/thumbs/';
+        $this->image_types = 'gif|jpg|jpeg|png|tif';
+        $this->digital_file_types = 'zip|psd|ai|rar|pdf|doc|docx|xls|xlsx|ppt|pptx|gif|jpg|jpeg|png|tif|txt';
+        $this->allowed_file_size = '1024';
+        $this->popup_attributes = ['width' => '900', 'height' => '600', 'window_name' => 'sma_popup', 'menubar' => 'yes', 'scrollbars' => 'yes', 'status' => 'no', 'resizable' => 'yes', 'screenx' => '0', 'screeny' => '0'];
     }
 
     /* ------------------------------------------------------- */
@@ -45,74 +45,77 @@ class Products extends MY_Controller
         $this->form_validation->set_rules('userfile', lang('product_gallery_images'), 'xss_clean');
         if ($this->form_validation->run() == true) {
             $tax_rate = $this->input->post('tax_rate') ? $this->site->getTaxRateByID($this->input->post('tax_rate')) : null;
-            $data     = [
-                'code'              => $this->input->post('code'),
+            $allergy_facts = '';
+            if ($this->input->post('cf4')) $allergy_facts = serialize($this->input->post('cf4'));
+            $data = [
+                'code' => $this->input->post('code'),
                 'barcode_symbology' => $this->input->post('barcode_symbology'),
-                'name'              => $this->input->post('name'),
-                'type'              => $this->input->post('type'),
-                'brand'             => $this->input->post('brand'),
-                'category_id'       => $this->input->post('category'),
-                'subcategory_id'    => $this->input->post('subcategory') ? $this->input->post('subcategory') : null,
-                'cost'              => $this->sma->formatDecimal($this->input->post('cost')),
-                'price'             => $this->sma->formatDecimal($this->input->post('price')),
-                'unit'              => $this->input->post('unit'),
-                'sale_unit'         => $this->input->post('default_sale_unit'),
-                'purchase_unit'     => $this->input->post('default_purchase_unit'),
-                'tax_rate'          => $this->input->post('tax_rate'),
-                'tax_method'        => $this->input->post('tax_method'),
-                'alert_quantity'    => $this->input->post('alert_quantity'),
-                'track_quantity'    => $this->input->post('track_quantity') ? $this->input->post('track_quantity') : '0',
-                'details'           => $this->input->post('details'),
-                'product_details'   => $this->input->post('product_details'),
-                'supplier1'         => $this->input->post('supplier'),
-                'supplier1price'    => $this->sma->formatDecimal($this->input->post('supplier_price')),
-                'supplier2'         => $this->input->post('supplier_2'),
-                'supplier2price'    => $this->sma->formatDecimal($this->input->post('supplier_2_price')),
-                'supplier3'         => $this->input->post('supplier_3'),
-                'supplier3price'    => $this->sma->formatDecimal($this->input->post('supplier_3_price')),
-                'supplier4'         => $this->input->post('supplier_4'),
-                'supplier4price'    => $this->sma->formatDecimal($this->input->post('supplier_4_price')),
-                'supplier5'         => $this->input->post('supplier_5'),
-                'supplier5price'    => $this->sma->formatDecimal($this->input->post('supplier_5_price')),
-                'cf1'               => $this->input->post('cf1'),
-                'cf2'               => $this->input->post('cf2'),
-                'cf3'               => $this->input->post('cf3'),
-                'cf4'               => $this->input->post('cf4'),
-                'cf5'               => $this->input->post('cf5'),
-                'cf6'               => $this->input->post('cf6'),
-                'promotion'         => $this->input->post('promotion'),
-                'promo_price'       => $this->sma->formatDecimal($this->input->post('promo_price')),
-                'start_date'        => $this->input->post('start_date') ? $this->sma->fsd($this->input->post('start_date')) : null,
-                'end_date'          => $this->input->post('end_date') ? $this->sma->fsd($this->input->post('end_date')) : null,
+                'name' => $this->input->post('name'),
+                'type' => $this->input->post('type'),
+                'brand' => $this->input->post('brand'),
+                'category_id' => $this->input->post('category'),
+                'subcategory_id' => $this->input->post('subcategory') ? $this->input->post('subcategory') : null,
+                'cost' => $this->sma->formatDecimal($this->input->post('cost')),
+                'price' => $this->sma->formatDecimal($this->input->post('price')),
+                'margin' => $this->sma->formatDecimal($this->input->post('margin')),
+                'unit' => $this->input->post('unit'),
+                'sale_unit' => $this->input->post('default_sale_unit'),
+                'purchase_unit' => $this->input->post('default_purchase_unit'),
+                'tax_rate' => $this->input->post('tax_rate'),
+                'tax_method' => $this->input->post('tax_method'),
+                'alert_quantity' => $this->input->post('alert_quantity'),
+                'track_quantity' => $this->input->post('track_quantity') ? $this->input->post('track_quantity') : '0',
+                'details' => $this->input->post('details'),
+                'product_details' => $this->input->post('product_details'),
+                'supplier1' => $this->input->post('supplier'),
+                'supplier1price' => $this->sma->formatDecimal($this->input->post('supplier_price')),
+                'supplier2' => $this->input->post('supplier_2'),
+                'supplier2price' => $this->sma->formatDecimal($this->input->post('supplier_2_price')),
+                'supplier3' => $this->input->post('supplier_3'),
+                'supplier3price' => $this->sma->formatDecimal($this->input->post('supplier_3_price')),
+                'supplier4' => $this->input->post('supplier_4'),
+                'supplier4price' => $this->sma->formatDecimal($this->input->post('supplier_4_price')),
+                'supplier5' => $this->input->post('supplier_5'),
+                'supplier5price' => $this->sma->formatDecimal($this->input->post('supplier_5_price')),
+                'cf1' => $this->input->post('cf1'),
+                'cf2' => $this->input->post('cf2'),
+                'cf3' => $this->input->post('cf3'),
+                'cf4' => $allergy_facts,
+                'cf5' => $this->input->post('cf5'),
+                'cf6' => $this->input->post('cf6'),
+                'promotion' => $this->input->post('promotion'),
+                'promo_price' => $this->sma->formatDecimal($this->input->post('promo_price')),
+                'start_date' => $this->input->post('start_date') ? $this->sma->fsd($this->input->post('start_date')) : null,
+                'end_date' => $this->input->post('end_date') ? $this->sma->fsd($this->input->post('end_date')) : null,
                 'supplier1_part_no' => $this->input->post('supplier_part_no'),
                 'supplier2_part_no' => $this->input->post('supplier_2_part_no'),
                 'supplier3_part_no' => $this->input->post('supplier_3_part_no'),
                 'supplier4_part_no' => $this->input->post('supplier_4_part_no'),
                 'supplier5_part_no' => $this->input->post('supplier_5_part_no'),
-                'file'              => $this->input->post('file_link'),
-                'slug'              => $this->input->post('slug'),
-                'weight'            => $this->input->post('weight'),
-                'featured'          => $this->input->post('featured'),
-                'hsn_code'          => $this->input->post('hsn_code'),
-                'hide'              => $this->input->post('hide') ? $this->input->post('hide') : 0,
-                'second_name'       => $this->input->post('second_name'),
+                'file' => $this->input->post('file_link'),
+                'slug' => $this->input->post('slug'),
+                'weight' => $this->input->post('weight'),
+                'featured' => $this->input->post('featured'),
+                'hsn_code' => $this->input->post('hsn_code'),
+                'hide' => $this->input->post('hide') ? $this->input->post('hide') : 0,
+                'second_name' => $this->input->post('second_name'),
             ];
-            $warehouse_qty      = null;
+            $warehouse_qty = null;
             $product_attributes = null;
             $this->load->library('upload');
             if ($this->input->post('type') == 'standard') {
                 $wh_total_quantity = 0;
                 $pv_total_quantity = 0;
                 for ($s = 2; $s > 5; $s++) {
-                    $data['suppliers' . $s]           = $this->input->post('supplier_' . $s);
+                    $data['suppliers' . $s] = $this->input->post('supplier_' . $s);
                     $data['suppliers' . $s . 'price'] = $this->input->post('supplier_' . $s . '_price');
                 }
                 foreach ($warehouses as $warehouse) {
                     if ($this->input->post('wh_qty_' . $warehouse->id)) {
                         $warehouse_qty[] = [
                             'warehouse_id' => $this->input->post('wh_' . $warehouse->id),
-                            'quantity'     => $this->input->post('wh_qty_' . $warehouse->id),
-                            'rack'         => $this->input->post('rack_' . $warehouse->id) ? $this->input->post('rack_' . $warehouse->id) : null,
+                            'quantity' => $this->input->post('wh_qty_' . $warehouse->id),
+                            'rack' => $this->input->post('rack_' . $warehouse->id) ? $this->input->post('rack_' . $warehouse->id) : null,
                         ];
                         $wh_total_quantity += $this->input->post('wh_qty_' . $warehouse->id);
                     }
@@ -123,10 +126,10 @@ class Products extends MY_Controller
                     for ($r = 0; $r <= $a; $r++) {
                         if (isset($_POST['attr_name'][$r])) {
                             $product_attributes[] = [
-                                'name'         => $_POST['attr_name'][$r],
+                                'name' => $_POST['attr_name'][$r],
                                 'warehouse_id' => $_POST['attr_warehouse'][$r],
-                                'quantity'     => $_POST['attr_quantity'][$r],
-                                'price'        => $_POST['attr_price'][$r],
+                                'quantity' => $_POST['attr_quantity'][$r],
+                                'price' => $_POST['attr_price'][$r],
                             ];
                             $pv_total_quantity += $_POST['attr_quantity'][$r];
                         }
@@ -145,12 +148,12 @@ class Products extends MY_Controller
                 $data['track_quantity'] = 0;
             } elseif ($this->input->post('type') == 'combo') {
                 $total_price = 0;
-                $c           = sizeof($_POST['combo_item_code']) - 1;
+                $c = sizeof($_POST['combo_item_code']) - 1;
                 for ($r = 0; $r <= $c; $r++) {
                     if (isset($_POST['combo_item_code'][$r]) && isset($_POST['combo_item_quantity'][$r]) && isset($_POST['combo_item_price'][$r])) {
                         $items[] = [
-                            'item_code'  => $_POST['combo_item_code'][$r],
-                            'quantity'   => $_POST['combo_item_quantity'][$r],
+                            'item_code' => $_POST['combo_item_code'][$r],
+                            'quantity' => $_POST['combo_item_quantity'][$r],
                             'unit_price' => $_POST['combo_item_price'][$r],
                         ];
                     }
@@ -163,55 +166,55 @@ class Products extends MY_Controller
                 $data['track_quantity'] = 0;
             } elseif ($this->input->post('type') == 'digital') {
                 if ($_FILES['digital_file']['size'] > 0) {
-                    $config['upload_path']   = $this->digital_upload_path;
+                    $config['upload_path'] = $this->digital_upload_path;
                     $config['allowed_types'] = $this->digital_file_types;
-                    $config['max_size']      = $this->allowed_file_size;
-                    $config['overwrite']     = false;
-                    $config['encrypt_name']  = true;
-                    $config['max_filename']  = 25;
+                    $config['max_size'] = $this->allowed_file_size;
+                    $config['overwrite'] = false;
+                    $config['encrypt_name'] = true;
+                    $config['max_filename'] = 25;
                     $this->upload->initialize($config);
                     if (!$this->upload->do_upload('digital_file')) {
                         $error = $this->upload->display_errors();
                         $this->session->set_flashdata('error', $error);
                         admin_redirect('products/add');
                     }
-                    $file         = $this->upload->file_name;
+                    $file = $this->upload->file_name;
                     $data['file'] = $file;
                 } else {
                     if (!$this->input->post('file_link')) {
                         $this->form_validation->set_rules('digital_file', lang('digital_file'), 'required');
                     }
                 }
-                $config                 = null;
+                $config = null;
                 $data['track_quantity'] = 0;
             }
             if (!isset($items)) {
                 $items = null;
             }
             if ($_FILES['product_image']['size'] > 0) {
-                $config['upload_path']   = $this->upload_path;
+                $config['upload_path'] = $this->upload_path;
                 $config['allowed_types'] = $this->image_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['max_width']     = $this->Settings->iwidth;
-                $config['max_height']    = $this->Settings->iheight;
-                $config['overwrite']     = false;
-                $config['max_filename']  = 25;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['max_width'] = $this->Settings->iwidth;
+                $config['max_height'] = $this->Settings->iheight;
+                $config['overwrite'] = false;
+                $config['max_filename'] = 25;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload('product_image')) {
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     admin_redirect('products/add');
                 }
-                $photo         = $this->upload->file_name;
+                $photo = $this->upload->file_name;
                 $data['image'] = $photo;
                 $this->load->library('image_lib');
-                $config['image_library']  = 'gd2';
-                $config['source_image']   = $this->upload_path . $photo;
-                $config['new_image']      = $this->thumbs_path . $photo;
+                $config['image_library'] = 'gd2';
+                $config['source_image'] = $this->upload_path . $photo;
+                $config['new_image'] = $this->thumbs_path . $photo;
                 $config['maintain_ratio'] = true;
-                $config['width']          = $this->Settings->twidth;
-                $config['height']         = $this->Settings->theight;
+                $config['width'] = $this->Settings->twidth;
+                $config['height'] = $this->Settings->theight;
                 $this->image_lib->clear();
                 $this->image_lib->initialize($config);
                 if (!$this->image_lib->resize()) {
@@ -219,17 +222,17 @@ class Products extends MY_Controller
                 }
                 if ($this->Settings->watermark) {
                     $this->image_lib->clear();
-                    $wm['source_image']     = $this->upload_path . $photo;
-                    $wm['wm_text']          = 'Copyright ' . date('Y') . ' - ' . $this->Settings->site_name;
-                    $wm['wm_type']          = 'text';
-                    $wm['wm_font_path']     = 'system/fonts/texb.ttf';
-                    $wm['quality']          = '100';
-                    $wm['wm_font_size']     = '16';
-                    $wm['wm_font_color']    = '999999';
-                    $wm['wm_shadow_color']  = 'CCCCCC';
+                    $wm['source_image'] = $this->upload_path . $photo;
+                    $wm['wm_text'] = 'Copyright ' . date('Y') . ' - ' . $this->Settings->site_name;
+                    $wm['wm_type'] = 'text';
+                    $wm['wm_font_path'] = 'system/fonts/texb.ttf';
+                    $wm['quality'] = '100';
+                    $wm['wm_font_size'] = '16';
+                    $wm['wm_font_color'] = '999999';
+                    $wm['wm_shadow_color'] = 'CCCCCC';
                     $wm['wm_vrt_alignment'] = 'top';
                     $wm['wm_hor_alignment'] = 'left';
-                    $wm['wm_padding']       = '10';
+                    $wm['wm_padding'] = '10';
                     $this->image_lib->initialize($wm);
                     $this->image_lib->watermark();
                 }
@@ -238,22 +241,22 @@ class Products extends MY_Controller
             }
 
             if ($_FILES['userfile']['name'][0] != '') {
-                $config['upload_path']   = $this->upload_path;
+                $config['upload_path'] = $this->upload_path;
                 $config['allowed_types'] = $this->image_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['max_width']     = $this->Settings->iwidth;
-                $config['max_height']    = $this->Settings->iheight;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
-                $config['max_filename']  = 25;
-                $files                   = $_FILES;
-                $cpt                     = count($_FILES['userfile']['name']);
+                $config['max_size'] = $this->allowed_file_size;
+                $config['max_width'] = $this->Settings->iwidth;
+                $config['max_height'] = $this->Settings->iheight;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
+                $config['max_filename'] = 25;
+                $files = $_FILES;
+                $cpt = count($_FILES['userfile']['name']);
                 for ($i = 0; $i < $cpt; $i++) {
-                    $_FILES['userfile']['name']     = $files['userfile']['name'][$i];
-                    $_FILES['userfile']['type']     = $files['userfile']['type'][$i];
+                    $_FILES['userfile']['name'] = $files['userfile']['name'][$i];
+                    $_FILES['userfile']['type'] = $files['userfile']['type'][$i];
                     $_FILES['userfile']['tmp_name'] = $files['userfile']['tmp_name'][$i];
-                    $_FILES['userfile']['error']    = $files['userfile']['error'][$i];
-                    $_FILES['userfile']['size']     = $files['userfile']['size'][$i];
+                    $_FILES['userfile']['error'] = $files['userfile']['error'][$i];
+                    $_FILES['userfile']['size'] = $files['userfile']['size'][$i];
 
                     $this->upload->initialize($config);
 
@@ -267,12 +270,12 @@ class Products extends MY_Controller
                         $photos[] = $pho;
 
                         $this->load->library('image_lib');
-                        $config['image_library']  = 'gd2';
-                        $config['source_image']   = $this->upload_path . $pho;
-                        $config['new_image']      = $this->thumbs_path . $pho;
+                        $config['image_library'] = 'gd2';
+                        $config['source_image'] = $this->upload_path . $pho;
+                        $config['new_image'] = $this->thumbs_path . $pho;
                         $config['maintain_ratio'] = true;
-                        $config['width']          = $this->Settings->twidth;
-                        $config['height']         = $this->Settings->theight;
+                        $config['width'] = $this->Settings->twidth;
+                        $config['height'] = $this->Settings->theight;
 
                         $this->image_lib->initialize($config);
 
@@ -282,17 +285,17 @@ class Products extends MY_Controller
 
                         if ($this->Settings->watermark) {
                             $this->image_lib->clear();
-                            $wm['source_image']     = $this->upload_path . $pho;
-                            $wm['wm_text']          = 'Copyright ' . date('Y') . ' - ' . $this->Settings->site_name;
-                            $wm['wm_type']          = 'text';
-                            $wm['wm_font_path']     = 'system/fonts/texb.ttf';
-                            $wm['quality']          = '100';
-                            $wm['wm_font_size']     = '16';
-                            $wm['wm_font_color']    = '999999';
-                            $wm['wm_shadow_color']  = 'CCCCCC';
+                            $wm['source_image'] = $this->upload_path . $pho;
+                            $wm['wm_text'] = 'Copyright ' . date('Y') . ' - ' . $this->Settings->site_name;
+                            $wm['wm_type'] = 'text';
+                            $wm['wm_font_path'] = 'system/fonts/texb.ttf';
+                            $wm['quality'] = '100';
+                            $wm['wm_font_size'] = '16';
+                            $wm['wm_font_color'] = '999999';
+                            $wm['wm_shadow_color'] = 'CCCCCC';
                             $wm['wm_vrt_alignment'] = 'top';
                             $wm['wm_hor_alignment'] = 'left';
-                            $wm['wm_padding']       = '10';
+                            $wm['wm_padding'] = '10';
                             $this->image_lib->initialize($wm);
                             $this->image_lib->watermark();
                         }
@@ -314,18 +317,19 @@ class Products extends MY_Controller
         } else {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
-            $this->data['categories']          = $this->site->getAllCategories();
-            $this->data['tax_rates']           = $this->site->getAllTaxRates();
-            $this->data['brands']              = $this->site->getAllBrands();
-            $this->data['base_units']          = $this->site->getAllBaseUnits();
-            $this->data['warehouses']          = $warehouses;
+            $this->data['allergy_facts'] = $this->site->getAllAllergyFacts();
+            $this->data['categories'] = $this->site->getAllCategories();
+            $this->data['tax_rates'] = $this->site->getAllTaxRates();
+            $this->data['brands'] = $this->site->getAllBrands();
+            $this->data['base_units'] = $this->site->getAllBaseUnits();
+            $this->data['warehouses'] = $warehouses;
             $this->data['warehouses_products'] = $id ? $this->products_model->getAllWarehousesWithPQ($id) : null;
-            $this->data['product']             = $id ? $this->products_model->getProductByID($id) : null;
-            $this->data['variants']            = $this->products_model->getAllVariants();
-            $this->data['combo_items']         = ($id && $this->data['product']->type == 'combo') ? $this->products_model->getProductComboItems($id) : null;
-            $this->data['product_options']     = $id ? $this->products_model->getProductOptionsWithWH($id) : null;
-            $bc                                = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('add_product')]];
-            $meta                              = ['page_title' => lang('add_product'), 'bc' => $bc];
+            $this->data['product'] = $id ? $this->products_model->getProductByID($id) : null;
+            $this->data['variants'] = $this->products_model->getAllVariants();
+            $this->data['combo_items'] = ($id && $this->data['product']->type == 'combo') ? $this->products_model->getProductComboItems($id) : null;
+            $this->data['product_options'] = $id ? $this->products_model->getProductOptionsWithWH($id) : null;
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('add_product')]];
+            $meta = ['page_title' => lang('add_product'), 'bc' => $bc];
             $this->page_construct('products/add', $meta, $this->data);
         }
     }
@@ -344,15 +348,15 @@ class Products extends MY_Controller
 
             $reference_no = $this->input->post('reference_no') ? $this->input->post('reference_no') : $this->site->getReference('qa');
             $warehouse_id = $this->input->post('warehouse');
-            $note         = $this->sma->clear_tags($this->input->post('note'));
+            $note = $this->sma->clear_tags($this->input->post('note'));
 
             $i = isset($_POST['product_id']) ? sizeof($_POST['product_id']) : 0;
             for ($r = 0; $r < $i; $r++) {
                 $product_id = $_POST['product_id'][$r];
-                $type       = $_POST['type'][$r];
-                $quantity   = $_POST['quantity'][$r];
-                $serial     = $_POST['serial'][$r];
-                $variant    = isset($_POST['variant'][$r]) && !empty($_POST['variant'][$r]) ? $_POST['variant'][$r] : null;
+                $type = $_POST['type'][$r];
+                $quantity = $_POST['quantity'][$r];
+                $serial = $_POST['serial'][$r];
+                $variant = isset($_POST['variant'][$r]) && !empty($_POST['variant'][$r]) ? $_POST['variant'][$r] : null;
 
                 if (!$this->Settings->overselling && $type == 'subtraction' && !$count_id) {
                     if ($variant) {
@@ -378,12 +382,12 @@ class Products extends MY_Controller
                 }
 
                 $products[] = [
-                    'product_id'   => $product_id,
-                    'type'         => $type,
-                    'quantity'     => $quantity,
+                    'product_id' => $product_id,
+                    'type' => $type,
+                    'quantity' => $quantity,
                     'warehouse_id' => $warehouse_id,
-                    'option_id'    => $variant,
-                    'serial_no'    => $serial,
+                    'option_id' => $variant,
+                    'serial_no' => $serial,
                 ];
             }
 
@@ -394,28 +398,28 @@ class Products extends MY_Controller
             }
 
             $data = [
-                'date'         => $date,
+                'date' => $date,
                 'reference_no' => $reference_no,
                 'warehouse_id' => $warehouse_id,
-                'note'         => $note,
-                'created_by'   => $this->session->userdata('user_id'),
-                'count_id'     => $this->input->post('count_id') ? $this->input->post('count_id') : null,
+                'note' => $note,
+                'created_by' => $this->session->userdata('user_id'),
+                'count_id' => $this->input->post('count_id') ? $this->input->post('count_id') : null,
             ];
 
             if ($_FILES['document']['size'] > 0) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = $this->digital_file_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload('document')) {
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     redirect($_SERVER['HTTP_REFERER']);
                 }
-                $photo              = $this->upload->file_name;
+                $photo = $this->upload->file_name;
                 $data['attachment'] = $photo;
             }
 
@@ -429,36 +433,36 @@ class Products extends MY_Controller
         } else {
             if ($count_id) {
                 $stock_count = $this->products_model->getStouckCountByID($count_id);
-                $items       = $this->products_model->getStockCountItems($count_id);
+                $items = $this->products_model->getStockCountItems($count_id);
                 foreach ($items as $item) {
                     $c = sha1(uniqid(mt_rand(), true));
                     if ($item->counted != $item->expected) {
-                        $product     = $this->site->getProductByID($item->product_id);
-                        $row         = json_decode('{}');
-                        $row->id     = $item->product_id;
-                        $row->code   = $product->code;
-                        $row->name   = $product->name;
-                        $row->qty    = $item->counted - $item->expected;
-                        $row->type   = $row->qty > 0 ? 'addition' : 'subtraction';
-                        $row->qty    = $row->qty > 0 ? $row->qty : (0 - $row->qty);
-                        $options     = $this->products_model->getProductOptions($product->id);
+                        $product = $this->site->getProductByID($item->product_id);
+                        $row = json_decode('{}');
+                        $row->id = $item->product_id;
+                        $row->code = $product->code;
+                        $row->name = $product->name;
+                        $row->qty = $item->counted - $item->expected;
+                        $row->type = $row->qty > 0 ? 'addition' : 'subtraction';
+                        $row->qty = $row->qty > 0 ? $row->qty : (0 - $row->qty);
+                        $options = $this->products_model->getProductOptions($product->id);
                         $row->option = $item->product_variant_id ? $item->product_variant_id : 0;
                         $row->serial = '';
-                        $ri          = $this->Settings->item_addition ? $product->id : $c;
+                        $ri = $this->Settings->item_addition ? $product->id : $c;
 
                         $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                            'row'        => $row, 'options' => $options, ];
+                            'row' => $row, 'options' => $options,];
                         $c++;
                     }
                 }
             }
             $this->data['adjustment_items'] = $count_id ? json_encode($pr) : false;
-            $this->data['warehouse_id']     = $count_id ? $stock_count->warehouse_id : false;
-            $this->data['count_id']         = $count_id;
-            $this->data['error']            = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $this->data['warehouses']       = $this->site->getAllWarehouses();
-            $bc                             = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('add_adjustment')]];
-            $meta                           = ['page_title' => lang('add_adjustment'), 'bc' => $bc];
+            $this->data['warehouse_id'] = $count_id ? $stock_count->warehouse_id : false;
+            $this->data['count_id'] = $count_id;
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['warehouses'] = $this->site->getAllWarehouses();
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('add_adjustment')]];
+            $meta = ['page_title' => lang('add_adjustment'), 'bc' => $bc];
             $this->page_construct('products/add_adjustment', $meta, $this->data);
         }
     }
@@ -477,23 +481,23 @@ class Products extends MY_Controller
 
             $reference_no = $this->input->post('reference_no') ? $this->input->post('reference_no') : $this->site->getReference('qa');
             $warehouse_id = $this->input->post('warehouse');
-            $note         = $this->sma->clear_tags($this->input->post('note'));
-            $data         = [
-                'date'         => $date,
+            $note = $this->sma->clear_tags($this->input->post('note'));
+            $data = [
+                'date' => $date,
                 'reference_no' => $reference_no,
                 'warehouse_id' => $warehouse_id,
-                'note'         => $note,
-                'created_by'   => $this->session->userdata('user_id'),
-                'count_id'     => null,
+                'note' => $note,
+                'created_by' => $this->session->userdata('user_id'),
+                'count_id' => null,
             ];
 
             if ($_FILES['csv_file']['size'] > 0) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = 'csv';
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload('csv_file')) {
                     $error = $this->upload->display_errors();
@@ -501,11 +505,11 @@ class Products extends MY_Controller
                     redirect($_SERVER['HTTP_REFERER']);
                 }
 
-                $csv                = $this->upload->file_name;
+                $csv = $this->upload->file_name;
                 $data['attachment'] = $csv;
 
                 $arrResult = [];
-                $handle    = fopen($this->digital_upload_path . $csv, 'r');
+                $handle = fopen($this->digital_upload_path . $csv, 'r');
                 if ($handle) {
                     while (($row = fgetcsv($handle, 5000, ',')) !== false) {
                         $arrResult[] = $row;
@@ -513,8 +517,8 @@ class Products extends MY_Controller
                     fclose($handle);
                 }
                 $titles = array_shift($arrResult);
-                $keys   = ['code', 'quantity', 'variant'];
-                $final  = [];
+                $keys = ['code', 'quantity', 'variant'];
+                $final = [];
                 foreach ($arrResult as $key => $value) {
                     $final[] = array_combine($keys, $value);
                 }
@@ -523,11 +527,11 @@ class Products extends MY_Controller
                 foreach ($final as $pr) {
                     if ($product = $this->products_model->getProductByCode(trim($pr['code']))) {
                         $csv_variant = trim($pr['variant']);
-                        $variant     = !empty($csv_variant) ? $this->products_model->getProductVariantID($product->id, $csv_variant) : false;
+                        $variant = !empty($csv_variant) ? $this->products_model->getProductVariantID($product->id, $csv_variant) : false;
 
                         $csv_quantity = trim($pr['quantity']);
-                        $type         = $csv_quantity > 0 ? 'addition' : 'subtraction';
-                        $quantity     = $csv_quantity > 0 ? $csv_quantity : (0 - $csv_quantity);
+                        $type = $csv_quantity > 0 ? 'addition' : 'subtraction';
+                        $quantity = $csv_quantity > 0 ? $csv_quantity : (0 - $csv_quantity);
 
                         if (!$this->Settings->overselling && $type == 'subtraction') {
                             if ($variant) {
@@ -553,11 +557,11 @@ class Products extends MY_Controller
                         }
 
                         $products[] = [
-                            'product_id'   => $product->id,
-                            'type'         => $type,
-                            'quantity'     => $quantity,
+                            'product_id' => $product->id,
+                            'type' => $type,
+                            'quantity' => $quantity,
                             'warehouse_id' => $warehouse_id,
-                            'option_id'    => $variant,
+                            'option_id' => $variant,
                         ];
                     } else {
                         $this->session->set_flashdata('error', lang('check_product_code') . ' (' . $pr['code'] . '). ' . lang('product_code_x_exist') . ' ' . lang('line_no') . ' ' . $rw);
@@ -576,10 +580,10 @@ class Products extends MY_Controller
             $this->session->set_flashdata('message', lang('quantity_adjusted'));
             admin_redirect('products/quantity_adjustments');
         } else {
-            $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['warehouses'] = $this->site->getAllWarehouses();
-            $bc                       = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('add_adjustment')]];
-            $meta                     = ['page_title' => lang('add_adjustment_by_csv'), 'bc' => $bc];
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('add_adjustment')]];
+            $meta = ['page_title' => lang('add_adjustment_by_csv'), 'bc' => $bc];
             $this->page_construct('products/add_adjustment_by_csv', $meta, $this->data);
         }
     }
@@ -614,7 +618,7 @@ class Products extends MY_Controller
             }
             if ($row = $this->products_model->addAjaxProduct($product)) {
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
-                $pr       = ['id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'code' => $row->code, 'qty' => 1, 'cost' => $row->cost, 'name' => $row->name, 'tax_method' => $row->tax_method, 'tax_rate' => $tax_rate, 'discount' => '0'];
+                $pr = ['id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'code' => $row->code, 'qty' => 1, 'cost' => $row->cost, 'name' => $row->name, 'tax_method' => $row->tax_method, 'tax_rate' => $tax_rate, 'discount' => '0'];
                 $this->sma->send_json(['msg' => 'success', 'result' => $pr]);
             } else {
                 exit(json_encode(['msg' => lang('failed_to_add_product')]));
@@ -657,9 +661,9 @@ class Products extends MY_Controller
                     foreach ($_POST['val'] as $id) {
                         $adjustment = $this->products_model->getAdjustmentByID($id);
                         $created_by = $this->site->getUser($adjustment->created_by);
-                        $warehouse  = $this->site->getWarehouseByID($adjustment->warehouse_id);
-                        $items      = $this->products_model->getAdjustmentItems($id);
-                        $products   = '';
+                        $warehouse = $this->site->getWarehouseByID($adjustment->warehouse_id);
+                        $items = $this->products_model->getAdjustmentItems($id);
+                        $products = '';
                         if ($items) {
                             foreach ($items as $item) {
                                 $products .= $item->product_name . '(' . $this->sma->formatQuantity($item->type == 'subtraction' ? -$item->quantity : $item->quantity) . ')' . "\n";
@@ -714,23 +718,23 @@ class Products extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             $warehouse_id = $this->input->post('warehouse');
-            $type         = $this->input->post('type');
-            $categories   = $this->input->post('category') ? $this->input->post('category') : null;
-            $brands       = $this->input->post('brand') ? $this->input->post('brand') : null;
+            $type = $this->input->post('type');
+            $categories = $this->input->post('category') ? $this->input->post('category') : null;
+            $brands = $this->input->post('brand') ? $this->input->post('brand') : null;
             $this->load->helper('string');
-            $name     = random_string('md5') . '.csv';
+            $name = random_string('md5') . '.csv';
             $products = $this->products_model->getStockCountProducts($warehouse_id, $type, $categories, $brands);
-            $pr       = 0;
-            $rw       = 0;
+            $pr = 0;
+            $rw = 0;
             foreach ($products as $product) {
                 if ($variants = $this->products_model->getStockCountProductVariants($warehouse_id, $product->id)) {
                     foreach ($variants as $variant) {
                         $items[] = [
                             'product_code' => $product->code,
                             'product_name' => $product->name,
-                            'variant'      => $variant->name,
-                            'expected'     => $variant->quantity,
-                            'counted'      => '',
+                            'variant' => $variant->name,
+                            'expected' => $variant->quantity,
+                            'counted' => '',
                         ];
                         $rw++;
                     }
@@ -738,9 +742,9 @@ class Products extends MY_Controller
                     $items[] = [
                         'product_code' => $product->code,
                         'product_name' => $product->name,
-                        'variant'      => '',
-                        'expected'     => $product->quantity,
-                        'counted'      => '',
+                        'variant' => '',
+                        'expected' => $product->quantity,
+                        'counted' => '',
                     ];
                     $rw++;
                 }
@@ -766,10 +770,10 @@ class Products extends MY_Controller
             } else {
                 $date = date('Y-m-d H:s:i');
             }
-            $category_ids   = '';
-            $brand_ids      = '';
+            $category_ids = '';
+            $brand_ids = '';
             $category_names = '';
-            $brand_names    = '';
+            $brand_names = '';
             if ($categories) {
                 $r = 1;
                 $s = sizeof($categories);
@@ -777,10 +781,10 @@ class Products extends MY_Controller
                     $category = $this->site->getCategoryByID($category_id);
                     if ($r == $s) {
                         $category_names .= $category->name;
-                        $category_ids   .= $category->id;
+                        $category_ids .= $category->id;
                     } else {
                         $category_names .= $category->name . ', ';
-                        $category_ids   .= $category->id . ', ';
+                        $category_ids .= $category->id . ', ';
                     }
                     $r++;
                 }
@@ -792,27 +796,27 @@ class Products extends MY_Controller
                     $brand = $this->site->getBrandByID($brand_id);
                     if ($r == $s) {
                         $brand_names .= $brand->name;
-                        $brand_ids   .= $brand->id;
+                        $brand_ids .= $brand->id;
                     } else {
                         $brand_names .= $brand->name . ', ';
-                        $brand_ids   .= $brand->id . ', ';
+                        $brand_ids .= $brand->id . ', ';
                     }
                     $r++;
                 }
             }
             $data = [
-                'date'           => $date,
-                'warehouse_id'   => $warehouse_id,
-                'reference_no'   => $this->input->post('reference_no'),
-                'type'           => $type,
-                'categories'     => $category_ids,
+                'date' => $date,
+                'warehouse_id' => $warehouse_id,
+                'reference_no' => $this->input->post('reference_no'),
+                'type' => $type,
+                'categories' => $category_ids,
                 'category_names' => $category_names,
-                'brands'         => $brand_ids,
-                'brand_names'    => $brand_names,
-                'initial_file'   => $name,
-                'products'       => $pr,
-                'rows'           => $rw,
-                'created_by'     => $this->session->userdata('user_id'),
+                'brands' => $brand_ids,
+                'brand_names' => $brand_names,
+                'initial_file' => $name,
+                'products' => $pr,
+                'rows' => $rw,
+                'created_by' => $this->session->userdata('user_id'),
             ];
         }
 
@@ -820,12 +824,12 @@ class Products extends MY_Controller
             $this->session->set_flashdata('message', lang('stock_count_intiated'));
             admin_redirect('products/stock_counts');
         } else {
-            $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['warehouses'] = $this->site->getAllWarehouses();
             $this->data['categories'] = $this->site->getAllCategories();
-            $this->data['brands']     = $this->site->getAllBrands();
-            $bc                       = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('count_stock')]];
-            $meta                     = ['page_title' => lang('count_stock'), 'bc' => $bc];
+            $this->data['brands'] = $this->site->getAllBrands();
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('count_stock')]];
+            $meta = ['page_title' => lang('count_stock'), 'bc' => $bc];
             $this->page_construct('products/count_stock', $meta, $this->data);
         }
     }
@@ -878,9 +882,9 @@ class Products extends MY_Controller
         if ($this->input->post('id')) {
             $id = $this->input->post('id');
         }
-        $warehouses          = $this->site->getAllWarehouses();
+        $warehouses = $this->site->getAllWarehouses();
         $warehouses_products = $this->products_model->getAllWarehousesWithPQ($id);
-        $product             = $this->site->getProductByID($id);
+        $product = $this->site->getProductByID($id);
         if (!$id || !$product) {
             $this->session->set_flashdata('error', lang('prduct_not_found'));
             redirect($_SERVER['HTTP_REFERER']);
@@ -906,80 +910,84 @@ class Products extends MY_Controller
         $this->form_validation->set_rules('userfile', lang('product_gallery_images'), 'xss_clean');
 
         if ($this->form_validation->run('products/add') == true) {
-            $data = ['code'         => $this->input->post('code'),
+            $allergy_facts = '';
+            if ($this->input->post('cf4')) $allergy_facts = serialize($this->input->post('cf4'));
+
+            $data = ['code' => $this->input->post('code'),
                 'barcode_symbology' => $this->input->post('barcode_symbology'),
-                'name'              => $this->input->post('name'),
-                'type'              => $this->input->post('type'),
-                'brand'             => $this->input->post('brand'),
-                'category_id'       => $this->input->post('category'),
-                'subcategory_id'    => $this->input->post('subcategory') ? $this->input->post('subcategory') : null,
-                'cost'              => $this->sma->formatDecimal($this->input->post('cost')),
-                'price'             => $this->sma->formatDecimal($this->input->post('price')),
-                'unit'              => $this->input->post('unit'),
-                'sale_unit'         => $this->input->post('default_sale_unit'),
-                'purchase_unit'     => $this->input->post('default_purchase_unit'),
-                'tax_rate'          => $this->input->post('tax_rate'),
-                'tax_method'        => $this->input->post('tax_method'),
-                'alert_quantity'    => $this->input->post('alert_quantity'),
-                'track_quantity'    => $this->input->post('track_quantity') ? $this->input->post('track_quantity') : '0',
-                'details'           => $this->input->post('details'),
-                'product_details'   => $this->input->post('product_details'),
-                'supplier1'         => $this->input->post('supplier'),
-                'supplier1price'    => $this->sma->formatDecimal($this->input->post('supplier_price')),
-                'supplier2'         => $this->input->post('supplier_2'),
-                'supplier2price'    => $this->sma->formatDecimal($this->input->post('supplier_2_price')),
-                'supplier3'         => $this->input->post('supplier_3'),
-                'supplier3price'    => $this->sma->formatDecimal($this->input->post('supplier_3_price')),
-                'supplier4'         => $this->input->post('supplier_4'),
-                'supplier4price'    => $this->sma->formatDecimal($this->input->post('supplier_4_price')),
-                'supplier5'         => $this->input->post('supplier_5'),
-                'supplier5price'    => $this->sma->formatDecimal($this->input->post('supplier_5_price')),
-                'cf1'               => $this->input->post('cf1'),
-                'cf2'               => $this->input->post('cf2'),
-                'cf3'               => $this->input->post('cf3'),
-                'cf4'               => $this->input->post('cf4'),
-                'cf5'               => $this->input->post('cf5'),
-                'cf6'               => $this->input->post('cf6'),
-                'promotion'         => $this->input->post('promotion'),
-                'promo_price'       => $this->sma->formatDecimal($this->input->post('promo_price')),
-                'start_date'        => $this->input->post('start_date') ? $this->sma->fsd($this->input->post('start_date')) : null,
-                'end_date'          => $this->input->post('end_date') ? $this->sma->fsd($this->input->post('end_date')) : null,
+                'name' => $this->input->post('name'),
+                'type' => $this->input->post('type'),
+                'brand' => $this->input->post('brand'),
+                'category_id' => $this->input->post('category'),
+                'subcategory_id' => $this->input->post('subcategory') ? $this->input->post('subcategory') : null,
+                'cost' => $this->sma->formatDecimal($this->input->post('cost')),
+                'price' => $this->sma->formatDecimal($this->input->post('price')),
+                'margin' => $this->sma->formatDecimal($this->input->post('margin')),
+                'unit' => $this->input->post('unit'),
+                'sale_unit' => $this->input->post('default_sale_unit'),
+                'purchase_unit' => $this->input->post('default_purchase_unit'),
+                'tax_rate' => $this->input->post('tax_rate'),
+                'tax_method' => $this->input->post('tax_method'),
+                'alert_quantity' => $this->input->post('alert_quantity'),
+                'track_quantity' => $this->input->post('track_quantity') ? $this->input->post('track_quantity') : '0',
+                'details' => $this->input->post('details'),
+                'product_details' => $this->input->post('product_details'),
+                'supplier1' => $this->input->post('supplier'),
+                'supplier1price' => $this->sma->formatDecimal($this->input->post('supplier_price')),
+                'supplier2' => $this->input->post('supplier_2'),
+                'supplier2price' => $this->sma->formatDecimal($this->input->post('supplier_2_price')),
+                'supplier3' => $this->input->post('supplier_3'),
+                'supplier3price' => $this->sma->formatDecimal($this->input->post('supplier_3_price')),
+                'supplier4' => $this->input->post('supplier_4'),
+                'supplier4price' => $this->sma->formatDecimal($this->input->post('supplier_4_price')),
+                'supplier5' => $this->input->post('supplier_5'),
+                'supplier5price' => $this->sma->formatDecimal($this->input->post('supplier_5_price')),
+                'cf1' => $this->input->post('cf1'),
+                'cf2' => $this->input->post('cf2'),
+                'cf3' => $this->input->post('cf3'),
+                'cf4' => $allergy_facts,
+                'cf5' => $this->input->post('cf5'),
+                'cf6' => $this->input->post('cf6'),
+                'promotion' => $this->input->post('promotion'),
+                'promo_price' => $this->sma->formatDecimal($this->input->post('promo_price')),
+                'start_date' => $this->input->post('start_date') ? $this->sma->fsd($this->input->post('start_date')) : null,
+                'end_date' => $this->input->post('end_date') ? $this->sma->fsd($this->input->post('end_date')) : null,
                 'supplier1_part_no' => $this->input->post('supplier_part_no'),
                 'supplier2_part_no' => $this->input->post('supplier_2_part_no'),
                 'supplier3_part_no' => $this->input->post('supplier_3_part_no'),
                 'supplier4_part_no' => $this->input->post('supplier_4_part_no'),
                 'supplier5_part_no' => $this->input->post('supplier_5_part_no'),
-                'slug'              => $this->input->post('slug'),
-                'weight'            => $this->input->post('weight'),
-                'featured'          => $this->input->post('featured'),
-                'hsn_code'          => $this->input->post('hsn_code'),
-                'hide'              => $this->input->post('hide') ? $this->input->post('hide') : 0,
-                'hide_pos'          => $this->input->post('hide_pos') ? $this->input->post('hide_pos') : 0,
-                'second_name'       => $this->input->post('second_name'),
+                'slug' => $this->input->post('slug'),
+                'weight' => $this->input->post('weight'),
+                'featured' => $this->input->post('featured'),
+                'hsn_code' => $this->input->post('hsn_code'),
+                'hide' => $this->input->post('hide') ? $this->input->post('hide') : 0,
+                'hide_pos' => $this->input->post('hide_pos') ? $this->input->post('hide_pos') : 0,
+                'second_name' => $this->input->post('second_name'),
             ];
-            $warehouse_qty      = null;
+            $warehouse_qty = null;
             $product_attributes = null;
-            $update_variants    = [];
+            $update_variants = [];
             $this->load->library('upload');
             if ($this->input->post('type') == 'standard') {
                 if ($product_variants = $this->products_model->getProductOptions($id)) {
                     foreach ($product_variants as $pv) {
                         $update_variants[] = [
-                            'id'    => $this->input->post('variant_id_' . $pv->id),
-                            'name'  => $this->input->post('variant_name_' . $pv->id),
-                            'cost'  => $this->input->post('variant_cost_' . $pv->id),
+                            'id' => $this->input->post('variant_id_' . $pv->id),
+                            'name' => $this->input->post('variant_name_' . $pv->id),
+                            'cost' => $this->input->post('variant_cost_' . $pv->id),
                             'price' => $this->input->post('variant_price_' . $pv->id),
                         ];
                     }
                 }
                 for ($s = 2; $s > 5; $s++) {
-                    $data['suppliers' . $s]           = $this->input->post('supplier_' . $s);
+                    $data['suppliers' . $s] = $this->input->post('supplier_' . $s);
                     $data['suppliers' . $s . 'price'] = $this->input->post('supplier_' . $s . '_price');
                 }
                 foreach ($warehouses as $warehouse) {
                     $warehouse_qty[] = [
                         'warehouse_id' => $this->input->post('wh_' . $warehouse->id),
-                        'rack'         => $this->input->post('rack_' . $warehouse->id) ? $this->input->post('rack_' . $warehouse->id) : null,
+                        'rack' => $this->input->post('rack_' . $warehouse->id) ? $this->input->post('rack_' . $warehouse->id) : null,
                     ];
                 }
 
@@ -992,10 +1000,10 @@ class Products extends MY_Controller
                                 $this->form_validation->set_rules('new_product_variant', lang('new_product_variant'), 'required');
                             } else {
                                 $product_attributes[] = [
-                                    'name'         => $_POST['attr_name'][$r],
+                                    'name' => $_POST['attr_name'][$r],
                                     'warehouse_id' => $_POST['attr_warehouse'][$r],
-                                    'quantity'     => $_POST['attr_quantity'][$r],
-                                    'price'        => $_POST['attr_price'][$r],
+                                    'quantity' => $_POST['attr_quantity'][$r],
+                                    'price' => $_POST['attr_price'][$r],
                                 ];
                             }
                         }
@@ -1009,12 +1017,12 @@ class Products extends MY_Controller
                 $data['track_quantity'] = 0;
             } elseif ($this->input->post('type') == 'combo') {
                 $total_price = 0;
-                $c           = sizeof($_POST['combo_item_code']) - 1;
+                $c = sizeof($_POST['combo_item_code']) - 1;
                 for ($r = 0; $r <= $c; $r++) {
                     if (isset($_POST['combo_item_code'][$r]) && isset($_POST['combo_item_quantity'][$r]) && isset($_POST['combo_item_price'][$r])) {
                         $items[] = [
-                            'item_code'  => $_POST['combo_item_code'][$r],
-                            'quantity'   => $_POST['combo_item_quantity'][$r],
+                            'item_code' => $_POST['combo_item_code'][$r],
+                            'quantity' => $_POST['combo_item_quantity'][$r],
                             'unit_price' => $_POST['combo_item_price'][$r],
                         ];
                     }
@@ -1030,51 +1038,51 @@ class Products extends MY_Controller
                     $data['file'] = $this->input->post('file_link');
                 }
                 if ($_FILES['digital_file']['size'] > 0) {
-                    $config['upload_path']   = $this->digital_upload_path;
+                    $config['upload_path'] = $this->digital_upload_path;
                     $config['allowed_types'] = $this->digital_file_types;
-                    $config['max_size']      = $this->allowed_file_size;
-                    $config['overwrite']     = false;
-                    $config['encrypt_name']  = true;
-                    $config['max_filename']  = 25;
+                    $config['max_size'] = $this->allowed_file_size;
+                    $config['overwrite'] = false;
+                    $config['encrypt_name'] = true;
+                    $config['max_filename'] = 25;
                     $this->upload->initialize($config);
                     if (!$this->upload->do_upload('digital_file')) {
                         $error = $this->upload->display_errors();
                         $this->session->set_flashdata('error', $error);
                         admin_redirect('products/add');
                     }
-                    $file         = $this->upload->file_name;
+                    $file = $this->upload->file_name;
                     $data['file'] = $file;
                 }
-                $config                 = null;
+                $config = null;
                 $data['track_quantity'] = 0;
             }
             if (!isset($items)) {
                 $items = null;
             }
             if ($_FILES['product_image']['size'] > 0) {
-                $config['upload_path']   = $this->upload_path;
+                $config['upload_path'] = $this->upload_path;
                 $config['allowed_types'] = $this->image_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['max_width']     = $this->Settings->iwidth;
-                $config['max_height']    = $this->Settings->iheight;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
-                $config['max_filename']  = 25;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['max_width'] = $this->Settings->iwidth;
+                $config['max_height'] = $this->Settings->iheight;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
+                $config['max_filename'] = 25;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload('product_image')) {
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     admin_redirect('products/edit/' . $id);
                 }
-                $photo         = $this->upload->file_name;
+                $photo = $this->upload->file_name;
                 $data['image'] = $photo;
                 $this->load->library('image_lib');
-                $config['image_library']  = 'gd2';
-                $config['source_image']   = $this->upload_path . $photo;
-                $config['new_image']      = $this->thumbs_path . $photo;
+                $config['image_library'] = 'gd2';
+                $config['source_image'] = $this->upload_path . $photo;
+                $config['new_image'] = $this->thumbs_path . $photo;
                 $config['maintain_ratio'] = true;
-                $config['width']          = $this->Settings->twidth;
-                $config['height']         = $this->Settings->theight;
+                $config['width'] = $this->Settings->twidth;
+                $config['height'] = $this->Settings->theight;
                 $this->image_lib->clear();
                 $this->image_lib->initialize($config);
                 if (!$this->image_lib->resize()) {
@@ -1082,17 +1090,17 @@ class Products extends MY_Controller
                 }
                 if ($this->Settings->watermark) {
                     $this->image_lib->clear();
-                    $wm['source_image']     = $this->upload_path . $photo;
-                    $wm['wm_text']          = 'Copyright ' . date('Y') . ' - ' . $this->Settings->site_name;
-                    $wm['wm_type']          = 'text';
-                    $wm['wm_font_path']     = 'system/fonts/texb.ttf';
-                    $wm['quality']          = '100';
-                    $wm['wm_font_size']     = '16';
-                    $wm['wm_font_color']    = '999999';
-                    $wm['wm_shadow_color']  = 'CCCCCC';
+                    $wm['source_image'] = $this->upload_path . $photo;
+                    $wm['wm_text'] = 'Copyright ' . date('Y') . ' - ' . $this->Settings->site_name;
+                    $wm['wm_type'] = 'text';
+                    $wm['wm_font_path'] = 'system/fonts/texb.ttf';
+                    $wm['quality'] = '100';
+                    $wm['wm_font_size'] = '16';
+                    $wm['wm_font_color'] = '999999';
+                    $wm['wm_shadow_color'] = 'CCCCCC';
                     $wm['wm_vrt_alignment'] = 'top';
                     $wm['wm_hor_alignment'] = 'left';
-                    $wm['wm_padding']       = '10';
+                    $wm['wm_padding'] = '10';
                     $this->image_lib->initialize($wm);
                     $this->image_lib->watermark();
                 }
@@ -1101,22 +1109,22 @@ class Products extends MY_Controller
             }
 
             if ($_FILES['userfile']['name'][0] != '') {
-                $config['upload_path']   = $this->upload_path;
+                $config['upload_path'] = $this->upload_path;
                 $config['allowed_types'] = $this->image_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['max_width']     = $this->Settings->iwidth;
-                $config['max_height']    = $this->Settings->iheight;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
-                $config['max_filename']  = 25;
-                $files                   = $_FILES;
-                $cpt                     = count($_FILES['userfile']['name']);
+                $config['max_size'] = $this->allowed_file_size;
+                $config['max_width'] = $this->Settings->iwidth;
+                $config['max_height'] = $this->Settings->iheight;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
+                $config['max_filename'] = 25;
+                $files = $_FILES;
+                $cpt = count($_FILES['userfile']['name']);
                 for ($i = 0; $i < $cpt; $i++) {
-                    $_FILES['userfile']['name']     = $files['userfile']['name'][$i];
-                    $_FILES['userfile']['type']     = $files['userfile']['type'][$i];
+                    $_FILES['userfile']['name'] = $files['userfile']['name'][$i];
+                    $_FILES['userfile']['type'] = $files['userfile']['type'][$i];
                     $_FILES['userfile']['tmp_name'] = $files['userfile']['tmp_name'][$i];
-                    $_FILES['userfile']['error']    = $files['userfile']['error'][$i];
-                    $_FILES['userfile']['size']     = $files['userfile']['size'][$i];
+                    $_FILES['userfile']['error'] = $files['userfile']['error'][$i];
+                    $_FILES['userfile']['size'] = $files['userfile']['size'][$i];
 
                     $this->upload->initialize($config);
 
@@ -1130,12 +1138,12 @@ class Products extends MY_Controller
                         $photos[] = $pho;
 
                         $this->load->library('image_lib');
-                        $config['image_library']  = 'gd2';
-                        $config['source_image']   = $this->upload_path . $pho;
-                        $config['new_image']      = $this->thumbs_path . $pho;
+                        $config['image_library'] = 'gd2';
+                        $config['source_image'] = $this->upload_path . $pho;
+                        $config['new_image'] = $this->thumbs_path . $pho;
                         $config['maintain_ratio'] = true;
-                        $config['width']          = $this->Settings->twidth;
-                        $config['height']         = $this->Settings->theight;
+                        $config['width'] = $this->Settings->twidth;
+                        $config['height'] = $this->Settings->theight;
 
                         $this->image_lib->initialize($config);
 
@@ -1145,17 +1153,17 @@ class Products extends MY_Controller
 
                         if ($this->Settings->watermark) {
                             $this->image_lib->clear();
-                            $wm['source_image']     = $this->upload_path . $pho;
-                            $wm['wm_text']          = 'Copyright ' . date('Y') . ' - ' . $this->Settings->site_name;
-                            $wm['wm_type']          = 'text';
-                            $wm['wm_font_path']     = 'system/fonts/texb.ttf';
-                            $wm['quality']          = '100';
-                            $wm['wm_font_size']     = '16';
-                            $wm['wm_font_color']    = '999999';
-                            $wm['wm_shadow_color']  = 'CCCCCC';
+                            $wm['source_image'] = $this->upload_path . $pho;
+                            $wm['wm_text'] = 'Copyright ' . date('Y') . ' - ' . $this->Settings->site_name;
+                            $wm['wm_type'] = 'text';
+                            $wm['wm_font_path'] = 'system/fonts/texb.ttf';
+                            $wm['quality'] = '100';
+                            $wm['wm_font_size'] = '16';
+                            $wm['wm_font_color'] = '999999';
+                            $wm['wm_shadow_color'] = 'CCCCCC';
                             $wm['wm_vrt_alignment'] = 'top';
                             $wm['wm_hor_alignment'] = 'left';
-                            $wm['wm_padding']       = '10';
+                            $wm['wm_padding'] = '10';
                             $this->image_lib->initialize($wm);
                             $this->image_lib->watermark();
                         }
@@ -1177,20 +1185,21 @@ class Products extends MY_Controller
         } else {
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
-            $this->data['categories']          = $this->site->getAllCategories();
-            $this->data['tax_rates']           = $this->site->getAllTaxRates();
-            $this->data['brands']              = $this->site->getAllBrands();
-            $this->data['base_units']          = $this->site->getAllBaseUnits();
-            $this->data['warehouses']          = $warehouses;
+            $this->data['allergy_facts'] = $this->site->getAllAllergyFacts();
+            $this->data['categories'] = $this->site->getAllCategories();
+            $this->data['tax_rates'] = $this->site->getAllTaxRates();
+            $this->data['brands'] = $this->site->getAllBrands();
+            $this->data['base_units'] = $this->site->getAllBaseUnits();
+            $this->data['warehouses'] = $warehouses;
             $this->data['warehouses_products'] = $warehouses_products;
-            $this->data['product']             = $product;
-            $this->data['variants']            = $this->products_model->getAllVariants();
-            $this->data['subunits']            = $this->site->getUnitsByBUID($product->unit);
-            $this->data['product_variants']    = $this->products_model->getProductOptions($id);
-            $this->data['combo_items']         = $product->type == 'combo' ? $this->products_model->getProductComboItems($product->id) : null;
-            $this->data['product_options']     = $id ? $this->products_model->getProductOptionsWithWH($id) : null;
-            $bc                                = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('edit_product')]];
-            $meta                              = ['page_title' => lang('edit_product'), 'bc' => $bc];
+            $this->data['product'] = $product;
+            $this->data['variants'] = $this->products_model->getAllVariants();
+            $this->data['subunits'] = $this->site->getUnitsByBUID($product->unit);
+            $this->data['product_variants'] = $this->products_model->getProductOptions($id);
+            $this->data['combo_items'] = $product->type == 'combo' ? $this->products_model->getProductComboItems($product->id) : null;
+            $this->data['product_options'] = $id ? $this->products_model->getProductOptionsWithWH($id) : null;
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('edit_product')]];
+            $meta = ['page_title' => lang('edit_product'), 'bc' => $bc];
             $this->page_construct('products/edit', $meta, $this->data);
         }
     }
@@ -1214,16 +1223,16 @@ class Products extends MY_Controller
 
             $reference_no = $this->input->post('reference_no');
             $warehouse_id = $this->input->post('warehouse');
-            $note         = $this->sma->clear_tags($this->input->post('note'));
+            $note = $this->sma->clear_tags($this->input->post('note'));
 
             $i = isset($_POST['product_id']) ? sizeof($_POST['product_id']) : 0;
             for ($r = 0; $r < $i; $r++) {
                 $product_id = $_POST['product_id'][$r];
-                $type       = $_POST['type'][$r];
-                $quantity   = $_POST['quantity'][$r];
-                $equantity  = $_POST['edit_quantity'][$r];
-                $serial     = $_POST['serial'][$r];
-                $variant    = isset($_POST['variant'][$r]) && !empty($_POST['variant'][$r]) ? $_POST['variant'][$r] : null;
+                $type = $_POST['type'][$r];
+                $quantity = $_POST['quantity'][$r];
+                $equantity = $_POST['edit_quantity'][$r];
+                $serial = $_POST['serial'][$r];
+                $variant = isset($_POST['variant'][$r]) && !empty($_POST['variant'][$r]) ? $_POST['variant'][$r] : null;
 
                 if (!$this->Settings->overselling && $type == 'subtraction') {
                     if ($variant) {
@@ -1249,12 +1258,12 @@ class Products extends MY_Controller
                 }
 
                 $products[] = [
-                    'product_id'   => $product_id,
-                    'type'         => $type,
-                    'quantity'     => $quantity,
+                    'product_id' => $product_id,
+                    'type' => $type,
+                    'quantity' => $quantity,
                     'warehouse_id' => $warehouse_id,
-                    'option_id'    => $variant,
-                    'serial_no'    => $serial,
+                    'option_id' => $variant,
+                    'serial_no' => $serial,
                 ];
             }
 
@@ -1265,27 +1274,27 @@ class Products extends MY_Controller
             }
 
             $data = [
-                'date'         => $date,
+                'date' => $date,
                 'reference_no' => $reference_no,
                 'warehouse_id' => $warehouse_id,
-                'note'         => $note,
-                'created_by'   => $this->session->userdata('user_id'),
+                'note' => $note,
+                'created_by' => $this->session->userdata('user_id'),
             ];
 
             if ($_FILES['document']['size'] > 0) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = $this->digital_file_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload('document')) {
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     redirect($_SERVER['HTTP_REFERER']);
                 }
-                $photo              = $this->upload->file_name;
+                $photo = $this->upload->file_name;
                 $data['attachment'] = $photo;
             }
 
@@ -1300,31 +1309,31 @@ class Products extends MY_Controller
             $inv_items = $this->products_model->getAdjustmentItems($id);
             // krsort($inv_items);
             foreach ($inv_items as $item) {
-                $c           = sha1(uniqid(mt_rand(), true));
-                $product     = $this->site->getProductByID($item->product_id);
-                $row         = json_decode('{}');
-                $row->id     = $item->product_id;
-                $row->code   = $product->code;
-                $row->name   = $product->name;
-                $row->qty    = $item->quantity;
-                $row->oqty   = $item->quantity;
-                $row->type   = $item->type;
-                $options     = $this->products_model->getProductOptions($product->id);
+                $c = sha1(uniqid(mt_rand(), true));
+                $product = $this->site->getProductByID($item->product_id);
+                $row = json_decode('{}');
+                $row->id = $item->product_id;
+                $row->code = $product->code;
+                $row->name = $product->name;
+                $row->qty = $item->quantity;
+                $row->oqty = $item->quantity;
+                $row->type = $item->type;
+                $options = $this->products_model->getProductOptions($product->id);
                 $row->option = $item->option_id ? $item->option_id : 0;
                 $row->serial = $item->serial_no ? $item->serial_no : '';
-                $ri          = $this->Settings->item_addition ? $product->id : $c;
+                $ri = $this->Settings->item_addition ? $product->id : $c;
 
                 $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'        => $row, 'options' => $options, ];
+                    'row' => $row, 'options' => $options,];
                 $c++;
             }
 
-            $this->data['adjustment']       = $adjustment;
+            $this->data['adjustment'] = $adjustment;
             $this->data['adjustment_items'] = json_encode($pr);
-            $this->data['error']            = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $this->data['warehouses']       = $this->site->getAllWarehouses();
-            $bc                             = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('edit_adjustment')]];
-            $meta                           = ['page_title' => lang('edit_adjustment'), 'bc' => $bc];
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['warehouses'] = $this->site->getAllWarehouses();
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('edit_adjustment')]];
+            $meta = ['page_title' => lang('edit_adjustment'), 'bc' => $bc];
             $this->page_construct('products/edit_adjustment', $meta, $this->data);
         }
     }
@@ -1346,15 +1355,15 @@ class Products extends MY_Controller
                 $data = [
                     'updated_by' => $this->session->userdata('user_id'),
                     'updated_at' => date('Y-m-d H:s:i'),
-                    'note'       => $note,
+                    'note' => $note,
                 ];
 
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = 'csv';
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload('csv_file')) {
                     $error = $this->upload->display_errors();
@@ -1365,7 +1374,7 @@ class Products extends MY_Controller
                 $csv = $this->upload->file_name;
 
                 $arrResult = [];
-                $handle    = fopen($this->digital_upload_path . $csv, 'r');
+                $handle = fopen($this->digital_upload_path . $csv, 'r');
                 if ($handle) {
                     while (($row = fgetcsv($handle, 5000, ',')) !== false) {
                         $arrResult[] = $row;
@@ -1373,26 +1382,26 @@ class Products extends MY_Controller
                     fclose($handle);
                 }
                 $titles = array_shift($arrResult);
-                $keys   = ['product_code', 'product_name', 'product_variant', 'expected', 'counted'];
-                $final  = [];
+                $keys = ['product_code', 'product_name', 'product_variant', 'expected', 'counted'];
+                $final = [];
                 foreach ($arrResult as $key => $value) {
                     $final[] = array_combine($keys, $value);
                 }
                 // $this->sma->print_arrays($final);
-                $rw          = 2;
+                $rw = 2;
                 $differences = 0;
-                $matches     = 0;
+                $matches = 0;
                 foreach ($final as $pr) {
                     if ($product = $this->products_model->getProductByCode(trim($pr['product_code']))) {
                         $pr['counted'] = !empty($pr['counted']) ? $pr['counted'] : 0;
                         if ($pr['expected'] == $pr['counted']) {
                             $matches++;
                         } else {
-                            $pr['stock_count_id']     = $id;
-                            $pr['product_id']         = $product->id;
-                            $pr['cost']               = $product->cost;
+                            $pr['stock_count_id'] = $id;
+                            $pr['product_id'] = $product->id;
+                            $pr['cost'] = $product->cost;
                             $pr['product_variant_id'] = empty($pr['product_variant']) ? null : $this->products_model->getProductVariantID($pr['product_id'], $pr['product_variant']);
-                            $products[]               = $pr;
+                            $products[] = $pr;
                             $differences++;
                         }
                     } else {
@@ -1402,11 +1411,11 @@ class Products extends MY_Controller
                     $rw++;
                 }
 
-                $data['final_file']  = $csv;
+                $data['final_file'] = $csv;
                 $data['differences'] = $differences;
-                $data['matches']     = $matches;
-                $data['missing']     = $stock_count->rows - ($rw - 2);
-                $data['finalized']   = 1;
+                $data['matches'] = $matches;
+                $data['missing'] = $stock_count->rows - ($rw - 2);
+                $data['finalized'] = 1;
             }
 
             // $this->sma->print_arrays($data, $products);
@@ -1416,11 +1425,11 @@ class Products extends MY_Controller
             $this->session->set_flashdata('message', lang('stock_count_finalized'));
             admin_redirect('products/stock_counts');
         } else {
-            $this->data['error']       = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['stock_count'] = $stock_count;
-            $this->data['warehouse']   = $this->site->getWarehouseByID($stock_count->warehouse_id);
-            $bc                        = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => admin_url('products/stock_counts'), 'page' => lang('stock_counts')], ['link' => '#', 'page' => lang('finalize_count')]];
-            $meta                      = ['page_title' => lang('finalize_count'), 'bc' => $bc];
+            $this->data['warehouse'] = $this->site->getWarehouseByID($stock_count->warehouse_id);
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => admin_url('products/stock_counts'), 'page' => lang('stock_counts')], ['link' => '#', 'page' => lang('finalize_count')]];
+            $meta = ['page_title' => lang('finalize_count'), 'bc' => $bc];
             $this->page_construct('products/finalize_count', $meta, $this->data);
         }
     }
@@ -1436,7 +1445,7 @@ class Products extends MY_Controller
         if ($rows) {
             foreach ($rows as $row) {
                 $variants = $this->products_model->getProductOptions($row->id);
-                $pr[]     = ['id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'code' => $row->code, 'name' => $row->name, 'price' => $row->price, 'qty' => 1, 'variants' => $variants];
+                $pr[] = ['id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'code' => $row->code, 'name' => $row->name, 'price' => $row->price, 'qty' => 1, 'variants' => $variants];
             }
             $this->sma->send_json($pr);
         } else {
@@ -1472,7 +1481,7 @@ class Products extends MY_Controller
         $this->sma->checkPermissions('stock_count', true);
 
         if ((!$this->Owner || !$this->Admin) && !$warehouse_id) {
-            $user         = $this->site->getUser();
+            $user = $this->site->getUser();
             $warehouse_id = $user->warehouse_id;
         }
         $detail_link = anchor('admin/products/view_count/$1', '<label class="label label-primary pointer">' . lang('details') . '</label>', 'class="tip" title="' . lang('details') . '" data-toggle="modal" data-target="#myModal"');
@@ -1496,7 +1505,7 @@ class Products extends MY_Controller
         $supplier = $this->input->get('supplier') ? $this->input->get('supplier') : null;
 
         if ((!$this->Owner || !$this->Admin) && !$warehouse_id) {
-            $user         = $this->site->getUser();
+            $user = $this->site->getUser();
             $warehouse_id = $user->warehouse_id;
         }
         $detail_link = anchor('admin/products/view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('product_details'));
@@ -1527,19 +1536,19 @@ class Products extends MY_Controller
         $this->load->library('datatables');
         if ($warehouse_id) {
             $this->datatables
-            ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, COALESCE(wp.quantity, 0) as quantity, {$this->db->dbprefix('units')}.code as unit, wp.rack as rack, alert_quantity", false)
-            ->from('products');
+                ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, COALESCE(wp.quantity, 0) as quantity, {$this->db->dbprefix('units')}.code as unit, wp.rack as rack, alert_quantity", false)
+                ->from('products');
             if ($this->Settings->display_all_products) {
                 $this->datatables->join("( SELECT product_id, quantity, rack from {$this->db->dbprefix('warehouses_products')} WHERE warehouse_id = {$warehouse_id}) wp", 'products.id=wp.product_id', 'left');
             } else {
                 $this->datatables->join('warehouses_products wp', 'products.id=wp.product_id', 'left')
-                ->where('wp.warehouse_id', $warehouse_id)
-                ->where('wp.quantity !=', 0);
+                    ->where('wp.warehouse_id', $warehouse_id)
+                    ->where('wp.quantity !=', 0);
             }
             $this->datatables->join('categories', 'products.category_id=categories.id', 'left')
-            ->join('units', 'products.unit=units.id', 'left')
-            ->join('brands', 'products.brand=brands.id', 'left');
-        // ->group_by("products.id");
+                ->join('units', 'products.unit=units.id', 'left')
+                ->join('brands', 'products.brand=brands.id', 'left');
+            // ->group_by("products.id");
         } else {
             $this->datatables
                 ->select($this->db->dbprefix('products') . ".id as productid, {$this->db->dbprefix('products')}.image as image, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, {$this->db->dbprefix('brands')}.name as brand, {$this->db->dbprefix('categories')}.name as cname, cost as cost, price as price, COALESCE(quantity, 0) as quantity, {$this->db->dbprefix('units')}.code as unit, '' as rack, alert_quantity", false)
@@ -1559,12 +1568,12 @@ class Products extends MY_Controller
         }
         if ($supplier) {
             $this->datatables->group_start()
-            ->where('supplier1', $supplier)
-            ->or_where('supplier2', $supplier)
-            ->or_where('supplier3', $supplier)
-            ->or_where('supplier4', $supplier)
-            ->or_where('supplier5', $supplier)
-            ->group_end();
+                ->where('supplier1', $supplier)
+                ->or_where('supplier2', $supplier)
+                ->or_where('supplier3', $supplier)
+                ->or_where('supplier4', $supplier)
+                ->or_where('supplier5', $supplier)
+                ->group_end();
         }
         $this->datatables->add_column('Actions', $action, 'productid, image, code, name');
         echo $this->datatables->generate();
@@ -1603,12 +1612,12 @@ class Products extends MY_Controller
         if ($this->form_validation->run() == true) {
             if (isset($_FILES['userfile'])) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = 'csv';
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = true;
-                $config['encrypt_name']  = true;
-                $config['max_filename']  = 25;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = true;
+                $config['encrypt_name'] = true;
+                $config['max_filename'] = 25;
                 $this->upload->initialize($config);
 
                 if (!$this->upload->do_upload()) {
@@ -1620,58 +1629,58 @@ class Products extends MY_Controller
                 $csv = $this->upload->file_name;
 
                 $arrResult = [];
-                $handle    = fopen($this->digital_upload_path . $csv, 'r');
+                $handle = fopen($this->digital_upload_path . $csv, 'r');
                 if ($handle) {
                     while (($row = fgetcsv($handle, 5000, ',')) !== false) {
                         $arrResult[] = $row;
                     }
                     fclose($handle);
                 }
-                $titles  = array_shift($arrResult);
+                $titles = array_shift($arrResult);
                 $updated = 0;
-                $items   = [];
+                $items = [];
                 foreach ($arrResult as $key => $value) {
                     $supplier_name = isset($value[24]) ? trim($value[24]) : '';
-                    $supplier      = $supplier_name ? $this->products_model->getSupplierByName($supplier_name) : false;
+                    $supplier = $supplier_name ? $this->products_model->getSupplierByName($supplier_name) : false;
 
                     $item = [
-                        'name'              => isset($value[0]) ? trim($value[0]) : '',
-                        'code'              => isset($value[1]) ? trim($value[1]) : '',
+                        'name' => isset($value[0]) ? trim($value[0]) : '',
+                        'code' => isset($value[1]) ? trim($value[1]) : '',
                         'barcode_symbology' => isset($value[2]) ? mb_strtolower(trim($value[2]), 'UTF-8') : '',
-                        'brand'             => isset($value[3]) ? trim($value[3]) : '',
-                        'category_code'     => isset($value[4]) ? trim($value[4]) : '',
-                        'unit'              => isset($value[5]) ? trim($value[5]) : '',
-                        'sale_unit'         => isset($value[6]) ? trim($value[6]) : '',
-                        'purchase_unit'     => isset($value[7]) ? trim($value[7]) : '',
-                        'cost'              => isset($value[8]) ? trim($value[8]) : '',
-                        'price'             => isset($value[9]) ? trim($value[9]) : '',
-                        'alert_quantity'    => isset($value[10]) ? trim($value[10]) : '',
-                        'tax_rate'          => isset($value[11]) ? trim($value[11]) : '',
-                        'tax_method'        => isset($value[12]) ? (trim($value[12]) == 'exclusive' ? 1 : 0) : '',
-                        'image'             => isset($value[13]) ? trim($value[13]) : '',
-                        'subcategory_code'  => isset($value[14]) ? trim($value[14]) : '',
-                        'variants'          => isset($value[15]) ? trim($value[15]) : '',
-                        'cf1'               => isset($value[16]) ? trim($value[16]) : '',
-                        'cf2'               => isset($value[17]) ? trim($value[17]) : '',
-                        'cf3'               => isset($value[18]) ? trim($value[18]) : '',
-                        'cf4'               => isset($value[19]) ? trim($value[19]) : '',
-                        'cf5'               => isset($value[20]) ? trim($value[20]) : '',
-                        'cf6'               => isset($value[21]) ? trim($value[21]) : '',
-                        'hsn_code'          => isset($value[22]) ? trim($value[22]) : '',
-                        'second_name'       => isset($value[23]) ? trim($value[23]) : '',
-                        'supplier1'         => $supplier ? $supplier->id : null,
+                        'brand' => isset($value[3]) ? trim($value[3]) : '',
+                        'category_code' => isset($value[4]) ? trim($value[4]) : '',
+                        'unit' => isset($value[5]) ? trim($value[5]) : '',
+                        'sale_unit' => isset($value[6]) ? trim($value[6]) : '',
+                        'purchase_unit' => isset($value[7]) ? trim($value[7]) : '',
+                        'cost' => isset($value[8]) ? trim($value[8]) : '',
+                        'price' => isset($value[9]) ? trim($value[9]) : '',
+                        'alert_quantity' => isset($value[10]) ? trim($value[10]) : '',
+                        'tax_rate' => isset($value[11]) ? trim($value[11]) : '',
+                        'tax_method' => isset($value[12]) ? (trim($value[12]) == 'exclusive' ? 1 : 0) : '',
+                        'image' => isset($value[13]) ? trim($value[13]) : '',
+                        'subcategory_code' => isset($value[14]) ? trim($value[14]) : '',
+                        'variants' => isset($value[15]) ? trim($value[15]) : '',
+                        'cf1' => isset($value[16]) ? trim($value[16]) : '',
+                        'cf2' => isset($value[17]) ? trim($value[17]) : '',
+                        'cf3' => isset($value[18]) ? trim($value[18]) : '',
+                        'cf4' => isset($value[19]) ? trim($value[19]) : '',
+                        'cf5' => isset($value[20]) ? trim($value[20]) : '',
+                        'cf6' => isset($value[21]) ? trim($value[21]) : '',
+                        'hsn_code' => isset($value[22]) ? trim($value[22]) : '',
+                        'second_name' => isset($value[23]) ? trim($value[23]) : '',
+                        'supplier1' => $supplier ? $supplier->id : null,
                         'supplier1_part_no' => isset($value[25]) ? trim($value[25]) : '',
-                        'supplier1price'    => isset($value[26]) ? trim($value[26]) : '',
-                        'slug'              => $this->sma->slug($value[0]),
+                        'supplier1price' => isset($value[26]) ? trim($value[26]) : '',
+                        'slug' => $this->sma->slug($value[0]),
                     ];
 
                     if ($catd = $this->products_model->getCategoryByCode($item['category_code'])) {
-                        $tax_details   = $this->products_model->getTaxRateByName($item['tax_rate']);
-                        $prsubcat      = $this->products_model->getCategoryByCode($item['subcategory_code']);
-                        $brand         = $this->products_model->getBrandByName($item['brand']);
-                        $unit          = $this->products_model->getUnitByCode($item['unit']);
-                        $base_unit     = $unit ? $unit->id : null;
-                        $sale_unit     = $base_unit;
+                        $tax_details = $this->products_model->getTaxRateByName($item['tax_rate']);
+                        $prsubcat = $this->products_model->getCategoryByCode($item['subcategory_code']);
+                        $brand = $this->products_model->getBrandByName($item['brand']);
+                        $unit = $this->products_model->getUnitByCode($item['unit']);
+                        $base_unit = $unit ? $unit->id : null;
+                        $sale_unit = $base_unit;
                         $purcahse_unit = $base_unit;
                         if ($base_unit) {
                             $units = $this->site->getUnitsByBUID($base_unit);
@@ -1689,12 +1698,12 @@ class Products extends MY_Controller
                         }
 
                         unset($item['category_code'], $item['subcategory_code']);
-                        $item['unit']           = $base_unit;
-                        $item['sale_unit']      = $sale_unit;
-                        $item['category_id']    = $catd->id;
-                        $item['purchase_unit']  = $purcahse_unit;
-                        $item['brand']          = $brand ? $brand->id : null;
-                        $item['tax_rate']       = $tax_details ? $tax_details->id : null;
+                        $item['unit'] = $base_unit;
+                        $item['sale_unit'] = $sale_unit;
+                        $item['category_id'] = $catd->id;
+                        $item['purchase_unit'] = $purcahse_unit;
+                        $item['brand'] = $brand ? $brand->id : null;
+                        $item['tax_rate'] = $tax_details ? $tax_details->id : null;
                         $item['subcategory_id'] = $prsubcat ? $prsubcat->id : null;
 
                         if ($product = $this->products_model->getProductByCode($item['code'])) {
@@ -1745,14 +1754,14 @@ class Products extends MY_Controller
                 admin_redirect('products/import_csv');
             }
 
-            $this->data['error']    = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['userfile'] = ['name' => 'userfile',
-                'id'                          => 'userfile',
-                'type'                        => 'text',
-                'value'                       => $this->form_validation->set_value('userfile'),
+                'id' => 'userfile',
+                'type' => 'text',
+                'value' => $this->form_validation->set_value('userfile'),
             ];
 
-            $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('import_products_by_csv')]];
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('import_products_by_csv')]];
             $meta = ['page_title' => lang('import_products_by_csv'), 'bc' => $bc];
             $this->page_construct('products/import_csv', $meta, $this->data);
         }
@@ -1764,18 +1773,18 @@ class Products extends MY_Controller
 
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         if ($this->Owner || $this->Admin || !$this->session->userdata('warehouse_id')) {
-            $this->data['warehouses']   = $this->site->getAllWarehouses();
+            $this->data['warehouses'] = $this->site->getAllWarehouses();
             $this->data['warehouse_id'] = $warehouse_id;
-            $this->data['warehouse']    = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
+            $this->data['warehouse'] = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
         } else {
-            $this->data['warehouses']   = null;
+            $this->data['warehouses'] = null;
             $this->data['warehouse_id'] = $this->session->userdata('warehouse_id');
-            $this->data['warehouse']    = $this->session->userdata('warehouse_id') ? $this->site->getWarehouseByID($this->session->userdata('warehouse_id')) : null;
+            $this->data['warehouse'] = $this->session->userdata('warehouse_id') ? $this->site->getWarehouseByID($this->session->userdata('warehouse_id')) : null;
         }
 
         $this->data['supplier'] = $this->input->get('supplier') ? $this->site->getCompanyByID($this->input->get('supplier')) : null;
-        $bc                     = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('products')]];
-        $meta                   = ['page_title' => lang('products'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('products')]];
+        $meta = ['page_title' => lang('products'), 'bc' => $bc];
         $this->page_construct('products/index', $meta, $this->data);
     }
 
@@ -1794,16 +1803,19 @@ class Products extends MY_Controller
         if ($pr_details->type == 'combo') {
             $this->data['combo_items'] = $this->products_model->getProductComboItems($id);
         }
-        $this->data['product']     = $pr_details;
-        $this->data['unit']        = $this->site->getUnitByID($pr_details->unit);
-        $this->data['brand']       = $this->site->getBrandByID($pr_details->brand);
-        $this->data['images']      = $this->products_model->getProductPhotos($id);
-        $this->data['category']    = $this->site->getCategoryByID($pr_details->category_id);
+        $obj_details='';
+        $this->data['product'] = $pr_details;
+        if ($pr_details->cf4) $obj_details = $this->sma->makeObj($pr_details->cf4);
+        $this->data['allergy_fact'] = $obj_details;
+        $this->data['unit'] = $this->site->getUnitByID($pr_details->unit);
+        $this->data['brand'] = $this->site->getBrandByID($pr_details->brand);
+        $this->data['images'] = $this->products_model->getProductPhotos($id);
+        $this->data['category'] = $this->site->getCategoryByID($pr_details->category_id);
         $this->data['subcategory'] = $pr_details->subcategory_id ? $this->site->getCategoryByID($pr_details->subcategory_id) : null;
-        $this->data['tax_rate']    = $pr_details->tax_rate ? $this->site->getTaxRateByID($pr_details->tax_rate) : null;
-        $this->data['warehouses']  = $this->products_model->getAllWarehousesWithPQ($id);
-        $this->data['options']     = $this->products_model->getProductOptionsWithWH($id);
-        $this->data['variants']    = $this->products_model->getProductOptions($id);
+        $this->data['tax_rate'] = $pr_details->tax_rate ? $this->site->getTaxRateByID($pr_details->tax_rate) : null;
+        $this->data['warehouses'] = $this->products_model->getAllWarehousesWithPQ($id);
+        $this->data['options'] = $this->products_model->getProductOptionsWithWH($id);
+        $this->data['variants'] = $this->products_model->getProductOptions($id);
 
         $this->load->view($this->theme . 'products/modal_view', $this->data);
     }
@@ -1821,17 +1833,20 @@ class Products extends MY_Controller
         if ($pr_details->type == 'combo') {
             $this->data['combo_items'] = $this->products_model->getProductComboItems($id);
         }
-        $this->data['product']          = $pr_details;
-        $this->data['unit']             = $this->site->getUnitByID($pr_details->unit);
-        $this->data['brand']            = $this->site->getBrandByID($pr_details->brand);
-        $this->data['images']           = $this->products_model->getProductPhotos($id);
-        $this->data['category']         = $this->site->getCategoryByID($pr_details->category_id);
-        $this->data['subcategory']      = $pr_details->subcategory_id ? $this->site->getCategoryByID($pr_details->subcategory_id) : null;
-        $this->data['tax_rate']         = $pr_details->tax_rate ? $this->site->getTaxRateByID($pr_details->tax_rate) : null;
+        $obj_details='';
+        $this->data['product'] = $pr_details;
+        if ($pr_details->cf4) $obj_details = $this->sma->makeObj($pr_details->cf4);
+        $this->data['allergy_fact'] = $obj_details;
+        $this->data['unit'] = $this->site->getUnitByID($pr_details->unit);
+        $this->data['brand'] = $this->site->getBrandByID($pr_details->brand);
+        $this->data['images'] = $this->products_model->getProductPhotos($id);
+        $this->data['category'] = $this->site->getCategoryByID($pr_details->category_id);
+        $this->data['subcategory'] = $pr_details->subcategory_id ? $this->site->getCategoryByID($pr_details->subcategory_id) : null;
+        $this->data['tax_rate'] = $pr_details->tax_rate ? $this->site->getTaxRateByID($pr_details->tax_rate) : null;
         $this->data['popup_attributes'] = $this->popup_attributes;
-        $this->data['warehouses']       = $this->products_model->getAllWarehousesWithPQ($id);
-        $this->data['options']          = $this->products_model->getProductOptionsWithWH($id);
-        $this->data['variants']         = $this->products_model->getProductOptions($id);
+        $this->data['warehouses'] = $this->products_model->getAllWarehousesWithPQ($id);
+        $this->data['options'] = $this->products_model->getProductOptionsWithWH($id);
+        $this->data['variants'] = $this->products_model->getProductOptions($id);
 
         $name = $pr_details->code . '_' . str_replace('/', '_', $pr_details->name) . '.pdf';
         if ($view) {
@@ -1852,74 +1867,74 @@ class Products extends MY_Controller
         $this->form_validation->set_rules('style', lang('style'), 'required');
 
         if ($this->form_validation->run() == true) {
-            $style      = $this->input->post('style');
-            $bci_size   = ($style == 10 || $style == 12 ? 50 : ($style == 14 || $style == 18 ? 30 : 20));
+            $style = $this->input->post('style');
+            $bci_size = ($style == 10 || $style == 12 ? 50 : ($style == 14 || $style == 18 ? 30 : 20));
             $currencies = $this->site->getAllCurrencies();
-            $s          = isset($_POST['product']) ? sizeof($_POST['product']) : 0;
+            $s = isset($_POST['product']) ? sizeof($_POST['product']) : 0;
             if ($s < 1) {
                 $this->session->set_flashdata('error', lang('no_product_selected'));
                 admin_redirect('products/print_barcodes');
             }
             for ($m = 0; $m < $s; $m++) {
-                $pid            = $_POST['product'][$m];
-                $quantity       = $_POST['quantity'][$m];
-                $product        = $this->products_model->getProductWithCategory($pid);
+                $pid = $_POST['product'][$m];
+                $quantity = $_POST['quantity'][$m];
+                $product = $this->products_model->getProductWithCategory($pid);
                 $product->price = $this->input->post('check_promo') ? ($product->promotion ? $product->promo_price : $product->price) : $product->price;
                 if ($variants = $this->products_model->getProductOptions($pid)) {
                     foreach ($variants as $option) {
                         if ($this->input->post('vt_' . $product->id . '_' . $option->id)) {
                             $barcodes[] = [
-                                'site'    => $this->input->post('site_name') ? $this->Settings->site_name : false,
-                                'name'    => $this->input->post('product_name') ? $product->name . ' - ' . $option->name : false,
-                                'image'   => $this->input->post('product_image') ? $product->image : false,
+                                'site' => $this->input->post('site_name') ? $this->Settings->site_name : false,
+                                'name' => $this->input->post('product_name') ? $product->name . ' - ' . $option->name : false,
+                                'image' => $this->input->post('product_image') ? $product->image : false,
                                 'barcode' => $product->code . $this->Settings->barcode_separator . $option->id,
-                                'bcs'     => 'code128',
-                                'bcis'    => $bci_size,
+                                'bcs' => 'code128',
+                                'bcis' => $bci_size,
                                 // 'barcode' => $this->product_barcode($product->code . $this->Settings->barcode_separator . $option->id, 'code128', $bci_size),
-                                'price'      => $this->input->post('price') ? $this->sma->formatMoney($option->price != 0 ? ($product->price + $option->price) : $product->price, 'none') : false,
-                                'rprice'     => $this->input->post('price') ? ($option->price != 0 ? ($product->price + $option->price) : $product->price) : false,
-                                'unit'       => $this->input->post('unit') ? $product->unit : false,
-                                'category'   => $this->input->post('category') ? $product->category : false,
+                                'price' => $this->input->post('price') ? $this->sma->formatMoney($option->price != 0 ? ($product->price + $option->price) : $product->price, 'none') : false,
+                                'rprice' => $this->input->post('price') ? ($option->price != 0 ? ($product->price + $option->price) : $product->price) : false,
+                                'unit' => $this->input->post('unit') ? $product->unit : false,
+                                'category' => $this->input->post('category') ? $product->category : false,
                                 'currencies' => $this->input->post('currencies'),
-                                'variants'   => $this->input->post('variants') ? $variants : false,
-                                'quantity'   => $quantity,
+                                'variants' => $this->input->post('variants') ? $variants : false,
+                                'quantity' => $quantity,
                             ];
                         }
                     }
                 } else {
                     $barcodes[] = [
-                        'site'  => $this->input->post('site_name') ? $this->Settings->site_name : false,
-                        'name'  => $this->input->post('product_name') ? $product->name : false,
+                        'site' => $this->input->post('site_name') ? $this->Settings->site_name : false,
+                        'name' => $this->input->post('product_name') ? $product->name : false,
                         'image' => $this->input->post('product_image') ? $product->image : false,
                         // 'barcode' => $this->product_barcode($product->code, $product->barcode_symbology, $bci_size),
-                        'barcode'    => $product->code,
-                        'bcs'        => $product->barcode_symbology,
-                        'bcis'       => $bci_size,
-                        'price'      => $this->input->post('price') ? $this->sma->formatMoney($product->price, 'none') : false,
-                        'rprice'     => $this->input->post('price') ? $product->price : false,
-                        'unit'       => $this->input->post('unit') ? $product->unit : false,
-                        'category'   => $this->input->post('category') ? $product->category : false,
+                        'barcode' => $product->code,
+                        'bcs' => $product->barcode_symbology,
+                        'bcis' => $bci_size,
+                        'price' => $this->input->post('price') ? $this->sma->formatMoney($product->price, 'none') : false,
+                        'rprice' => $this->input->post('price') ? $product->price : false,
+                        'unit' => $this->input->post('unit') ? $product->unit : false,
+                        'category' => $this->input->post('category') ? $product->category : false,
                         'currencies' => $this->input->post('currencies'),
-                        'variants'   => false,
-                        'quantity'   => $quantity,
+                        'variants' => false,
+                        'quantity' => $quantity,
                     ];
                 }
             }
-            $this->data['barcodes']   = $barcodes;
+            $this->data['barcodes'] = $barcodes;
             $this->data['currencies'] = $currencies;
-            $this->data['style']      = $style;
-            $this->data['items']      = false;
-            $bc                       = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('print_barcodes')]];
-            $meta                     = ['page_title' => lang('print_barcodes'), 'bc' => $bc];
+            $this->data['style'] = $style;
+            $this->data['items'] = false;
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('print_barcodes')]];
+            $meta = ['page_title' => lang('print_barcodes'), 'bc' => $bc];
             $this->page_construct('products/print_barcodes', $meta, $this->data);
         } else {
             if ($this->input->get('purchase') || $this->input->get('transfer')) {
                 if ($this->input->get('purchase')) {
                     $purchase_id = $this->input->get('purchase', true);
-                    $items       = $this->products_model->getPurchaseItems($purchase_id);
+                    $items = $this->products_model->getPurchaseItems($purchase_id);
                 } elseif ($this->input->get('transfer')) {
                     $transfer_id = $this->input->get('transfer', true);
-                    $items       = $this->products_model->getTransferItems($transfer_id);
+                    $items = $this->products_model->getTransferItems($transfer_id);
                 }
                 if ($items) {
                     foreach ($items as $item) {
@@ -1989,8 +2004,8 @@ class Products extends MY_Controller
 
             $this->data['items'] = isset($pr) ? json_encode($pr) : false;
             $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $bc                  = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('print_barcodes')]];
-            $meta                = ['page_title' => lang('print_barcodes'), 'bc' => $bc];
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('print_barcodes')]];
+            $meta = ['page_title' => lang('print_barcodes'), 'bc' => $bc];
             $this->page_construct('products/print_barcodes', $meta, $this->data);
         }
     }
@@ -2027,7 +2042,7 @@ class Products extends MY_Controller
                     redirect($_SERVER['HTTP_REFERER']);
                 } elseif ($this->input->post('form_action') == 'labels') {
                     foreach ($_POST['val'] as $id) {
-                        $row               = $this->products_model->getProductByID($id);
+                        $row = $this->products_model->getProductByID($id);
                         $selected_variants = false;
                         if ($variants = $this->products_model->getProductOptions($row->id)) {
                             foreach ($variants as $variant) {
@@ -2039,8 +2054,8 @@ class Products extends MY_Controller
 
                     $this->data['items'] = isset($pr) ? json_encode($pr) : false;
                     $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-                    $bc                  = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('print_barcodes')]];
-                    $meta                = ['page_title' => lang('print_barcodes'), 'bc' => $bc];
+                    $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('print_barcodes')]];
+                    $meta = ['page_title' => lang('print_barcodes'), 'bc' => $bc];
                     $this->page_construct('products/print_barcodes', $meta, $this->data);
                 } elseif ($this->input->post('form_action') == 'export_excel') {
                     $this->load->library('excel');
@@ -2079,8 +2094,8 @@ class Products extends MY_Controller
 
                     $row = 2;
                     foreach ($_POST['val'] as $id) {
-                        $product   = $this->products_model->getProductDetail($id);
-                        $brand     = $this->site->getBrandByID($product->brand);
+                        $product = $this->products_model->getProductDetail($id);
+                        $brand = $this->site->getBrandByID($product->brand);
                         $base_unit = $sale_unit = $purchase_unit = '';
                         if ($units = $this->site->getUnitsByBUID($product->unit)) {
                             foreach ($units as $u) {
@@ -2095,7 +2110,7 @@ class Products extends MY_Controller
                                 }
                             }
                         }
-                        $variants         = $this->products_model->getProductOptions($id);
+                        $variants = $this->products_model->getProductOptions($id);
                         $product_variants = '';
                         if ($variants) {
                             $i = 1;
@@ -2186,21 +2201,21 @@ class Products extends MY_Controller
             die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . admin_url('welcome') . "'; }, 10);</script>");
         }
 
-        $analyzed  = $this->sma->analyze_term($term);
-        $sr        = $analyzed['term'];
+        $analyzed = $this->sma->analyze_term($term);
+        $sr = $analyzed['term'];
         $option_id = $analyzed['option_id'];
-        $sr        = addslashes($sr);
+        $sr = addslashes($sr);
 
         $rows = $this->products_model->getQASuggestions($sr);
         if ($rows) {
             foreach ($rows as $row) {
-                $row->qty    = 1;
-                $options     = $this->products_model->getProductOptions($row->id);
+                $row->qty = 1;
+                $options = $this->products_model->getProductOptions($row->id);
                 $row->option = $option_id;
                 $row->serial = '';
-                $c           = sha1(uniqid(mt_rand(), true));
-                $pr[]        = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'            => $row, 'options' => $options, ];
+                $c = sha1(uniqid(mt_rand(), true));
+                $pr[] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
+                    'row' => $row, 'options' => $options,];
             }
             $this->sma->send_json($pr);
         } else {
@@ -2216,15 +2231,15 @@ class Products extends MY_Controller
 
         if ($this->Owner || $this->Admin || !$this->session->userdata('warehouse_id')) {
             $this->data['warehouses'] = $this->site->getAllWarehouses();
-            $this->data['warehouse']  = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
+            $this->data['warehouse'] = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
         } else {
             $this->data['warehouses'] = null;
-            $this->data['warehouse']  = $this->session->userdata('warehouse_id') ? $this->site->getWarehouseByID($this->session->userdata('warehouse_id')) : null;
+            $this->data['warehouse'] = $this->session->userdata('warehouse_id') ? $this->site->getWarehouseByID($this->session->userdata('warehouse_id')) : null;
         }
 
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $bc                  = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('quantity_adjustments')]];
-        $meta                = ['page_title' => lang('quantity_adjustments'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('quantity_adjustments')]];
+        $meta = ['page_title' => lang('quantity_adjustments'), 'bc' => $bc];
         $this->page_construct('products/quantity_adjustments', $meta, $this->data);
     }
 
@@ -2235,8 +2250,8 @@ class Products extends MY_Controller
         $this->form_validation->set_rules('rack', lang('rack_location'), 'trim|required');
 
         if ($this->form_validation->run() == true) {
-            $data = ['rack'    => $this->input->post('rack'),
-                'product_id'   => $product_id,
+            $data = ['rack' => $this->input->post('rack'),
+                'product_id' => $product_id,
                 'warehouse_id' => $warehouse_id,
             ];
         } elseif ($this->input->post('set_rack')) {
@@ -2248,12 +2263,12 @@ class Products extends MY_Controller
             $this->session->set_flashdata('message', lang('rack_set'));
             admin_redirect('products/' . $warehouse_id);
         } else {
-            $this->data['error']        = validation_errors() ? validation_errors() : $this->session->flashdata('error');
+            $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
             $this->data['warehouse_id'] = $warehouse_id;
-            $this->data['product']      = $this->site->getProductByID($product_id);
-            $wh_pr                      = $this->products_model->getProductQuantity($product_id, $warehouse_id);
-            $this->data['rack']         = $wh_pr['rack'];
-            $this->data['modal_js']     = $this->site->modal_js();
+            $this->data['product'] = $this->site->getProductByID($product_id);
+            $wh_pr = $this->products_model->getProductQuantity($product_id, $warehouse_id);
+            $this->data['rack'] = $wh_pr['rack'];
+            $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'products/set_rack', $this->data);
         }
     }
@@ -2264,16 +2279,16 @@ class Products extends MY_Controller
 
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         if ($this->Owner || $this->Admin || !$this->session->userdata('warehouse_id')) {
-            $this->data['warehouses']   = $this->site->getAllWarehouses();
+            $this->data['warehouses'] = $this->site->getAllWarehouses();
             $this->data['warehouse_id'] = $warehouse_id;
-            $this->data['warehouse']    = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
+            $this->data['warehouse'] = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
         } else {
-            $this->data['warehouses']   = null;
+            $this->data['warehouses'] = null;
             $this->data['warehouse_id'] = $this->session->userdata('warehouse_id');
-            $this->data['warehouse']    = $this->session->userdata('warehouse_id') ? $this->site->getWarehouseByID($this->session->userdata('warehouse_id')) : null;
+            $this->data['warehouse'] = $this->session->userdata('warehouse_id') ? $this->site->getWarehouseByID($this->session->userdata('warehouse_id')) : null;
         }
 
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('stock_counts')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('stock_counts')]];
         $meta = ['page_title' => lang('stock_counts'), 'bc' => $bc];
         $this->page_construct('products/stock_counts', $meta, $this->data);
     }
@@ -2312,12 +2327,12 @@ class Products extends MY_Controller
 
             if (isset($_FILES['userfile'])) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = 'csv';
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = true;
-                $config['encrypt_name']  = true;
-                $config['max_filename']  = 25;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = true;
+                $config['encrypt_name'] = true;
+                $config['max_filename'] = 25;
                 $this->upload->initialize($config);
 
                 if (!$this->upload->do_upload()) {
@@ -2329,7 +2344,7 @@ class Products extends MY_Controller
                 $csv = $this->upload->file_name;
 
                 $arrResult = [];
-                $handle    = fopen($this->digital_upload_path . $csv, 'r');
+                $handle = fopen($this->digital_upload_path . $csv, 'r');
                 if ($handle) {
                     while (($row = fgetcsv($handle, 1000, ',')) !== false) {
                         $arrResult[] = $row;
@@ -2365,9 +2380,9 @@ class Products extends MY_Controller
             admin_redirect('products');
         } else {
             $this->data['userfile'] = ['name' => 'userfile',
-                'id'                          => 'userfile',
-                'type'                        => 'text',
-                'value'                       => $this->form_validation->set_value('userfile'),
+                'id' => 'userfile',
+                'type' => 'text',
+                'value' => $this->form_validation->set_value('userfile'),
             ];
             $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'products/update_price', $this->data);
@@ -2387,21 +2402,24 @@ class Products extends MY_Controller
         if ($pr_details->type == 'combo') {
             $this->data['combo_items'] = $this->products_model->getProductComboItems($id);
         }
-        $this->data['product']          = $pr_details;
-        $this->data['unit']             = $this->site->getUnitByID($pr_details->unit);
-        $this->data['brand']            = $this->site->getBrandByID($pr_details->brand);
-        $this->data['images']           = $this->products_model->getProductPhotos($id);
-        $this->data['category']         = $this->site->getCategoryByID($pr_details->category_id);
-        $this->data['subcategory']      = $pr_details->subcategory_id ? $this->site->getCategoryByID($pr_details->subcategory_id) : null;
-        $this->data['tax_rate']         = $pr_details->tax_rate ? $this->site->getTaxRateByID($pr_details->tax_rate) : null;
+        $obj_details='';
+        $this->data['product'] = $pr_details;
+        if ($pr_details->cf4) $obj_details = $this->sma->makeObj($pr_details->cf4);
+        $this->data['allergy_fact'] = $obj_details;
+        $this->data['unit'] = $this->site->getUnitByID($pr_details->unit);
+        $this->data['brand'] = $this->site->getBrandByID($pr_details->brand);
+        $this->data['images'] = $this->products_model->getProductPhotos($id);
+        $this->data['category'] = $this->site->getCategoryByID($pr_details->category_id);
+        $this->data['subcategory'] = $pr_details->subcategory_id ? $this->site->getCategoryByID($pr_details->subcategory_id) : null;
+        $this->data['tax_rate'] = $pr_details->tax_rate ? $this->site->getTaxRateByID($pr_details->tax_rate) : null;
         $this->data['popup_attributes'] = $this->popup_attributes;
-        $this->data['warehouses']       = $this->products_model->getAllWarehousesWithPQ($id);
-        $this->data['options']          = $this->products_model->getProductOptionsWithWH($id);
-        $this->data['variants']         = $this->products_model->getProductOptions($id);
-        $this->data['sold']             = $this->products_model->getSoldQty($id);
-        $this->data['purchased']        = $this->products_model->getPurchasedQty($id);
+        $this->data['warehouses'] = $this->products_model->getAllWarehousesWithPQ($id);
+        $this->data['options'] = $this->products_model->getProductOptionsWithWH($id);
+        $this->data['variants'] = $this->products_model->getProductOptions($id);
+        $this->data['sold'] = $this->products_model->getSoldQty($id);
+        $this->data['purchased'] = $this->products_model->getPurchasedQty($id);
 
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => $pr_details->name]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => $pr_details->name]];
         $meta = ['page_title' => $pr_details->name, 'bc' => $bc];
         $this->page_construct('products/view', $meta, $this->data);
     }
@@ -2416,11 +2434,11 @@ class Products extends MY_Controller
             $this->sma->md();
         }
 
-        $this->data['inv']        = $adjustment;
-        $this->data['rows']       = $this->products_model->getAdjustmentItems($id);
+        $this->data['inv'] = $adjustment;
+        $this->data['rows'] = $this->products_model->getAdjustmentItems($id);
         $this->data['created_by'] = $this->site->getUser($adjustment->created_by);
         $this->data['updated_by'] = $this->site->getUser($adjustment->updated_by);
-        $this->data['warehouse']  = $this->site->getWarehouseByID($adjustment->warehouse_id);
+        $this->data['warehouse'] = $this->site->getWarehouseByID($adjustment->warehouse_id);
         $this->load->view($this->theme . 'products/view_adjustment', $this->data);
     }
 
@@ -2432,10 +2450,23 @@ class Products extends MY_Controller
             $this->sma->md('admin/products/finalize_count/' . $id);
         }
 
-        $this->data['stock_count']       = $stock_count;
+        $this->data['stock_count'] = $stock_count;
         $this->data['stock_count_items'] = $this->products_model->getStockCountItems($id);
-        $this->data['warehouse']         = $this->site->getWarehouseByID($stock_count->warehouse_id);
-        $this->data['adjustment']        = $this->products_model->getAdjustmentByCountID($id);
+        $this->data['warehouse'] = $this->site->getWarehouseByID($stock_count->warehouse_id);
+        $this->data['adjustment'] = $this->products_model->getAdjustmentByCountID($id);
         $this->load->view($this->theme . 'products/view_count', $this->data);
+    }
+
+    public function makeObj($objs){
+        $obj_details = '';
+        if ($objs) {
+            foreach (unserialize($objs) as $obj) {
+                $facts = $this->site->getAllergyFactByID($obj);
+                $obj_details .= $facts->name . ',';
+            }
+            $l_index=strripos($obj_details,(','));
+            $obj_details=substr($obj_details,0,($l_index-1));
+        }
+        return $obj_details;
     }
 }

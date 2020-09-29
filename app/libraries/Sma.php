@@ -387,7 +387,7 @@ class Sma
         }
         $this->load->library('tec_qrcode', '', 'qr');
         $config = ['data' => $text, 'size' => $size, 'level' => $level, 'savename' => $file_name];
-        $this->qr->generate($config);
+        $this->qr->custom_generate($config);
         $imagedata = file_get_contents($file_name);
         return "<img src='data:image/png;base64," . base64_encode($imagedata) . "' alt='{$text}' class='qrimg' />";
     }
@@ -571,5 +571,18 @@ class Sma
             }
             $zip->close();
         }
+    }
+
+    public function makeObj($objs){
+        $obj_details = '';
+        if ($objs) {
+            foreach (unserialize($objs) as $obj) {
+                $facts = $this->site->getAllergyFactByID($obj);
+                $obj_details .= $facts->name . ',';
+            }
+            $l_index=strripos($obj_details,(','));
+            $obj_details=substr($obj_details,0,$l_index);
+        }
+        return $obj_details;
     }
 }

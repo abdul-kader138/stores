@@ -698,6 +698,7 @@ class Pos extends MY_Controller
         }
         $duplicate_link    = anchor('admin/pos/?duplicate=$1', '<i class="fa fa-plus-square"></i> ' . lang('duplicate_sale'), 'class="duplicate_pos"');
         $detail_link       = anchor('admin/pos/view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('view_receipt'));
+        $qr_link       = anchor('admin/pos/qr_view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('view_qr'));
         $detail_link2      = anchor('admin/sales/modal_view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('sale_details_modal'), 'data-toggle="modal" data-target="#myModal"');
         $detail_link3      = anchor('admin/sales/view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('sale_details'));
         $payments_link     = anchor('admin/sales/payments/$1', '<i class="fa fa-money"></i> ' . lang('view_payments'), 'data-toggle="modal" data-target="#myModal"');
@@ -717,6 +718,7 @@ class Pos extends MY_Controller
             <ul class="dropdown-menu pull-right" role="menu">
                 <li>' . $duplicate_link . '</li>
                 <li>' . $detail_link . '</li>
+                <li>' . $qr_link . '</li>
                 <li>' . $detail_link2 . '</li>
                 <li>' . $detail_link3 . '</li>
                 <li>' . $payments_link . '</li>
@@ -1555,6 +1557,38 @@ class Pos extends MY_Controller
         $this->data['printer']         = $this->pos_model->getPrinterByID($this->pos_settings->printer);
         $this->data['page_title']      = $this->lang->line('invoice');
         $this->load->view($this->theme . 'pos/view', $this->data);
+    }
+    public function qr_view($sale_id = null, $modal = null)
+    {
+        $this->sma->checkPermissions('index');
+        if ($this->input->get('id')) {
+            $sale_id = $this->input->get('id');
+        }
+        $this->load->helper('pos');
+        $this->data['error']   = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+        $this->data['message'] = $this->session->flashdata('message');
+        $inv                   = $this->pos_model->getInvoiceByID($sale_id);
+        if (!$this->session->userdata('view_right')) {
+            $this->sma->view_rights($inv->created_by, true);
+        }
+        $this->data['rows']            = $this->pos_model->getAllInvoiceItems($sale_id);
+        $biller_id                     = $inv->biller_id;
+        $customer_id                   = $inv->customer_id;
+        $this->data['biller']          = $this->pos_model->getCompanyByID($biller_id);
+        $this->data['customer']        = $this->pos_model->getCompanyByID($customer_id);
+        $this->data['payments']        = $this->pos_model->getInvoicePayments($sale_id);
+        $this->data['pos']             = $this->pos_model->getSetting();
+        $this->data['barcode']         = $this->barcode($inv->reference_no, 'code128', 30);
+        $this->data['return_sale']     = $inv->return_id ? $this->pos_model->getInvoiceByID($inv->return_id) : null;
+        $this->data['return_rows']     = $inv->return_id ? $this->pos_model->getAllInvoiceItems($inv->return_id) : null;
+        $this->data['return_payments'] = $this->data['return_sale'] ? $this->pos_model->getInvoicePayments($this->data['return_sale']->id) : null;
+        $this->data['inv']             = $inv;
+        $this->data['sid']             = $sale_id;
+        $this->data['modal']           = $modal;
+        $this->data['created_by']      = $this->site->getUser($inv->created_by);
+        $this->data['printer']         = $this->pos_model->getPrinterByID($this->pos_settings->printer);
+        $this->data['page_title']      = $this->lang->line('invoice');
+        $this->load->view($this->theme . 'pos/qr_view', $this->data);
     }
 
     public function view_bill()

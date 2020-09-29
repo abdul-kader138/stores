@@ -383,6 +383,7 @@
                     } ?>
                 </span>
                 <span class="pull-left col-xs-12"><a class="btn btn-block btn-success" href="#" id="email"><?= lang('email'); ?></a></span>
+                <span class="pull-left col-xs-12"><a class="btn btn-block btn-info" href="<?= admin_url('pos/qr_view/'.$inv->id); ?>" id="view_qr"><?= lang('view_qr'); ?></a></span>
                 <span class="col-xs-12">
                     <a class="btn btn-block btn-warning" href="<?= admin_url('pos'); ?>"><?= lang('back_to_pos'); ?></a>
                 </span>

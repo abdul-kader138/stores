@@ -734,6 +734,11 @@
                                                 <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('tax_rates'); ?></span>
                                             </a>
                                         </li>
+                                        <li id="system_settings_allergy_facts">
+                                            <a href="<?= admin_url('system_settings/allergy_facts') ?>">
+                                                <i class="fa fa-th-list"></i><span class="text"> <?= lang('allergy_facts'); ?></span>
+                                            </a>
+                                        </li>
                                         <li id="system_settings_warehouses">
                                             <a href="<?= admin_url('system_settings/warehouses') ?>">
                                                 <i class="fa fa-building-o"></i><span class="text"> <?= lang('warehouses'); ?></span>
@@ -754,16 +759,11 @@
                                                 <i class="fa fa-file-text"></i><span class="text"> <?= lang('site_logs'); ?></span>
                                             </a>
                                         </li>
-                                        <!-- <li id="system_settings_backups">
+                                         <li id="system_settings_backups">
                                             <a href="<?= admin_url('system_settings/backups') ?>">
                                                 <i class="fa fa-database"></i><span class="text"> <?= lang('backups'); ?></span>
                                             </a>
                                         </li>
-                                        <li id="system_settings_updates">
-                                            <a href="<?= admin_url('system_settings/updates') ?>">
-                                                <i class="fa fa-upload"></i><span class="text"> <?= lang('updates'); ?></span>
-                                            </a>
-                                        </li> -->
                                     </ul>
                                 </li>
                             <?php

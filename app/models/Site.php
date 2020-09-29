@@ -1325,4 +1325,25 @@ class Site extends CI_Model
         }
         return 0;
     }
+
+    public function getAllergyFactByID($id)
+    {
+        $q = $this->db->get_where('allergy_facts', ['id' => $id], 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
+    public function getAllAllergyFacts()
+    {
+        $q = $this->db->get('allergy_facts');
+        if ($q->num_rows() > 0) {
+            foreach (($q->result()) as $row) {
+                $data[] = $row;
+            }
+            return $data;
+        }
+        return false;
+    }
 }

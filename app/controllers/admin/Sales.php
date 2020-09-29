@@ -1467,6 +1467,7 @@ class Sales extends MY_Controller
             $warehouse_id = $user->warehouse_id;
         }
         $detail_link       = anchor('admin/sales/view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('sale_details'));
+        $qr_link       = anchor('admin/pos/qr_view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('view_qr'));
         $duplicate_link    = anchor('admin/sales/add?sale_id=$1', '<i class="fa fa-plus-circle"></i> ' . lang('duplicate_sale'));
         $payments_link     = anchor('admin/sales/payments/$1', '<i class="fa fa-money"></i> ' . lang('view_payments'), 'data-toggle="modal" data-target="#myModal"');
         $add_payment_link  = anchor('admin/sales/add_payment/$1', '<i class="fa fa-money"></i> ' . lang('add_payment'), 'data-toggle="modal" data-target="#myModal"');
@@ -1485,6 +1486,7 @@ class Sales extends MY_Controller
         . lang('actions') . ' <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right" role="menu">
             <li>' . $detail_link . '</li>
+            <li>' . $qr_link . '</li>
             <li>' . $duplicate_link . '</li>
             <li>' . $payments_link . '</li>
             <li>' . $add_payment_link . '</li>

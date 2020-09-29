@@ -170,9 +170,13 @@ if (!empty($variants)) {
                         <?= lang('product_cost', 'cost') ?>
                         <?= form_input('cost', (isset($_POST['cost']) ? $_POST['cost'] : ($product ? $this->sma->formatDecimal($product->cost) : '')), 'class="form-control tip" id="cost" required="required"') ?>
                     </div>
+                    <div class="form-group standard">
+                        <?= lang('margin', 'margin') ?>
+                        <?= form_input('margin', (isset($_POST['margin']) ? $_POST['margin'] : ($product ? $this->sma->formatDecimal($product->margin) : '')), 'class="form-control tip" value="0" id="margin" required="required"') ?>
+                    </div>
                     <div class="form-group all">
                         <?= lang('product_price', 'price') ?>
-                        <?= form_input('price', (isset($_POST['price']) ? $_POST['price'] : ($product ? $this->sma->formatDecimal($product->price) : '')), 'class="form-control tip" id="price" required="required"') ?>
+                        <?= form_input('price', (isset($_POST['price']) ? $_POST['price'] : ($product ? $this->sma->formatDecimal($product->price) : '')), 'class="form-control tip" id="price" readonly required="required"') ?>
                     </div>
 
                     <div class="form-group">
@@ -470,35 +474,41 @@ if (!empty($variants)) {
 
                         <div class="col-md-4">
                             <div class="form-group all">
-                                <?= lang('pcf1', 'cf1') ?>
+                                <?= lang('recipe_one', 'cf1') ?>
                                 <?= form_input('cf1', (isset($_POST['cf1']) ? $_POST['cf1'] : ($product ? $product->cf1 : '')), 'class="form-control tip" id="cf1"') ?>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group all">
-                                <?= lang('pcf2', 'cf2') ?>
+                                <?= lang('recipe_two', 'cf2') ?>
                                 <?= form_input('cf2', (isset($_POST['cf2']) ? $_POST['cf2'] : ($product ? $product->cf2 : '')), 'class="form-control tip" id="cf2"') ?>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group all">
-                                <?= lang('pcf3', 'cf3') ?>
+                                <?= lang('origin', 'cf3') ?>
                                 <?= form_input('cf3', (isset($_POST['cf3']) ? $_POST['cf3'] : ($product ? $product->cf3 : '')), 'class="form-control tip" id="cf3"') ?>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group all">
-                                <?= lang('pcf4', 'cf4') ?>
-                                <?= form_input('cf4', (isset($_POST['cf4']) ? $_POST['cf4'] : ($product ? $product->cf4 : '')), 'class="form-control tip" id="cf4"') ?>
+                                <?= lang('food_allergy', 'cf4') ?>
+                                <?php
+                                $af[''] = '';
+                                foreach ($allergy_facts as $allergy_fact) {
+                                    $af[$allergy_fact->id] = $allergy_fact->name;
+                                }
+                                echo form_dropdown('cf4[]', $af, ($_POST['cf4'] ?? ($product ? unserialize($product->cf4) : ($product ? $product->cf4 : ''))), 'class="form-control select" id="cf4" multiple="multiple" placeholder="' . lang('select') . ' ' . lang('food_allergy') . '" style="width:100%"')
+                                ?>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group all">
-                                <?= lang('pcf5', 'cf5') ?>
+                                <?= lang('nutrition_facts', 'cf5') ?>
                                 <?= form_input('cf5', (isset($_POST['cf5']) ? $_POST['cf5'] : ($product ? $product->cf5 : '')), 'class="form-control tip" id="cf5"') ?>
                             </div>
                         </div>
@@ -937,6 +947,29 @@ if (!empty($variants)) {
     <?php
         } ?>
     $(document).ready(function () {
+        $('#margin').change(function (e) {
+            var margin, sales_price, cost_price = 0;
+            margin = $(this).val();
+            cost_price = parseFloat($('#cost').val());
+            if (margin !== '' && margin !== undefined) margin = parseFloat(((margin*cost_price) / 100));
+            if (isNaN(cost_price)) cost_price = 0;
+            if (isNaN(margin)) margin = 0;
+            if (cost_price > 0 && margin > 0) sales_price = (cost_price +  margin);
+            $('#price').val(sales_price);
+        });
+
+        $('#cost').change(function (e) {
+            var margin, sales_price, cost_price = 0;
+            cost_price = parseFloat($(this).val());
+            margin = $('#margin').val();
+            if (margin !== '' && margin !== undefined) margin = parseFloat(((margin*cost_price) / 100));
+            if (isNaN(cost_price)) cost_price = 0;
+            if (isNaN(margin)) margin = 0;
+            if (cost_price > 0 && margin > 0) sales_price = (cost_price +  margin);
+            console.log(sales_price);
+            $('#price').val(sales_price);
+        });
+
         $('#enable_wh').trigger('click');
         $('#unit').change(function(e) {
             var v = $(this).val();

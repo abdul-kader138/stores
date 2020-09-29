@@ -10,7 +10,7 @@ if (!empty($variants)) {
 ?>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.gen_slug').change(function(e) {
+        $('.gen_slug').change(function (e) {
             console.log($(this).val());
             getSlug($(this).val(), 'products');
         });
@@ -176,13 +176,18 @@ if (!empty($variants)) {
                         <?= lang('product_cost', 'cost') ?>
                         <?= form_input('cost', ($_POST['cost'] ?? ($product ? $this->sma->formatDecimal($product->cost) : '')), 'class="form-control tip" id="cost" required="required"') ?>
                     </div>
+                    <div class="form-group standard">
+                        <?= lang('margin', 'margin') ?>
+                        <?= form_input('margin', ($_POST['margin'] ?? ($product ? $this->sma->formatDecimal($product->margin) : '')), 'class="form-control tip" value="0" id="margin" required="required"') ?>
+                    </div>
                     <div class="form-group all">
                         <?= lang('product_price', 'price') ?>
-                        <?= form_input('price', ($_POST['price'] ?? ($product ? $this->sma->formatDecimal($product->price) : '')), 'class="form-control tip" id="price" required="required"') ?>
+                        <?= form_input('price', ($_POST['price'] ?? ($product ? $this->sma->formatDecimal($product->price) : '')), 'class="form-control tip" id="price" readonly') ?>
                     </div>
 
                     <div class="form-group">
-                        <input type="checkbox" class="checkbox" value="1" name="promotion" id="promotion" <?= $this->input->post('promotion') ? 'checked="checked"' : ''; ?>>
+                        <input type="checkbox" class="checkbox" value="1" name="promotion"
+                               id="promotion" <?= $this->input->post('promotion') ? 'checked="checked"' : ''; ?>>
                         <label for="promotion" class="padding05">
                             <?= lang('promotion'); ?>
                         </label>
@@ -206,16 +211,16 @@ if (!empty($variants)) {
                     </div>
 
                     <?php if ($Settings->invoice_view == 2) {
-                            ?>
+                        ?>
                         <div class="form-group">
                             <?= lang('hsn_code', 'hsn_code'); ?>
                             <?= form_input('hsn_code', set_value('hsn_code', ($product ? $product->hsn_code : '')), 'class="form-control" id="hsn_code"'); ?>
                         </div>
-                    <?php
-                        } ?>
+                        <?php
+                    } ?>
 
                     <?php if ($Settings->tax1) {
-                            ?>
+                        ?>
                         <div class="form-group all">
                             <?= lang('product_tax', 'tax_rate') ?>
                             <?php
@@ -232,12 +237,12 @@ if (!empty($variants)) {
                             $tm = ['1' => lang('exclusive'), '0' => lang('inclusive')];
                             echo form_dropdown('tax_method', $tm, ($_POST['tax_method'] ?? ($product ? $product->tax_method : '')), 'class="form-control select" id="tax_method" placeholder="' . lang('select') . ' ' . lang('tax_method') . '" style="width:100%"'); ?>
                         </div>
-                    <?php
-                        } ?>
+                        <?php
+                    } ?>
                     <div class="form-group standard">
                         <?= lang('alert_quantity', 'alert_quantity') ?>
                         <div
-                            class="input-group"> <?= form_input('alert_quantity', ($_POST['alert_quantity'] ?? ($product ? $this->sma->formatQuantityDecimal($product->alert_quantity) : '')), 'class="form-control tip" id="alert_quantity"') ?>
+                                class="input-group"> <?= form_input('alert_quantity', ($_POST['alert_quantity'] ?? ($product ? $this->sma->formatQuantityDecimal($product->alert_quantity) : '')), 'class="form-control tip" id="alert_quantity"') ?>
                             <span class="input-group-addon">
                             <input type="checkbox" name="track_quantity" id="track_quantity"
                                    value="1" <?= ($product ? (isset($product->track_quantity) ? 'checked="checked"' : '') : 'checked="checked"') ?>>
@@ -247,13 +252,15 @@ if (!empty($variants)) {
 
                     <div class="form-group all">
                         <?= lang('product_image', 'product_image') ?>
-                        <input id="product_image" type="file" data-browse-label="<?= lang('browse'); ?>" name="product_image" data-show-upload="false"
+                        <input id="product_image" type="file" data-browse-label="<?= lang('browse'); ?>"
+                               name="product_image" data-show-upload="false"
                                data-show-preview="false" accept="image/*" class="form-control file">
                     </div>
 
                     <div class="form-group all">
                         <?= lang('product_gallery_images', 'images') ?>
-                        <input id="images" type="file" data-browse-label="<?= lang('browse'); ?>" name="userfile[]" multiple="true" data-show-upload="false"
+                        <input id="images" type="file" data-browse-label="<?= lang('browse'); ?>" name="userfile[]"
+                               multiple="true" data-show-upload="false"
                                data-show-preview="false" class="form-control file" accept="image/*">
                     </div>
                     <div id="img-details"></div>
@@ -266,8 +273,8 @@ if (!empty($variants)) {
                         <div class="form-group">
                             <input type="checkbox" class="checkbox" name="attributes"
                                    id="attributes" <?= $this->input->post('attributes') || $product_options ? 'checked="checked"' : ''; ?>><label
-                                for="attributes"
-                                class="padding05"><?= lang('product_has_attributes'); ?></label> <?= lang('eg_sizes_colors'); ?>
+                                    for="attributes"
+                                    class="padding05"><?= lang('product_has_attributes'); ?></label> <?= lang('eg_sizes_colors'); ?>
                         </div>
                         <div class="well well-sm" id="attr-con"
                              style="<?= $this->input->post('attributes') || $product_options ? '' : 'display:none;'; ?>">
@@ -317,39 +324,39 @@ if (!empty($variants)) {
                         <!-- <div class="<?= $product ? 'text-warning' : '' ?>">
                             <strong><?= lang('warehouse_quantity') ?></strong><br>
                             <?php
-                            if (!empty($warehouses)) {
-                                if ($product) {
-                                    echo '<div class="row"><div class="col-md-12"><div class="well"><div id="show_wh_edit">';
-                                    if (!empty($warehouses_products)) {
-                                        echo '<div style="display:none;">';
-                                        foreach ($warehouses_products as $wh_pr) {
-                                            echo '<span class="bold text-info">' . $wh_pr->name . ': <span class="padding05" id="rwh_qty_' . $wh_pr->id . '">' . $this->sma->formatQuantity($wh_pr->quantity) . '</span>' . ($wh_pr->rack ? ' (<span class="padding05" id="rrack_' . $wh_pr->id . '">' . $wh_pr->rack . '</span>)' : '') . '</span><br>';
-                                        }
-                                        echo '</div>';
+                        if (!empty($warehouses)) {
+                            if ($product) {
+                                echo '<div class="row"><div class="col-md-12"><div class="well"><div id="show_wh_edit">';
+                                if (!empty($warehouses_products)) {
+                                    echo '<div style="display:none;">';
+                                    foreach ($warehouses_products as $wh_pr) {
+                                        echo '<span class="bold text-info">' . $wh_pr->name . ': <span class="padding05" id="rwh_qty_' . $wh_pr->id . '">' . $this->sma->formatQuantity($wh_pr->quantity) . '</span>' . ($wh_pr->rack ? ' (<span class="padding05" id="rrack_' . $wh_pr->id . '">' . $wh_pr->rack . '</span>)' : '') . '</span><br>';
                                     }
-                                    foreach ($warehouses as $warehouse) {
-                                        //$whs[$warehouse->id] = $warehouse->name;
-                                        echo '<div class="col-md-6 col-sm-6 col-xs-6" style="padding-bottom:15px;">' . $warehouse->name . '<br><div class="form-group">' . form_hidden('wh_' . $warehouse->id, $warehouse->id) . form_input('wh_qty_' . $warehouse->id, (isset($_POST['wh_qty_' . $warehouse->id]) ? $_POST['wh_qty_' . $warehouse->id] : (isset($warehouse->quantity) ? $warehouse->quantity : '')), 'class="form-control wh" id="wh_qty_' . $warehouse->id . '" placeholder="' . lang('quantity') . '"') . '</div>';
-                                        if ($Settings->racks) {
-                                            echo '<div class="form-group">' . form_input('rack_' . $warehouse->id, (isset($_POST['rack_' . $warehouse->id]) ? $_POST['rack_' . $warehouse->id] : (isset($warehouse->rack) ? $warehouse->rack : '')), 'class="form-control wh" id="rack_' . $warehouse->id . '" placeholder="' . lang('rack') . '"') . '</div>';
-                                        }
-                                        echo '</div>';
-                                    }
-                                    echo '</div><div class="clearfix"></div></div></div></div>';
-                                } else {
-                                    echo '<div class="row"><div class="col-md-12"><div class="well">';
-                                    foreach ($warehouses as $warehouse) {
-                                        //$whs[$warehouse->id] = $warehouse->name;
-                                        echo '<div class="col-md-6 col-sm-6 col-xs-6" style="padding-bottom:15px;">' . $warehouse->name . '<br><div class="form-group">' . form_hidden('wh_' . $warehouse->id, $warehouse->id) . form_input('wh_qty_' . $warehouse->id, (isset($_POST['wh_qty_' . $warehouse->id]) ? $_POST['wh_qty_' . $warehouse->id] : ''), 'class="form-control" id="wh_qty_' . $warehouse->id . '" placeholder="' . lang('quantity') . '"') . '</div>';
-                                        if ($Settings->racks) {
-                                            echo '<div class="form-group">' . form_input('rack_' . $warehouse->id, (isset($_POST['rack_' . $warehouse->id]) ? $_POST['rack_' . $warehouse->id] : ''), 'class="form-control" id="rack_' . $warehouse->id . '" placeholder="' . lang('rack') . '"') . '</div>';
-                                        }
-                                        echo '</div>';
-                                    }
-                                    echo '<div class="clearfix"></div></div></div></div>';
+                                    echo '</div>';
                                 }
+                                foreach ($warehouses as $warehouse) {
+                                    //$whs[$warehouse->id] = $warehouse->name;
+                                    echo '<div class="col-md-6 col-sm-6 col-xs-6" style="padding-bottom:15px;">' . $warehouse->name . '<br><div class="form-group">' . form_hidden('wh_' . $warehouse->id, $warehouse->id) . form_input('wh_qty_' . $warehouse->id, (isset($_POST['wh_qty_' . $warehouse->id]) ? $_POST['wh_qty_' . $warehouse->id] : (isset($warehouse->quantity) ? $warehouse->quantity : '')), 'class="form-control wh" id="wh_qty_' . $warehouse->id . '" placeholder="' . lang('quantity') . '"') . '</div>';
+                                    if ($Settings->racks) {
+                                        echo '<div class="form-group">' . form_input('rack_' . $warehouse->id, (isset($_POST['rack_' . $warehouse->id]) ? $_POST['rack_' . $warehouse->id] : (isset($warehouse->rack) ? $warehouse->rack : '')), 'class="form-control wh" id="rack_' . $warehouse->id . '" placeholder="' . lang('rack') . '"') . '</div>';
+                                    }
+                                    echo '</div>';
+                                }
+                                echo '</div><div class="clearfix"></div></div></div></div>';
+                            } else {
+                                echo '<div class="row"><div class="col-md-12"><div class="well">';
+                                foreach ($warehouses as $warehouse) {
+                                    //$whs[$warehouse->id] = $warehouse->name;
+                                    echo '<div class="col-md-6 col-sm-6 col-xs-6" style="padding-bottom:15px;">' . $warehouse->name . '<br><div class="form-group">' . form_hidden('wh_' . $warehouse->id, $warehouse->id) . form_input('wh_qty_' . $warehouse->id, (isset($_POST['wh_qty_' . $warehouse->id]) ? $_POST['wh_qty_' . $warehouse->id] : ''), 'class="form-control" id="wh_qty_' . $warehouse->id . '" placeholder="' . lang('quantity') . '"') . '</div>';
+                                    if ($Settings->racks) {
+                                        echo '<div class="form-group">' . form_input('rack_' . $warehouse->id, (isset($_POST['rack_' . $warehouse->id]) ? $_POST['rack_' . $warehouse->id] : ''), 'class="form-control" id="rack_' . $warehouse->id . '" placeholder="' . lang('rack') . '"') . '</div>';
+                                    }
+                                    echo '</div>';
+                                }
+                                echo '<div class="clearfix"></div></div></div></div>';
                             }
-                            ?>
+                        }
+                        ?>
                         </div>
                         <div class="clearfix"></div> -->
 
@@ -386,7 +393,8 @@ if (!empty($variants)) {
                     <div class="digital" style="display:none;">
                         <div class="form-group digital">
                             <?= lang('digital_file', 'digital_file') ?>
-                            <input id="digital_file" type="file" data-browse-label="<?= lang('browse'); ?>" name="digital_file" data-show-upload="false"
+                            <input id="digital_file" type="file" data-browse-label="<?= lang('browse'); ?>"
+                                   name="digital_file" data-show-upload="false"
                                    data-show-preview="false" class="form-control file">
                         </div>
                         <div class="form-group">
@@ -395,87 +403,98 @@ if (!empty($variants)) {
                         </div>
                     </div>
 
-                <div class="form-group standard">
-                    <div class="form-group">
-                        <?= lang('supplier', 'supplier') ?>
-                        <button type="button" class="btn btn-primary btn-xs" id="addSupplier"><i class="fa fa-plus"></i>
-                        </button>
+                    <div class="form-group standard">
+                        <div class="form-group">
+                            <?= lang('supplier', 'supplier') ?>
+                            <button type="button" class="btn btn-primary btn-xs" id="addSupplier"><i
+                                        class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="row" id="supplier-con">
+                            <div class="col-xs-12">
+                                <div class="form-group">
+                                    <?php
+                                    echo form_input('supplier', ($_POST['supplier'] ?? ''), 'class="form-control ' . ($product ? '' : 'suppliers') . '" id="' . ($product && !empty($product->supplier1) ? 'supplier1' : 'supplier') . '" placeholder="' . lang('select') . ' ' . lang('supplier') . '" style="width:100%;"');
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <?= form_input('supplier_part_no', ($_POST['supplier_part_no'] ?? ''), 'class="form-control tip" id="supplier_part_no" placeholder="' . lang('supplier_part_no') . '"'); ?>
+                                </div>
+                            </div>
+                            <div class="col-xs-6">
+                                <div class="form-group">
+                                    <?= form_input('supplier_price', ($_POST['supplier_price'] ?? ''), 'class="form-control tip" id="supplier_price" placeholder="' . lang('supplier_price') . '"'); ?>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="ex-suppliers"></div>
                     </div>
-                    <div class="row" id="supplier-con">
-                        <div class="col-xs-12">
-                            <div class="form-group">
-                                <?php
-                                echo form_input('supplier', ($_POST['supplier'] ?? ''), 'class="form-control ' . ($product ? '' : 'suppliers') . '" id="' . ($product && !empty($product->supplier1) ? 'supplier1' : 'supplier') . '" placeholder="' . lang('select') . ' ' . lang('supplier') . '" style="width:100%;"');
-                                ?>
-                            </div>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="form-group">
-                                <?= form_input('supplier_part_no', ($_POST['supplier_part_no'] ?? ''), 'class="form-control tip" id="supplier_part_no" placeholder="' . lang('supplier_part_no') . '"'); ?>
-                            </div>
-                        </div>
-                        <div class="col-xs-6">
-                            <div class="form-group">
-                            <?= form_input('supplier_price', ($_POST['supplier_price'] ?? ''), 'class="form-control tip" id="supplier_price" placeholder="' . lang('supplier_price') . '"'); ?>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="ex-suppliers"></div>
-                </div>
 
                 </div>
 
                 <div class="col-md-12">
                     <div class="form-group">
-                        <input name="featured" type="checkbox" class="checkbox" id="featured" value="1" <?= isset($_POST['featured']) ? 'checked="checked"' : '' ?>/>
+                        <input name="featured" type="checkbox" class="checkbox" id="featured"
+                               value="1" <?= isset($_POST['featured']) ? 'checked="checked"' : '' ?>/>
                         <label for="featured" class="padding05"><?= lang('featured') ?></label>
                     </div>
                     <div class="form-group">
-                        <input name="hide_pos" type="checkbox" class="checkbox" id="hide_pos" value="1" <?= isset($_POST['hide_pos']) ? 'checked="checked"' : '' ?>/>
+                        <input name="hide_pos" type="checkbox" class="checkbox" id="hide_pos"
+                               value="1" <?= isset($_POST['hide_pos']) ? 'checked="checked"' : '' ?>/>
                         <label for="hide_pos" class="padding05"><?= lang('hide_in_pos') ?></label>
                     </div>
                     <div class="form-group">
-                        <input name="hide" type="checkbox" class="checkbox" id="hide" value="1" <?= isset($_POST['hide']) ? 'checked="checked"' : '' ?>/>
+                        <input name="hide" type="checkbox" class="checkbox" id="hide"
+                               value="1" <?= isset($_POST['hide']) ? 'checked="checked"' : '' ?>/>
                         <label for="hide" class="padding05"><?= lang('hide_in_shop') ?></label>
                     </div>
 
                     <div class="form-group">
-                        <input name="cf" type="checkbox" class="checkbox" id="extras" value="" <?= isset($_POST['cf']) ? 'checked="checked"' : '' ?>/>
+                        <input name="cf" type="checkbox" class="checkbox" id="extras"
+                               value="" <?= isset($_POST['cf']) ? 'checked="checked"' : '' ?>/>
                         <label for="extras" class="padding05"><?= lang('custom_fields') ?></label>
                     </div>
                     <div class="row" id="extras-con" style="display: none;">
 
                         <div class="col-md-4">
                             <div class="form-group all">
-                                <?= lang('pcf1', 'cf1') ?>
+                                <?= lang('recipe_one', 'cf1') ?>
                                 <?= form_input('cf1', ($_POST['cf1'] ?? ($product ? $product->cf1 : '')), 'class="form-control tip" id="cf1"') ?>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group all">
-                                <?= lang('pcf2', 'cf2') ?>
+                                <?= lang('recipe_two', 'cf2') ?>
                                 <?= form_input('cf2', ($_POST['cf2'] ?? ($product ? $product->cf2 : '')), 'class="form-control tip" id="cf2"') ?>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group all">
-                                <?= lang('pcf3', 'cf3') ?>
+                                <?= lang('origin', 'cf3') ?>
                                 <?= form_input('cf3', ($_POST['cf3'] ?? ($product ? $product->cf3 : '')), 'class="form-control tip" id="cf3"') ?>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group all">
-                                <?= lang('pcf4', 'cf4') ?>
-                                <?= form_input('cf4', ($_POST['cf4'] ?? ($product ? $product->cf4 : '')), 'class="form-control tip" id="cf4"') ?>
+                                <?= lang('food_allergy', 'cf4') ?>
+                                <?php
+                                $af[''] = '';
+                                foreach ($allergy_facts as $allergy_fact) {
+                                    $af[$allergy_fact->id] = $allergy_fact->name;
+                                }
+                                echo form_dropdown('cf4[]', $af, ($_POST['cf4'] ?? ($product ? $product->cf4 : '')), 'class="form-control"  multiple="multiple" id="cf4" placeholder="' . lang('select') . ' ' . lang('food_allergy') . '" style="width:100%"')
+                                ?>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <div class="form-group all">
-                                <?= lang('pcf5', 'cf5') ?>
+                                <?= lang('nutrition_facts', 'cf5') ?>
                                 <?= form_input('cf5', ($_POST['cf5'] ?? ($product ? $product->cf5 : '')), 'class="form-control tip" id="cf5"') ?>
                             </div>
                         </div>
@@ -513,7 +532,7 @@ if (!empty($variants)) {
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('form[data-toggle="validator"]').bootstrapValidator({ excluded: [':disabled'] });
+        $('form[data-toggle="validator"]').bootstrapValidator({excluded: [':disabled']});
         var audio_success = new Audio('<?= $assets ?>sounds/sound2.mp3');
         var audio_error = new Audio('<?= $assets ?>sounds/sound3.mp3');
         var items = {};
@@ -702,7 +721,7 @@ if (!empty($variants)) {
                 tr_html += '<td class="text-center"><i class="fa fa-times tip del" id="' + row_no + '" title="Remove" style="cursor:pointer;"></i></td>';
                 newTr.html(tr_html);
                 newTr.prependTo("#prTable");
-                pp += formatDecimal(parseFloat(this.price)*parseFloat(this.qty));
+                pp += formatDecimal(parseFloat(this.price) * parseFloat(this.qty));
             });
             $('.item_' + item_id).addClass('warning');
             $('#price').val(pp);
@@ -713,7 +732,7 @@ if (!empty($variants)) {
             var rows = $('#prTable').children('tbody').children('tr');
             var pp = 0;
             $.each(rows, function () {
-                pp += formatDecimal(parseFloat($(this).find('.rprice').val())*parseFloat($(this).find('.rquantity').val()));
+                pp += formatDecimal(parseFloat($(this).find('.rprice').val()) * parseFloat($(this).find('.rquantity').val()));
             });
             $('#price').val(pp);
             return true;
@@ -783,16 +802,16 @@ if (!empty($variants)) {
             for (var i in attrs) {
                 if (attrs[i] !== '') {
                     <?php if (!empty($warehouses)) {
-            foreach ($warehouses as $warehouse) {
-                echo '$(\'#attrTable\').show().append(\'<tr class="attr"><td><input type="hidden" name="attr_name[]" value="\' + attrs[i] + \'"><span>\' + attrs[i] + \'</span></td><td class="code text-center"><input type="hidden" name="attr_warehouse[]" value="' . $warehouse->id . '"><span>' . $warehouse->name . '</span></td><td class="price text-right"><input type="hidden" name="attr_price[]" value="0"><span>0</span></span></td><td class="text-center"><i class="fa fa-times delAttr"></i></td></tr>\');';
-                // echo '$(\'#attrTable\').show().append(\'<tr class="attr"><td><input type="hidden" name="attr_name[]" value="\' + attrs[i] + \'"><span>\' + attrs[i] + \'</span></td><td class="code text-center"><input type="hidden" name="attr_warehouse[]" value="' . $warehouse->id . '"><span>' . $warehouse->name . '</span></td><td class="quantity text-center"><input type="hidden" name="attr_quantity[]" value="0"><span>0</span></td><td class="price text-right"><input type="hidden" name="attr_price[]" value="0"><span>0</span></span></td><td class="text-center"><i class="fa fa-times delAttr"></i></td></tr>\');';
-            }
-        } else {
-            ?>
-                        $('#attrTable').show().append('<tr class="attr"><td><input type="hidden" name="attr_name[]" value="' + attrs[i] + '"><span>' + attrs[i] + '</span></td><td class="code text-center"><input type="hidden" name="attr_warehouse[]" value=""><span></span></td><td class="price text-right"><input type="hidden" name="attr_price[]" value="0"><span>0</span></span></td><td class="text-center"><i class="fa fa-times delAttr"></i></td></tr>');
-                        // $('#attrTable').show().append('<tr class="attr"><td><input type="hidden" name="attr_name[]" value="' + attrs[i] + '"><span>' + attrs[i] + '</span></td><td class="code text-center"><input type="hidden" name="attr_warehouse[]" value=""><span></span></td><td class="quantity text-center"><input type="hidden" name="attr_quantity[]" value="0"><span></span></td><td class="price text-right"><input type="hidden" name="attr_price[]" value="0"><span>0</span></span></td><td class="text-center"><i class="fa fa-times delAttr"></i></td></tr>');
+                    foreach ($warehouses as $warehouse) {
+                        echo '$(\'#attrTable\').show().append(\'<tr class="attr"><td><input type="hidden" name="attr_name[]" value="\' + attrs[i] + \'"><span>\' + attrs[i] + \'</span></td><td class="code text-center"><input type="hidden" name="attr_warehouse[]" value="' . $warehouse->id . '"><span>' . $warehouse->name . '</span></td><td class="price text-right"><input type="hidden" name="attr_price[]" value="0"><span>0</span></span></td><td class="text-center"><i class="fa fa-times delAttr"></i></td></tr>\');';
+                        // echo '$(\'#attrTable\').show().append(\'<tr class="attr"><td><input type="hidden" name="attr_name[]" value="\' + attrs[i] + \'"><span>\' + attrs[i] + \'</span></td><td class="code text-center"><input type="hidden" name="attr_warehouse[]" value="' . $warehouse->id . '"><span>' . $warehouse->name . '</span></td><td class="quantity text-center"><input type="hidden" name="attr_quantity[]" value="0"><span>0</span></td><td class="price text-right"><input type="hidden" name="attr_price[]" value="0"><span>0</span></span></td><td class="text-center"><i class="fa fa-times delAttr"></i></td></tr>\');';
+                    }
+                } else {
+                    ?>
+                    $('#attrTable').show().append('<tr class="attr"><td><input type="hidden" name="attr_name[]" value="' + attrs[i] + '"><span>' + attrs[i] + '</span></td><td class="code text-center"><input type="hidden" name="attr_warehouse[]" value=""><span></span></td><td class="price text-right"><input type="hidden" name="attr_price[]" value="0"><span>0</span></span></td><td class="text-center"><i class="fa fa-times delAttr"></i></td></tr>');
+                    // $('#attrTable').show().append('<tr class="attr"><td><input type="hidden" name="attr_name[]" value="' + attrs[i] + '"><span>' + attrs[i] + '</span></td><td class="code text-center"><input type="hidden" name="attr_warehouse[]" value=""><span></span></td><td class="quantity text-center"><input type="hidden" name="attr_quantity[]" value="0"><span></span></td><td class="price text-right"><input type="hidden" name="attr_price[]" value="0"><span>0</span></span></td><td class="text-center"><i class="fa fa-times delAttr"></i></td></tr>');
                     <?php
-        } ?>
+                    } ?>
                 }
             }
         });
@@ -840,7 +859,7 @@ if (!empty($variants)) {
     });
 
     <?php if ($product) {
-            ?>
+    ?>
     $(document).ready(function () {
         var t = "<?=$product->type?>";
         if (t !== 'standard') {
@@ -895,39 +914,39 @@ if (!empty($variants)) {
             }
         });
         <?php if ($product->supplier1) {
-                ?>
+        ?>
         select_supplier('supplier1', "<?= $product->supplier1; ?>");
         $('#supplier_price').val("<?= $product->supplier1price == 0 ? '' : $this->sma->formatDecimal($product->supplier1price); ?>");
         <?php
-            } ?>
+        } ?>
         <?php if ($product->supplier2) {
-                ?>
+        ?>
         $('#addSupplier').click();
         select_supplier('supplier_2', "<?= $product->supplier2; ?>");
         $('#supplier_2_price').val("<?= $product->supplier2price == 0 ? '' : $this->sma->formatDecimal($product->supplier2price); ?>");
         <?php
-            } ?>
+        } ?>
         <?php if ($product->supplier3) {
-                ?>
+        ?>
         $('#addSupplier').click();
         select_supplier('supplier_3', "<?= $product->supplier3; ?>");
         $('#supplier_3_price').val("<?= $product->supplier3price == 0 ? '' : $this->sma->formatDecimal($product->supplier3price); ?>");
         <?php
-            } ?>
+        } ?>
         <?php if ($product->supplier4) {
-                ?>
+        ?>
         $('#addSupplier').click();
         select_supplier('supplier_4', "<?= $product->supplier4; ?>");
         $('#supplier_4_price').val("<?= $product->supplier4price == 0 ? '' : $this->sma->formatDecimal($product->supplier4price); ?>");
         <?php
-            } ?>
+        } ?>
         <?php if ($product->supplier5) {
-                ?>
+        ?>
         $('#addSupplier').click();
         select_supplier('supplier_5', "<?= $product->supplier5; ?>");
         $('#supplier_5_price').val("<?= $product->supplier5price == 0 ? '' : $this->sma->formatDecimal($product->supplier5price); ?>");
         <?php
-            } ?>
+        } ?>
         function select_supplier(id, v) {
             $('#' + id).val(v).select2({
                 minimumInputLength: 1,
@@ -969,9 +988,9 @@ if (!empty($variants)) {
         });
     });
     <?php
-        } ?>
-    $(document).ready(function() {
-        $('#unit').change(function(e) {
+    } ?>
+    $(document).ready(function () {
+        $('#unit').change(function (e) {
             var v = $(this).val();
             if (v) {
                 $.ajax({
@@ -983,8 +1002,14 @@ if (!empty($variants)) {
                         $('#default_sale_unit').select2("destroy").empty().select2({minimumResultsForSearch: 7});
                         $('#default_purchase_unit').select2("destroy").empty().select2({minimumResultsForSearch: 7});
                         $.each(data, function () {
-                            $("<option />", {value: this.id, text: this.name+' ('+this.code+')'}).appendTo($('#default_sale_unit'));
-                            $("<option />", {value: this.id, text: this.name+' ('+this.code+')'}).appendTo($('#default_purchase_unit'));
+                            $("<option />", {
+                                value: this.id,
+                                text: this.name + ' (' + this.code + ')'
+                            }).appendTo($('#default_sale_unit'));
+                            $("<option />", {
+                                value: this.id,
+                                text: this.name + ' (' + this.code + ')'
+                            }).appendTo($('#default_purchase_unit'));
                         });
                         $('#default_sale_unit').select2('val', v);
                         $('#default_purchase_unit').select2('val', v);
@@ -996,12 +1021,40 @@ if (!empty($variants)) {
             } else {
                 $('#default_sale_unit').select2("destroy").empty();
                 $('#default_purchase_unit').select2("destroy").empty();
-                $("<option />", {value: '', text: '<?= lang('select_unit_first') ?>'}).appendTo($('#default_sale_unit'));
-                $("<option />", {value: '', text: '<?= lang('select_unit_first') ?>'}).appendTo($('#default_purchase_unit'));
+                $("<option />", {
+                    value: '',
+                    text: '<?= lang('select_unit_first') ?>'
+                }).appendTo($('#default_sale_unit'));
+                $("<option />", {
+                    value: '',
+                    text: '<?= lang('select_unit_first') ?>'
+                }).appendTo($('#default_purchase_unit'));
                 $('#default_sale_unit').select2({minimumResultsForSearch: 7}).select2('val', '');
                 $('#default_purchase_unit').select2({minimumResultsForSearch: 7}).select2('val', '');
             }
         });
+        $('#margin').change(function (e) {
+            var margin, sales_price, cost_price = 0;
+            margin = $(this).val();
+            cost_price = parseFloat($('#cost').val());
+            if (margin !== '' && margin !== undefined) margin = parseFloat(((margin*cost_price) / 100));
+            if (isNaN(cost_price)) cost_price = 0;
+            if (isNaN(margin)) margin = 0;
+            if (cost_price > 0 && margin > 0) sales_price = (cost_price +  margin);
+            $('#price').val(sales_price);
+        });
+
+        $('#cost').change(function (e) {
+            var margin, sales_price, cost_price = 0;
+            cost_price = parseFloat($(this).val());
+            margin = $('#margin').val();
+            if (margin !== '' && margin !== undefined) margin = parseFloat(((margin*cost_price) / 100));
+            if (isNaN(cost_price)) cost_price = 0;
+            if (isNaN(margin)) margin = 0;
+            if (cost_price > 0 && margin > 0) sales_price = (cost_price +  margin);
+            $('#price').val(sales_price);
+        });
+        // $(".multiselect").multiselect();
     });
 </script>
 

@@ -139,3 +139,5 @@ $lang['bank']                            = 'Bank-in';
 $lang['stripe']                          = 'Stripe';
 $lang['skrill']                          = 'Skrill';
 $lang['paypal']                          = 'PayPal';
+$lang['view_qr']                            = 'View QR Code';
+$lang['product_name']                     = 'Product Name';

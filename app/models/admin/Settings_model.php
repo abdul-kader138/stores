@@ -143,9 +143,9 @@ class Settings_model extends CI_Model
         return false;
     }
 
-    public function brandHasProducts($brand_id)
+    public function allergyFactHasProducts($allergy_fact_id)
     {
-        $q = $this->db->get_where('products', ['brand' => $brand_id], 1);
+        $q = $this->db->get_where('products', ['cf4' => $allergy_fact_id], 1);
         if ($q->num_rows() > 0) {
             return $q->row();
         }
@@ -489,8 +489,8 @@ class Settings_model extends CI_Model
         $pg = "(SELECT {$this->db->dbprefix('product_prices')}.price as price, {$this->db->dbprefix('product_prices')}.product_id as product_id FROM {$this->db->dbprefix('product_prices')} WHERE {$this->db->dbprefix('product_prices')}.product_id = {$product_id} AND {$this->db->dbprefix('product_prices')}.price_group_id = {$group_id}) GP";
 
         $this->db->select("{$this->db->dbprefix('products')}.id as id, {$this->db->dbprefix('products')}.code as code, {$this->db->dbprefix('products')}.name as name, GP.price", false)
-        // ->join('products', 'products.id=product_prices.product_id', 'left')
-        ->join($pg, 'GP.product_id=products.id', 'left');
+            // ->join('products', 'products.id=product_prices.product_id', 'left')
+            ->join($pg, 'GP.product_id=products.id', 'left');
         $q = $this->db->get_where('products', ['products.id' => $product_id], 1);
         if ($q->num_rows() > 0) {
             return $q->row();
@@ -744,4 +744,32 @@ class Settings_model extends CI_Model
         }
         return false;
     }
+
+
+    public function addAllergyFact($data)
+    {
+        if ($this->db->insert('allergy_facts', $data)) {
+            return true;
+        }
+        return false;
+    }
+
+    public function updateAllergyFact($id, $data = [])
+    {
+        if ($this->db->update('allergy_facts', $data, ['id' => $id])) {
+            return true;
+        }
+        return false;
+
+    }
+
+    public function deleteAllergyFact($id)
+    {
+        if ($this->db->delete('allergy_facts', ['id' => $id])) {
+            return true;
+        }
+        return false;
+    }
+
+
 }

@@ -137,3 +137,5 @@ $lang['last_topups']                     = 'Derniers Topups';
 $lang['topup_added']                     = 'Solde de la carte-cadeau mis à jour avec succès';
 $lang['duplicate_sale']                  = 'Dupliquer vente';
 $lang['update_customer_email']           = "Veuillez mettre à jour l\&#39;adresse email du client";
+$lang['view_qr']                            = 'Afficher le code QR';
+$lang['product_name']                     = 'Nom du produit';

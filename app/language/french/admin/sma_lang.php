@@ -81,7 +81,7 @@ $lang['confirm_password']                 = 'Confirmez le mot de passe';
 $lang['email']                            = 'Email';
 $lang['phone']                            = 'Téléphone';
 $lang['company']                          = 'Compagnie';
-$lang['product_code']                     = 'Code produit';
+$lang['product_code']                     = 'Numéro de produit';
 $lang['product_name']                     = 'Nom du produit';
 $lang['cname']                            = 'Nom du client';
 $lang['barcode_symbology']                = 'Symbologie des codes à barres';
@@ -478,3 +478,9 @@ $lang['list_printers']                    = 'Liste des imprimantes';
 $lang['add_printer']                      = 'Ajouter une imprimante';
 
 $lang['please_select_these_before_adding_product'] = 'Veuillez les sélectionner avant d&#39;ajouter un produit';
+
+$lang['recipe_one']                               = 'Recette 1';
+$lang['recipe_two']                               = 'Recette 2';
+$lang['origin']                                   = 'Origine';
+$lang['food_allergy']                             = 'Allergie alimentaire';
+$lang['allergy_facts']                            = 'Faits d\'allergie';

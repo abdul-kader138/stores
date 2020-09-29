@@ -295,3 +295,5 @@ $lang['register_total_tip']                 = 'Please review the details below a
 $lang['desc']                               = 'Description';
 $lang['qty_x_price']                        = 'Qty x Price';
 $lang['print_dot']                          = 'Print . (Dot)';
+$lang['view_qr']                            = 'View QR Code';
+$lang['product_name']                     = 'Product Name';

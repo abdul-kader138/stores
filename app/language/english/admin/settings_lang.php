@@ -362,3 +362,14 @@ $lang['weight_start']                                                = 'Weight S
 $lang['weight_chars']                                                = 'Number of characters in Weight';
 $lang['weight_divide_by']                                            = 'Weight divide by';
 $lang['apply_as_discount']                                           = 'Apply as product discount (only applicable with -ve value)';
+$lang['add_allergy_fact']                                            = 'Add Allergy Fact';
+$lang['edit_allergy_fact']                                           = 'Edit Allergy Fact';
+$lang['delete_allergy_fact']                                         = 'Delete Allergy Fact';
+$lang['allergy_facts']                                               = 'Allergy Facts';
+$lang['import_allergy_facts']                                        = 'Import Allergy Facts';
+
+$lang['allergy_fact_added']                                                 = 'Allergy Fact successfully added';
+$lang['allergy_facts_added']                                                = 'Allergy Facts successfully added';
+$lang['allergy_fact_updated']                                               = 'Allergy Fact successfully updated';
+$lang['allergy_fact_deleted']                                               = 'Allergy Fact successfully deleted';
+$lang['allergy_fact_has_products']                                                 = 'Allergy Fact can not be deleted as it has products attachment, please assign products to different allergy fact then try again.';

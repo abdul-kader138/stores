@@ -118,3 +118,5 @@ $lang['tax_rate_name']                     = 'Nombre de tasa impositiva';
 $lang['auto_added_for_sale_by_csv']        = 'Agregado automáticamente a la venta por csv';
 $lang['invoice']                           = 'Factura';
 $lang['due_date']                          = 'Fecha de vencimiento';
+$lang['view_qr']                           = 'Ver código QR';
+$lang['product_name']                              = 'Nombre';

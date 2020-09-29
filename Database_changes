@@ -1,0 +1,9 @@
+CREATE TABLE `sma_allergy_facts` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `name` varchar(50) NOT NULL,
+ PRIMARY KEY (`id`),
+ KEY `name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+
+ALTER TABLE `sma_products` ADD `margin` DECIMAL(25,4) NOT NULL AFTER `hide_pos`;
