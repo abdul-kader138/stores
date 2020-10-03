@@ -4,7 +4,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 
 
 $lang['add_product']                              = 'Add Product';
-$lang['edit_product']                             = 'Edit Product';
+$lang['edit_product']                             = 'Update Product';
 $lang['delete_product']                           = 'Delete Product';
 $lang['delete_products']                          = 'Delete Products';
 $lang['product_added']                            = 'Product successfully added';
@@ -200,3 +200,4 @@ $lang['origin']                                   = 'Origin';
 $lang['food_allergy']                             = 'Food Allergy';
 $lang['nutrition_facts']                          = 'Nutrition Facts';
 $lang['margin']                                   = 'Product Margin';
+$lang['upc']                                      = 'UPC';

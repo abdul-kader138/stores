@@ -7,3 +7,5 @@ CREATE TABLE `sma_allergy_facts` (
 
 
 ALTER TABLE `sma_products` ADD `margin` DECIMAL(25,4) NOT NULL AFTER `hide_pos`;
+
+ALTER TABLE `sma_products` ADD `upc` VARCHAR(25) NULL DEFAULT NULL AFTER `margin`;

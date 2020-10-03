@@ -96,6 +96,10 @@ if (!empty($variants)) {
                     </div>
 
                     <div class="form-group all">
+                        <?= lang('upc', 'upc'); ?>
+                        <?= form_input('upc',set_value('upc', ($product ? $product->upc : '')), 'class="form-control tip" id="upc" required="required"'); ?>
+                    </div>
+                    <div class="form-group all">
                         <?= lang('slug', 'slug'); ?>
                         <?= form_input('slug', set_value('slug', ($product ? $product->slug : '')), 'class="form-control tip" id="slug" required="required"'); ?>
                     </div>

@@ -103,7 +103,10 @@ if (!empty($variants)) {
                         </div>
                         <span class="help-block"><?= lang('you_scan_your_barcode_too') ?></span>
                     </div>
-
+                    <div class="form-group all">
+                        <?= lang('upc', 'upc'); ?>
+                        <?= form_input('upc', set_value('upc'), 'class="form-control tip" id="upc" required="required"'); ?>
+                    </div>
                     <div class="form-group all">
                         <?= lang('slug', 'slug'); ?>
                         <?= form_input('slug', set_value('slug'), 'class="form-control tip" id="slug" required="required"'); ?>

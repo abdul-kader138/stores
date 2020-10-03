@@ -183,3 +183,4 @@ $lang['origin']                                   = 'Origine';
 $lang['food_allergy']                             = 'Allergie alimentaire';
 $lang['margin']                                    = 'Marge du produit';
 $lang['nutrition_facts']                          = 'Apports nutritionnels';
+$lang['upc']                                      = 'UPC';

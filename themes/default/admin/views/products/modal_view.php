@@ -59,6 +59,10 @@
                                     <td><?= $product->code; ?></td>
                                 </tr>
                                 <tr>
+                                    <td><?= lang('upc'); ?></td>
+                                    <td><?= $product->upc; ?></td>
+                                </tr>
+                                <tr>
                                     <td><?= lang('brand'); ?></td>
                                     <td><?= $brand ? $brand->name : ''; ?></td>
                                 </tr>

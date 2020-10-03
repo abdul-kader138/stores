@@ -111,6 +111,10 @@
                                             <td><?php echo $product->code; ?></td>
                                         </tr>
                                         <tr>
+                                            <td><?= lang('upc'); ?></td>
+                                            <td><?php echo $product->upc; ?></td>
+                                        </tr>
+                                        <tr>
                                             <td><?= lang('brand'); ?></td>
                                             <td><?= $brand ? $brand->name : ''; ?></td>
                                         </tr>

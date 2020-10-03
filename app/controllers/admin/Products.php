@@ -83,6 +83,7 @@ class Products extends MY_Controller
                 'cf4' => $allergy_facts,
                 'cf5' => $this->input->post('cf5'),
                 'cf6' => $this->input->post('cf6'),
+                'upc' => $this->input->post('upc'),
                 'promotion' => $this->input->post('promotion'),
                 'promo_price' => $this->sma->formatDecimal($this->input->post('promo_price')),
                 'start_date' => $this->input->post('start_date') ? $this->sma->fsd($this->input->post('start_date')) : null,
@@ -948,6 +949,7 @@ class Products extends MY_Controller
                 'cf4' => $allergy_facts,
                 'cf5' => $this->input->post('cf5'),
                 'cf6' => $this->input->post('cf6'),
+                'upc' => $this->input->post('upc'),
                 'promotion' => $this->input->post('promotion'),
                 'promo_price' => $this->sma->formatDecimal($this->input->post('promo_price')),
                 'start_date' => $this->input->post('start_date') ? $this->sma->fsd($this->input->post('start_date')) : null,
@@ -1642,6 +1644,23 @@ class Products extends MY_Controller
                 foreach ($arrResult as $key => $value) {
                     $supplier_name = isset($value[24]) ? trim($value[24]) : '';
                     $supplier = $supplier_name ? $this->products_model->getSupplierByName($supplier_name) : false;
+                    $margin = isset($value[9]) ? trim($value[9]) : 0;
+                    $cost = isset($value[8]) ? trim($value[8]) : 0;
+                    $price = 0;
+                    if ($margin != 0 && $cost != 0) {
+                        $price = ((($cost * $margin) / 100) + $cost);
+                    }
+                    $allergy_facts = isset($value[19]) ? trim($value[19]) : '';
+                    $allergy_fact_obj = '';
+                    if (!empty($allergy_facts)) {
+                        $allergy_facts = explode(',', $allergy_facts);
+                        $allergy_fact_obj = array();
+                        foreach ($allergy_facts as $allergy_fact) {
+                            $allergy_obj = $this->site->getAllergyFactByName($allergy_fact);
+                            if ($allergy_obj) $allergy_fact_obj[] = $allergy_obj->id;
+                        }
+                        $allergy_fact_obj = serialize($allergy_fact_obj);
+                    }
 
                     $item = [
                         'name' => isset($value[0]) ? trim($value[0]) : '',
@@ -1653,7 +1672,8 @@ class Products extends MY_Controller
                         'sale_unit' => isset($value[6]) ? trim($value[6]) : '',
                         'purchase_unit' => isset($value[7]) ? trim($value[7]) : '',
                         'cost' => isset($value[8]) ? trim($value[8]) : '',
-                        'price' => isset($value[9]) ? trim($value[9]) : '',
+                        'margin' => isset($value[9]) ? trim($value[9]) : '',
+                        'price' => $price,
                         'alert_quantity' => isset($value[10]) ? trim($value[10]) : '',
                         'tax_rate' => isset($value[11]) ? trim($value[11]) : '',
                         'tax_method' => isset($value[12]) ? (trim($value[12]) == 'exclusive' ? 1 : 0) : '',
@@ -1663,7 +1683,7 @@ class Products extends MY_Controller
                         'cf1' => isset($value[16]) ? trim($value[16]) : '',
                         'cf2' => isset($value[17]) ? trim($value[17]) : '',
                         'cf3' => isset($value[18]) ? trim($value[18]) : '',
-                        'cf4' => isset($value[19]) ? trim($value[19]) : '',
+                        'cf4' => $allergy_fact_obj,
                         'cf5' => isset($value[20]) ? trim($value[20]) : '',
                         'cf6' => isset($value[21]) ? trim($value[21]) : '',
                         'hsn_code' => isset($value[22]) ? trim($value[22]) : '',
@@ -1671,6 +1691,7 @@ class Products extends MY_Controller
                         'supplier1' => $supplier ? $supplier->id : null,
                         'supplier1_part_no' => isset($value[25]) ? trim($value[25]) : '',
                         'supplier1price' => isset($value[26]) ? trim($value[26]) : '',
+                        'upc' => isset($value[27]) ? trim($value[27]) : '',
                         'slug' => $this->sma->slug($value[0]),
                     ];
 
@@ -1734,7 +1755,8 @@ class Products extends MY_Controller
                 }
             }
 
-            // $this->sma->print_arrays($items);
+//            $this->sma->print_arrays($items);
+//            die();
         }
 
         if ($this->form_validation->run() == true && !empty($items)) {
@@ -1803,7 +1825,7 @@ class Products extends MY_Controller
         if ($pr_details->type == 'combo') {
             $this->data['combo_items'] = $this->products_model->getProductComboItems($id);
         }
-        $obj_details='';
+        $obj_details = '';
         $this->data['product'] = $pr_details;
         if ($pr_details->cf4) $obj_details = $this->sma->makeObj($pr_details->cf4);
         $this->data['allergy_fact'] = $obj_details;
@@ -1833,7 +1855,7 @@ class Products extends MY_Controller
         if ($pr_details->type == 'combo') {
             $this->data['combo_items'] = $this->products_model->getProductComboItems($id);
         }
-        $obj_details='';
+        $obj_details = '';
         $this->data['product'] = $pr_details;
         if ($pr_details->cf4) $obj_details = $this->sma->makeObj($pr_details->cf4);
         $this->data['allergy_fact'] = $obj_details;
@@ -2080,7 +2102,7 @@ class Products extends MY_Controller
                     $this->excel->getActiveSheet()->SetCellValue('Q1', lang('pcf1'));
                     $this->excel->getActiveSheet()->SetCellValue('R1', lang('pcf2'));
                     $this->excel->getActiveSheet()->SetCellValue('S1', lang('pcf3'));
-                    $this->excel->getActiveSheet()->SetCellValue('T1', lang('pcf4'));
+                    $this->excel->getActiveSheet()->SetCellValue('T1', lang('upc'));
                     $this->excel->getActiveSheet()->SetCellValue('U1', lang('pcf5'));
                     $this->excel->getActiveSheet()->SetCellValue('V1', lang('pcf6'));
                     $this->excel->getActiveSheet()->SetCellValue('W1', lang('hsn_code'));
@@ -2155,7 +2177,7 @@ class Products extends MY_Controller
                         $this->excel->getActiveSheet()->SetCellValue('Q' . $row, $product->cf1);
                         $this->excel->getActiveSheet()->SetCellValue('R' . $row, $product->cf2);
                         $this->excel->getActiveSheet()->SetCellValue('S' . $row, $product->cf3);
-                        $this->excel->getActiveSheet()->SetCellValue('T' . $row, $product->cf4);
+                        $this->excel->getActiveSheet()->SetCellValue('T' . $row, $product->upc);
                         $this->excel->getActiveSheet()->SetCellValue('U' . $row, $product->cf5);
                         $this->excel->getActiveSheet()->SetCellValue('V' . $row, $product->cf6);
                         $this->excel->getActiveSheet()->SetCellValue('W' . $row, $product->hsn_code);
@@ -2402,7 +2424,7 @@ class Products extends MY_Controller
         if ($pr_details->type == 'combo') {
             $this->data['combo_items'] = $this->products_model->getProductComboItems($id);
         }
-        $obj_details='';
+        $obj_details = '';
         $this->data['product'] = $pr_details;
         if ($pr_details->cf4) $obj_details = $this->sma->makeObj($pr_details->cf4);
         $this->data['allergy_fact'] = $obj_details;
@@ -2457,15 +2479,16 @@ class Products extends MY_Controller
         $this->load->view($this->theme . 'products/view_count', $this->data);
     }
 
-    public function makeObj($objs){
+    public function makeObj($objs)
+    {
         $obj_details = '';
         if ($objs) {
             foreach (unserialize($objs) as $obj) {
                 $facts = $this->site->getAllergyFactByID($obj);
                 $obj_details .= $facts->name . ',';
             }
-            $l_index=strripos($obj_details,(','));
-            $obj_details=substr($obj_details,0,($l_index-1));
+            $l_index = strripos($obj_details, (','));
+            $obj_details = substr($obj_details, 0, ($l_index - 1));
         }
         return $obj_details;
     }

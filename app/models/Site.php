@@ -1335,6 +1335,16 @@ class Site extends CI_Model
         return false;
     }
 
+
+    public function getAllergyFactByName($name)
+    {
+        $q = $this->db->get_where('allergy_facts', ['lower(name)' => trim(strtolower($name))], 1);
+        if ($q->num_rows() > 0) {
+            return $q->row();
+        }
+        return false;
+    }
+
     public function getAllAllergyFacts()
     {
         $q = $this->db->get('allergy_facts');

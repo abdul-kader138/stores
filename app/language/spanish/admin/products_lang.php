@@ -121,3 +121,4 @@ $lang['food_allergy']                             = 'Alergia a la comida';
 $lang['margin']                                    = 'Margen de producto';
 $lang['nutrition_facts']                          = 'información nutricional';
 $lang['product_name']                              = 'Nombre';
+$lang['upc']                                      = 'UPC';
