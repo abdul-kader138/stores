@@ -2403,6 +2403,7 @@ class Sales extends MY_Controller
     public function suggestions($pos = 0)
     {
         $term         = $this->input->get('term', true);
+
         $warehouse_id = $this->input->get('warehouse_id', true);
         $customer_id  = $this->input->get('customer_id', true);
 
@@ -2410,6 +2411,10 @@ class Sales extends MY_Controller
             die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . admin_url('welcome') . "'; }, 10);</script>");
         }
 
+        if (str_contains($term, 'Product Number')) {
+            $obj=explode("|",$term);
+            if(isset($obj)) $term=$obj[1];
+        }
         $analyzed  = $this->sma->analyze_term($term);
         $sr        = $analyzed['term'];
         $option_id = $analyzed['option_id'];

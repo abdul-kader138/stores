@@ -29,7 +29,16 @@
             $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
             ?>
             <img src="<?= $base64; ?>" alt="<?= $product->code; ?>" class="bcimg" />
-            <?= $this->sma->qrcode('link', urlencode(admin_url('products/view/' . $product->id)), 2); ?>
+            <?php
+            $qr_obj = '';
+            $qr_obj = nl2br(lang('product_code') . ': ' ."|". $product->code)."|";
+            $qr_obj .= nl2br(lang('product_name') . ': ' . $product->name)."|";
+            if (!empty($product->cf1)) $qr_obj .= nl2br(lang('recipe_one') . ':' . $product->cf1 . "|");
+            if (!empty($product->cf2)) $qr_obj .= nl2br(lang('recipe_two') . ':' . $product->cf2 . "|");
+            if (!empty($product->cf3)) $qr_obj .= nl2br(lang('origin') . ': ' . $product->cf3 . "|");
+            if (!empty($product->cf5)) $qr_obj .= nl2br(lang('nutrition_facts') . ': ' . $product->cf5 . "|");
+            ?>
+            <?= $this->sma->qrcode('text', $qr_obj, 4); ?>
         </div>
 
         <div class="clearfix"></div>
