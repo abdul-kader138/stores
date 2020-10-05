@@ -585,4 +585,18 @@ class Sma
         }
         return $obj_details;
     }
+
+
+    public function make_qr_code($product_code = null)
+    {
+        $row=$this->products_model->getProductByCode($product_code);
+        $qr_obj = '';
+        $qr_obj = nl2br(lang('product_code') . ': ' ."|". $row->code)."|";
+        $qr_obj .= nl2br(lang('product_name') . ': ' . $row->name)."|";
+        if (!empty($row->cf1)) $qr_obj .= nl2br(lang('recipe_one') . ':' . $row->cf1 . "|");
+        if (!empty($row->cf2)) $qr_obj .= nl2br(lang('recipe_two') . ':' . $row->cf2 . "|");
+        if (!empty($row->cf3)) $qr_obj .= nl2br(lang('origin') . ': ' . $row->cf3 . "|");
+        if (!empty($row->cf5)) $qr_obj .= nl2br(lang('nutrition_facts') . ': ' . $row->cf5 . "|");
+        echo $this->qrcode('text', $qr_obj, 4);
+    }
 }

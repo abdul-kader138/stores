@@ -711,6 +711,7 @@ class Products extends MY_Controller
         echo $this->sma->barcode($product_code, $bcs, $height, true, false, true);
     }
 
+
     public function count_stock($page = null)
     {
         $this->sma->checkPermissions('stock_count');
@@ -1516,6 +1517,7 @@ class Products extends MY_Controller
             . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
             . lang('delete_product') . '</a>';
         $single_barcode = anchor('admin/products/print_barcodes/$1', '<i class="fa fa-print"></i> ' . lang('print_barcode_label'));
+        $single_qr = anchor('admin/products/print_qr/$1', '<i class="fa fa-print"></i> ' . lang('Print_QR'));
         // $single_label = anchor_popup('products/single_label/$1/' . ($warehouse_id ? $warehouse_id : ''), '<i class="fa fa-print"></i> ' . lang('print_label'), $this->popup_attributes);
         $action = '<div class="text-center"><div class="btn-group text-left">'
             . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
@@ -1531,6 +1533,7 @@ class Products extends MY_Controller
         $action .= '<li><a href="' . base_url() . 'assets/uploads/$2" data-type="image" data-toggle="lightbox"><i class="fa fa-file-photo-o"></i> '
             . lang('view_image') . '</a></li>
             <li>' . $single_barcode . '</li>
+            <li>' . $single_qr . '</li>
             <li class="divider"></li>
             <li>' . $delete_link . '</li>
             </ul>
@@ -1911,6 +1914,7 @@ class Products extends MY_Controller
                                 'image' => $this->input->post('product_image') ? $product->image : false,
                                 'barcode' => $product->code . $this->Settings->barcode_separator . $option->id,
                                 'bcs' => 'code128',
+                                'code' => $product->code,
                                 'bcis' => $bci_size,
                                 // 'barcode' => $this->product_barcode($product->code . $this->Settings->barcode_separator . $option->id, 'code128', $bci_size),
                                 'price' => $this->input->post('price') ? $this->sma->formatMoney($option->price != 0 ? ($product->price + $option->price) : $product->price, 'none') : false,
@@ -1930,6 +1934,7 @@ class Products extends MY_Controller
                         'image' => $this->input->post('product_image') ? $product->image : false,
                         // 'barcode' => $this->product_barcode($product->code, $product->barcode_symbology, $bci_size),
                         'barcode' => $product->code,
+                        'code' => $product->code,
                         'bcs' => $product->barcode_symbology,
                         'bcis' => $bci_size,
                         'price' => $this->input->post('price') ? $this->sma->formatMoney($product->price, 'none') : false,
@@ -2029,6 +2034,157 @@ class Products extends MY_Controller
             $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('print_barcodes')]];
             $meta = ['page_title' => lang('print_barcodes'), 'bc' => $bc];
             $this->page_construct('products/print_barcodes', $meta, $this->data);
+        }
+    }
+
+
+    public function print_qr($product_id = null)
+    {
+        $this->sma->checkPermissions('barcode', true);
+
+        $this->form_validation->set_rules('style', lang('style'), 'required');
+
+        if ($this->form_validation->run() == true) {
+            $style = $this->input->post('style');
+            $bci_size = ($style == 10 || $style == 12 ? 50 : ($style == 14 || $style == 18 ? 30 : 20));
+            $currencies = $this->site->getAllCurrencies();
+            $s = isset($_POST['product']) ? sizeof($_POST['product']) : 0;
+            if ($s < 1) {
+                $this->session->set_flashdata('error', lang('no_product_selected'));
+                admin_redirect('products/print_barcodes');
+            }
+            for ($m = 0; $m < $s; $m++) {
+                $pid = $_POST['product'][$m];
+                $quantity = $_POST['quantity'][$m];
+                $product = $this->products_model->getProductWithCategory($pid);
+                $product->price = $this->input->post('check_promo') ? ($product->promotion ? $product->promo_price : $product->price) : $product->price;
+                if ($variants = $this->products_model->getProductOptions($pid)) {
+                    foreach ($variants as $option) {
+                        if ($this->input->post('vt_' . $product->id . '_' . $option->id)) {
+                            $barcodes[] = [
+                                'site' => $this->input->post('site_name') ? $this->Settings->site_name : false,
+                                'name' => $this->input->post('product_name') ? $product->name . ' - ' . $option->name : false,
+                                'image' => $this->input->post('product_image') ? $product->image : false,
+                                'barcode' => $product->code . $this->Settings->barcode_separator . $option->id,
+                                'bcs' => 'code128',
+                                'bcis' => $bci_size,
+                                // 'barcode' => $this->product_barcode($product->code . $this->Settings->barcode_separator . $option->id, 'code128', $bci_size),
+                                'price' => $this->input->post('price') ? $this->sma->formatMoney($option->price != 0 ? ($product->price + $option->price) : $product->price, 'none') : false,
+                                'rprice' => $this->input->post('price') ? ($option->price != 0 ? ($product->price + $option->price) : $product->price) : false,
+                                'unit' => $this->input->post('unit') ? $product->unit : false,
+                                'category' => $this->input->post('category') ? $product->category : false,
+                                'currencies' => $this->input->post('currencies'),
+                                'variants' => $this->input->post('variants') ? $variants : false,
+                                'quantity' => $quantity,
+                            ];
+                        }
+                    }
+                } else {
+                    $barcodes[] = [
+                        'site' => $this->input->post('site_name') ? $this->Settings->site_name : false,
+                        'name' => $this->input->post('product_name') ? $product->name : false,
+                        'image' => $this->input->post('product_image') ? $product->image : false,
+                        // 'barcode' => $this->product_barcode($product->code, $product->barcode_symbology, $bci_size),
+                        'barcode' => $product->code,
+                        'bcs' => $product->barcode_symbology,
+                        'bcis' => $bci_size,
+                        'price' => $this->input->post('price') ? $this->sma->formatMoney($product->price, 'none') : false,
+                        'rprice' => $this->input->post('price') ? $product->price : false,
+                        'unit' => $this->input->post('unit') ? $product->unit : false,
+                        'category' => $this->input->post('category') ? $product->category : false,
+                        'currencies' => $this->input->post('currencies'),
+                        'variants' => false,
+                        'quantity' => $quantity,
+                    ];
+                }
+            }
+            $this->data['barcodes'] = $barcodes;
+            $this->data['currencies'] = $currencies;
+            $this->data['style'] = $style;
+            $this->data['items'] = false;
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('Print_QR')]];
+            $meta = ['page_title' => lang('Print_QR'), 'bc' => $bc];
+            $this->page_construct('products/print_qr', $meta, $this->data);
+        } else {
+            if ($this->input->get('purchase') || $this->input->get('transfer')) {
+                if ($this->input->get('purchase')) {
+                    $purchase_id = $this->input->get('purchase', true);
+                    $items = $this->products_model->getPurchaseItems($purchase_id);
+                } elseif ($this->input->get('transfer')) {
+                    $transfer_id = $this->input->get('transfer', true);
+                    $items = $this->products_model->getTransferItems($transfer_id);
+                }
+                if ($items) {
+                    foreach ($items as $item) {
+                        if ($row = $this->products_model->getProductByID($item->product_id)) {
+                            $selected_variants = false;
+                            if ($variants = $this->products_model->getProductOptions($row->id)) {
+                                foreach ($variants as $variant) {
+                                    $selected_variants[$variant->id] = isset($pr[$row->id]['selected_variants'][$variant->id]) && !empty($pr[$row->id]['selected_variants'][$variant->id]) ? 1 : ($variant->id == $item->option_id ? 1 : 0);
+                                }
+                            }
+                            $pr[$row->id] = ['id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'code' => $row->code, 'name' => $row->name, 'price' => $row->price, 'qty' => $item->quantity, 'variants' => $variants, 'selected_variants' => $selected_variants];
+                        }
+                    }
+                    $this->data['message'] = lang('products_added_to_list');
+                }
+            }
+
+            if ($product_id) {
+                if ($row = $this->site->getProductByID($product_id)) {
+                    $selected_variants = false;
+                    if ($variants = $this->products_model->getProductOptions($row->id)) {
+                        foreach ($variants as $variant) {
+                            $selected_variants[$variant->id] = $variant->quantity > 0 ? 1 : 0;
+                        }
+                    }
+                    $pr[$row->id] = ['id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'code' => $row->code, 'name' => $row->name, 'price' => $row->price, 'qty' => $row->quantity, 'variants' => $variants, 'selected_variants' => $selected_variants];
+
+                    $this->data['message'] = lang('product_added_to_list');
+                }
+            }
+
+            if ($this->input->get('category')) {
+                if ($products = $this->products_model->getCategoryProducts($this->input->get('category'))) {
+                    foreach ($products as $row) {
+                        $selected_variants = false;
+                        if ($variants = $this->products_model->getProductOptions($row->id)) {
+                            foreach ($variants as $variant) {
+                                $selected_variants[$variant->id] = $variant->quantity > 0 ? 1 : 0;
+                            }
+                        }
+                        $pr[$row->id] = ['id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'code' => $row->code, 'name' => $row->name, 'price' => $row->price, 'qty' => $row->quantity, 'variants' => $variants, 'selected_variants' => $selected_variants];
+                    }
+                    $this->data['message'] = lang('products_added_to_list');
+                } else {
+                    $pr = [];
+                    $this->session->set_flashdata('error', lang('no_product_found'));
+                }
+            }
+
+            if ($this->input->get('subcategory')) {
+                if ($products = $this->products_model->getSubCategoryProducts($this->input->get('subcategory'))) {
+                    foreach ($products as $row) {
+                        $selected_variants = false;
+                        if ($variants = $this->products_model->getProductOptions($row->id)) {
+                            foreach ($variants as $variant) {
+                                $selected_variants[$variant->id] = $variant->quantity > 0 ? 1 : 0;
+                            }
+                        }
+                        $pr[$row->id] = ['id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'code' => $row->code, 'name' => $row->name, 'price' => $row->price, 'qty' => $row->quantity, 'variants' => $variants, 'selected_variants' => $selected_variants];
+                    }
+                    $this->data['message'] = lang('products_added_to_list');
+                } else {
+                    $pr = [];
+                    $this->session->set_flashdata('error', lang('no_product_found'));
+                }
+            }
+
+            $this->data['items'] = isset($pr) ? json_encode($pr) : false;
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('products'), 'page' => lang('products')], ['link' => '#', 'page' => lang('Print_QR')]];
+            $meta = ['page_title' => lang('Print_QR'), 'bc' => $bc];
+            $this->page_construct('products/print_qr', $meta, $this->data);
         }
     }
 
