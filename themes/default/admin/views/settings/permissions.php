@@ -120,6 +120,12 @@
                                             <input type="checkbox" value="1" id="sales-return_sales" class="checkbox" name="sales-return_sales" <?php echo $p->{'sales-return_sales'} ? 'checked' : ''; ?>>
                                             <label for="sales-return_sales" class="padding05"><?= lang('return_sales') ?></label>
                                         </span>
+<!--                                        a.kader-->
+                                        <span style="display:inline-block;">
+                                            <input type="checkbox" value="1" id="sales-return_history" class="checkbox" name="sales-return_history" <?php echo $p->{'sales-return_history'} ? 'checked' : ''; ?>>
+                                            <label for="sales-return_history" class="padding05"><?= lang('Return_History') ?></label>
+                                        </span>
+<!--                                        a.kader-->
                                     </td>
                                 </tr>
 
@@ -386,6 +392,12 @@
                                             <input type="checkbox" value="1" class="checkbox" id="staff" name="reports-staff" <?php echo $p->{'reports-staff'} ? 'checked' : ''; ?>>
                                             <label for="staff" class="padding05"><?= lang('staff') ?></label>
                                         </span>
+<!--                                        a.kader-->
+                                        <span style="display:inline-block;">
+                                            <input type="checkbox" value="1" id="reports-return_history" class="checkbox" name="reports-return_history" <?php echo $p->{'reports-return_history'} ? 'checked' : ''; ?>>
+                                            <label for="reports-return_history" class="padding05"><?= lang('Return_History') ?></label>
+                                        </span>
+                                        <!--                                        a.kader-->
                                     </td>
                                 </tr>
 

@@ -432,6 +432,9 @@ class Site extends CI_Model
 
     public function getAllWarehouses()
     {
+        if (!$this->Owner && !$this->Admin && $this->session->userdata('warehouse_id')) {
+            $this->db->where('id', $this->session->userdata('warehouse_id'));
+        }
         $q = $this->db->get('warehouses');
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {

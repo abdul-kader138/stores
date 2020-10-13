@@ -17,14 +17,14 @@ class Reports extends MY_Controller
         $this->load->library('form_validation');
         $this->load->admin_model('reports_model');
         $this->data['pb'] = [
-            'cash'       => lang('cash'),
-            'CC'         => lang('CC'),
-            'Cheque'     => lang('Cheque'),
+            'cash' => lang('cash'),
+            'CC' => lang('CC'),
+            'Cheque' => lang('Cheque'),
             'paypal_pro' => lang('paypal_pro'),
-            'stripe'     => lang('stripe'),
-            'gift_card'  => lang('gift_card'),
-            'deposit'    => lang('deposit'),
-            'authorize'  => lang('authorize'),
+            'stripe' => lang('stripe'),
+            'gift_card' => lang('gift_card'),
+            'deposit' => lang('deposit'),
+            'authorize' => lang('authorize'),
         ];
     }
 
@@ -32,12 +32,12 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions('products');
 
-        $this->data['users']      = $this->reports_model->getStaff();
+        $this->data['users'] = $this->reports_model->getStaff();
         $this->data['warehouses'] = $this->site->getAllWarehouses();
 
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $bc                  = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('adjustments_report')]];
-        $meta                = ['page_title' => lang('adjustments_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('adjustments_report')]];
+        $meta = ['page_title' => lang('adjustments_report'), 'bc' => $bc];
         $this->page_construct('reports/adjustments', $meta, $this->data);
     }
 
@@ -46,48 +46,48 @@ class Reports extends MY_Controller
         $this->sma->checkPermissions('products');
 
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-        $y1                  = date('Y', strtotime('-1 month'));
-        $m1                  = date('m', strtotime('-1 month'));
-        $m1sdate             = $y1 . '-' . $m1 . '-01 00:00:00';
-        $m1edate             = $y1 . '-' . $m1 . '-' . days_in_month($m1, $y1) . ' 23:59:59';
-        $this->data['m1']    = date('M Y', strtotime($y1 . '-' . $m1));
-        $this->data['m1bs']  = $this->reports_model->getBestSeller($m1sdate, $m1edate, $warehouse_id);
-        $y2                  = date('Y', strtotime('-2 months'));
-        $m2                  = date('m', strtotime('-2 months'));
-        $m2sdate             = $y2 . '-' . $m2 . '-01 00:00:00';
-        $m2edate             = $y2 . '-' . $m2 . '-' . days_in_month($m2, $y2) . ' 23:59:59';
-        $this->data['m2']    = date('M Y', strtotime($y2 . '-' . $m2));
-        $this->data['m2bs']  = $this->reports_model->getBestSeller($m2sdate, $m2edate, $warehouse_id);
-        $y3                  = date('Y', strtotime('-3 months'));
-        $m3                  = date('m', strtotime('-3 months'));
-        $m3sdate             = $y3 . '-' . $m3 . '-01 23:59:59';
-        $this->data['m3']    = date('M Y', strtotime($y3 . '-' . $m3)) . ' - ' . $this->data['m1'];
-        $this->data['m3bs']  = $this->reports_model->getBestSeller($m3sdate, $m1edate, $warehouse_id);
-        $y4                  = date('Y', strtotime('-12 months'));
-        $m4                  = date('m', strtotime('-12 months'));
-        $m4sdate             = $y4 . '-' . $m4 . '-01 23:59:59';
-        $this->data['m4']    = date('M Y', strtotime($y4 . '-' . $m4)) . ' - ' . $this->data['m1'];
-        $this->data['m4bs']  = $this->reports_model->getBestSeller($m4sdate, $m1edate, $warehouse_id);
+        $y1 = date('Y', strtotime('-1 month'));
+        $m1 = date('m', strtotime('-1 month'));
+        $m1sdate = $y1 . '-' . $m1 . '-01 00:00:00';
+        $m1edate = $y1 . '-' . $m1 . '-' . days_in_month($m1, $y1) . ' 23:59:59';
+        $this->data['m1'] = date('M Y', strtotime($y1 . '-' . $m1));
+        $this->data['m1bs'] = $this->reports_model->getBestSeller($m1sdate, $m1edate, $warehouse_id);
+        $y2 = date('Y', strtotime('-2 months'));
+        $m2 = date('m', strtotime('-2 months'));
+        $m2sdate = $y2 . '-' . $m2 . '-01 00:00:00';
+        $m2edate = $y2 . '-' . $m2 . '-' . days_in_month($m2, $y2) . ' 23:59:59';
+        $this->data['m2'] = date('M Y', strtotime($y2 . '-' . $m2));
+        $this->data['m2bs'] = $this->reports_model->getBestSeller($m2sdate, $m2edate, $warehouse_id);
+        $y3 = date('Y', strtotime('-3 months'));
+        $m3 = date('m', strtotime('-3 months'));
+        $m3sdate = $y3 . '-' . $m3 . '-01 23:59:59';
+        $this->data['m3'] = date('M Y', strtotime($y3 . '-' . $m3)) . ' - ' . $this->data['m1'];
+        $this->data['m3bs'] = $this->reports_model->getBestSeller($m3sdate, $m1edate, $warehouse_id);
+        $y4 = date('Y', strtotime('-12 months'));
+        $m4 = date('m', strtotime('-12 months'));
+        $m4sdate = $y4 . '-' . $m4 . '-01 23:59:59';
+        $this->data['m4'] = date('M Y', strtotime($y4 . '-' . $m4)) . ' - ' . $this->data['m1'];
+        $this->data['m4bs'] = $this->reports_model->getBestSeller($m4sdate, $m1edate, $warehouse_id);
         // $this->sma->print_arrays($this->data['m1bs'], $this->data['m2bs'], $this->data['m3bs'], $this->data['m4bs']);
         $this->data['warehouses'] = $this->site->getAllWarehouses();
-        $this->data['warehouse']  = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
-        $bc                       = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('best_sellers')]];
-        $meta                     = ['page_title' => lang('best_sellers'), 'bc' => $bc];
+        $this->data['warehouse'] = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('best_sellers')]];
+        $meta = ['page_title' => lang('best_sellers'), 'bc' => $bc];
         $this->page_construct('reports/best_sellers', $meta, $this->data);
     }
 
     public function brands()
     {
         $this->sma->checkPermissions('products');
-        $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-        $this->data['brands']     = $this->site->getAllBrands();
+        $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+        $this->data['brands'] = $this->site->getAllBrands();
         $this->data['warehouses'] = $this->site->getAllWarehouses();
         if ($this->input->post('start_date')) {
             $dt = 'From ' . $this->input->post('start_date') . ' to ' . $this->input->post('end_date');
         } else {
             $dt = 'Till ' . $this->input->post('end_date');
         }
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('brands_report')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('brands_report')]];
         $meta = ['page_title' => lang('brands_report'), 'bc' => $bc];
         $this->page_construct('reports/brands', $meta, $this->data);
     }
@@ -95,7 +95,7 @@ class Reports extends MY_Controller
     public function categories()
     {
         $this->sma->checkPermissions('products');
-        $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+        $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $this->data['categories'] = $this->site->getAllCategories();
         $this->data['warehouses'] = $this->site->getAllWarehouses();
         if ($this->input->post('start_date')) {
@@ -103,7 +103,7 @@ class Reports extends MY_Controller
         } else {
             $dt = 'Till ' . $this->input->post('end_date');
         }
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('categories_report')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('categories_report')]];
         $meta = ['page_title' => lang('categories_report'), 'bc' => $bc];
         $this->page_construct('reports/categories', $meta, $this->data);
     }
@@ -116,19 +116,19 @@ class Reports extends MY_Controller
             admin_redirect('reports/customers');
         }
 
-        $this->data['sales']         = $this->reports_model->getSalesTotals($user_id);
-        $this->data['total_sales']   = $this->reports_model->getCustomerSales($user_id);
-        $this->data['total_quotes']  = $this->reports_model->getCustomerQuotes($user_id);
+        $this->data['sales'] = $this->reports_model->getSalesTotals($user_id);
+        $this->data['total_sales'] = $this->reports_model->getCustomerSales($user_id);
+        $this->data['total_quotes'] = $this->reports_model->getCustomerQuotes($user_id);
         $this->data['total_returns'] = $this->reports_model->getCustomerReturns($user_id);
-        $this->data['users']         = $this->reports_model->getStaff();
-        $this->data['warehouses']    = $this->site->getAllWarehouses();
-        $this->data['billers']       = $this->site->getAllCompanies('biller');
+        $this->data['users'] = $this->reports_model->getStaff();
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        $this->data['billers'] = $this->site->getAllCompanies('biller');
 
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
 
         $this->data['user_id'] = $user_id;
-        $bc                    = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('customers_report')]];
-        $meta                  = ['page_title' => lang('customers_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('customers_report')]];
+        $meta = ['page_title' => lang('customers_report'), 'bc' => $bc];
         $this->page_construct('reports/customer_report', $meta, $this->data);
     }
 
@@ -137,7 +137,7 @@ class Reports extends MY_Controller
         $this->sma->checkPermissions('customers');
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('customers_report')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('customers_report')]];
         $meta = ['page_title' => lang('customers_report'), 'bc' => $bc];
         $this->page_construct('reports/customers', $meta, $this->data);
     }
@@ -158,11 +158,11 @@ class Reports extends MY_Controller
             $user_id = $this->session->userdata('user_id');
         }
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $config              = [
+        $config = [
             'show_next_prev' => true,
-            'next_prev_url'  => admin_url('reports/daily_purchases/' . ($warehouse_id ? $warehouse_id : 0)),
-            'month_type'     => 'long',
-            'day_type'       => 'long',
+            'next_prev_url' => admin_url('reports/daily_purchases/' . ($warehouse_id ? $warehouse_id : 0)),
+            'month_type' => 'long',
+            'day_type' => 'long',
         ];
 
         $config['template'] = '{table_open}<div class="table-responsive"><table border="0" cellpadding="0" cellspacing="0" class="table table-bordered dfTable">{/table_open}
@@ -203,19 +203,19 @@ class Reports extends MY_Controller
         }
 
         $this->data['calender'] = $this->calendar->generate($year, $month, $daily_purchase);
-        $this->data['year']     = $year;
-        $this->data['month']    = $month;
+        $this->data['year'] = $year;
+        $this->data['month'] = $month;
         if ($pdf) {
             $html = $this->load->view($this->theme . 'reports/daily', $this->data, true);
             $name = lang('daily_purchases') . '_' . $year . '_' . $month . '.pdf';
             $html = str_replace('<p class="introtext">' . lang('reports_calendar_text') . '</p>', '', $html);
             $this->sma->generate_pdf($html, $name, null, null, null, null, null, 'L');
         }
-        $this->data['warehouses']    = $this->site->getAllWarehouses();
-        $this->data['warehouse_id']  = $warehouse_id;
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        $this->data['warehouse_id'] = $warehouse_id;
         $this->data['sel_warehouse'] = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
-        $bc                          = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('daily_purchases_report')]];
-        $meta                        = ['page_title' => lang('daily_purchases_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('daily_purchases_report')]];
+        $meta = ['page_title' => lang('daily_purchases_report'), 'bc' => $bc];
         $this->page_construct('reports/daily_purchases', $meta, $this->data);
     }
 
@@ -235,11 +235,11 @@ class Reports extends MY_Controller
             $user_id = $this->session->userdata('user_id');
         }
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $config              = [
+        $config = [
             'show_next_prev' => true,
-            'next_prev_url'  => admin_url('reports/daily_sales/' . ($warehouse_id ? $warehouse_id : 0)),
-            'month_type'     => 'long',
-            'day_type'       => 'long',
+            'next_prev_url' => admin_url('reports/daily_sales/' . ($warehouse_id ? $warehouse_id : 0)),
+            'month_type' => 'long',
+            'day_type' => 'long',
         ];
 
         $config['template'] = '{table_open}<div class="table-responsive"><table border="0" cellpadding="0" cellspacing="0" class="table table-bordered dfTable">{/table_open}
@@ -280,31 +280,31 @@ class Reports extends MY_Controller
         }
 
         $this->data['calender'] = $this->calendar->generate($year, $month, $daily_sale);
-        $this->data['year']     = $year;
-        $this->data['month']    = $month;
+        $this->data['year'] = $year;
+        $this->data['month'] = $month;
         if ($pdf) {
             $html = $this->load->view($this->theme . 'reports/daily', $this->data, true);
             $name = lang('daily_sales') . '_' . $year . '_' . $month . '.pdf';
             $html = str_replace('<p class="introtext">' . lang('reports_calendar_text') . '</p>', '', $html);
             $this->sma->generate_pdf($html, $name, null, null, null, null, null, 'L');
         }
-        $this->data['warehouses']    = $this->site->getAllWarehouses();
-        $this->data['warehouse_id']  = $warehouse_id;
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        $this->data['warehouse_id'] = $warehouse_id;
         $this->data['sel_warehouse'] = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
-        $bc                          = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('daily_sales_report')]];
-        $meta                        = ['page_title' => lang('daily_sales_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('daily_sales_report')]];
+        $meta = ['page_title' => lang('daily_sales_report'), 'bc' => $bc];
         $this->page_construct('reports/daily', $meta, $this->data);
     }
 
     public function expenses($id = null)
     {
         $this->sma->checkPermissions();
-        $this->data['error']      = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $this->data['warehouses'] = $this->site->getAllWarehouses();
-        $this->data['users']      = $this->reports_model->getStaff();
+        $this->data['users'] = $this->reports_model->getStaff();
         $this->data['categories'] = $this->reports_model->getExpenseCategories();
-        $bc                       = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('expenses')]];
-        $meta                     = ['page_title' => lang('expenses'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('expenses')]];
+        $meta = ['page_title' => lang('expenses'), 'bc' => $bc];
         $this->page_construct('reports/expenses', $meta, $this->data);
     }
 
@@ -314,17 +314,17 @@ class Reports extends MY_Controller
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
         if ($this->Owner || $this->Admin || !$this->session->userdata('warehouse_id')) {
-            $this->data['warehouses']   = $this->site->getAllWarehouses();
+            $this->data['warehouses'] = $this->site->getAllWarehouses();
             $this->data['warehouse_id'] = $warehouse_id;
-            $this->data['warehouse']    = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
+            $this->data['warehouse'] = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
         } else {
-            $user                       = $this->site->getUser();
-            $this->data['warehouses']   = null;
+            $user = $this->site->getUser();
+            $this->data['warehouses'] = null;
             $this->data['warehouse_id'] = $user->warehouse_id;
-            $this->data['warehouse']    = $user->warehouse_id ? $this->site->getWarehouseByID($user->warehouse_id) : null;
+            $this->data['warehouse'] = $user->warehouse_id ? $this->site->getWarehouseByID($user->warehouse_id) : null;
         }
 
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('product_expiry_alerts')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('product_expiry_alerts')]];
         $meta = ['page_title' => lang('product_expiry_alerts'), 'bc' => $bc];
         $this->page_construct('reports/expiry_alerts', $meta, $this->data);
     }
@@ -344,13 +344,13 @@ class Reports extends MY_Controller
     public function get_purchase_taxes($pdf = null, $xls = null)
     {
         $this->sma->checkPermissions('tax', true);
-        $supplier   = $this->input->get('supplier') ? $this->input->get('supplier') : null;
-        $warehouse  = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
+        $supplier = $this->input->get('supplier') ? $this->input->get('supplier') : null;
+        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
         $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date   = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
         if ($start_date) {
             $start_date = $this->sma->fld($start_date);
-            $end_date   = $this->sma->fld($end_date);
+            $end_date = $this->sma->fld($end_date);
         }
 
         if ($pdf || $xls) {
@@ -394,7 +394,7 @@ class Reports extends MY_Controller
                 $this->excel->getActiveSheet()->SetCellValue('I1', lang('order_tax'));
                 $this->excel->getActiveSheet()->SetCellValue('J1', lang('grand_total'));
 
-                $row   = 2;
+                $row = 2;
                 $total = $order_tax = $product_tax = $igst = $cgst = $sgst = 0;
                 foreach ($data as $data_row) {
                     $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($data_row->date));
@@ -407,16 +407,16 @@ class Reports extends MY_Controller
                     $this->excel->getActiveSheet()->SetCellValue('H' . $row, $this->sma->formatDecimal($data_row->product_tax));
                     $this->excel->getActiveSheet()->SetCellValue('I' . $row, $this->sma->formatDecimal($data_row->order_tax));
                     $this->excel->getActiveSheet()->SetCellValue('J' . $row, $this->sma->formatDecimal($data_row->grand_total));
-                    $igst        += $data_row->igst;
-                    $cgst        += $data_row->cgst;
-                    $sgst        += $data_row->sgst;
+                    $igst += $data_row->igst;
+                    $cgst += $data_row->cgst;
+                    $sgst += $data_row->sgst;
                     $product_tax += $data_row->product_tax;
-                    $order_tax   += $data_row->order_tax;
-                    $total       += $data_row->grand_total;
+                    $order_tax += $data_row->order_tax;
+                    $total += $data_row->grand_total;
                     $row++;
                 }
                 $this->excel->getActiveSheet()->getStyle('E' . $row . ':J' . $row)->getBorders()
-                        ->getTop()->setBorderStyle('medium');
+                    ->getTop()->setBorderStyle('medium');
                 $this->excel->getActiveSheet()->SetCellValue('E' . $row, $this->sma->formatDecimal($igst));
                 $this->excel->getActiveSheet()->SetCellValue('F' . $row, $this->sma->formatDecimal($cgst));
                 $this->excel->getActiveSheet()->SetCellValue('G' . $row, $this->sma->formatDecimal($sgst));
@@ -465,13 +465,13 @@ class Reports extends MY_Controller
     public function get_sale_taxes($pdf = null, $xls = null)
     {
         $this->sma->checkPermissions('tax', true);
-        $biller     = $this->input->get('biller') ? $this->input->get('biller') : null;
-        $warehouse  = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
+        $biller = $this->input->get('biller') ? $this->input->get('biller') : null;
+        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
         $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date   = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
         if ($start_date) {
             $start_date = $this->sma->fld($start_date);
-            $end_date   = $this->sma->fld($end_date);
+            $end_date = $this->sma->fld($end_date);
         }
 
         if ($pdf || $xls) {
@@ -515,7 +515,7 @@ class Reports extends MY_Controller
                 $this->excel->getActiveSheet()->SetCellValue('I1', lang('order_tax'));
                 $this->excel->getActiveSheet()->SetCellValue('J1', lang('grand_total'));
 
-                $row   = 2;
+                $row = 2;
                 $total = $order_tax = $product_tax = $igst = $cgst = $sgst = 0;
                 foreach ($data as $data_row) {
                     $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($data_row->date));
@@ -528,12 +528,12 @@ class Reports extends MY_Controller
                     $this->excel->getActiveSheet()->SetCellValue('H' . $row, $this->sma->formatDecimal($data_row->product_tax));
                     $this->excel->getActiveSheet()->SetCellValue('I' . $row, $this->sma->formatDecimal($data_row->order_tax));
                     $this->excel->getActiveSheet()->SetCellValue('J' . $row, $this->sma->formatDecimal($data_row->grand_total));
-                    $igst        += $data_row->igst;
-                    $cgst        += $data_row->cgst;
-                    $sgst        += $data_row->sgst;
+                    $igst += $data_row->igst;
+                    $cgst += $data_row->cgst;
+                    $sgst += $data_row->sgst;
                     $product_tax += $data_row->product_tax;
-                    $order_tax   += $data_row->order_tax;
-                    $total       += $data_row->grand_total;
+                    $order_tax += $data_row->order_tax;
+                    $total += $data_row->grand_total;
                     $row++;
                 }
                 $this->excel->getActiveSheet()->getStyle('E' . $row . ':J' . $row)->getBorders()
@@ -586,17 +586,17 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions('products', true);
 
-        $product      = $this->input->get('product') ? $this->input->get('product') : null;
-        $warehouse    = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
-        $user         = $this->input->get('user') ? $this->input->get('user') : null;
+        $product = $this->input->get('product') ? $this->input->get('product') : null;
+        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
+        $user = $this->input->get('user') ? $this->input->get('user') : null;
         $reference_no = $this->input->get('reference_no') ? $this->input->get('reference_no') : null;
-        $start_date   = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date     = $this->input->get('end_date') ? $this->input->get('end_date') : null;
-        $serial       = $this->input->get('serial') ? $this->input->get('serial') : null;
+        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $serial = $this->input->get('serial') ? $this->input->get('serial') : null;
 
         if ($start_date) {
             $start_date = $this->sma->fld($start_date);
-            $end_date   = $this->sma->fld($end_date);
+            $end_date = $this->sma->fld($end_date);
         }
         if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
             $user = $this->session->userdata('user_id');
@@ -606,10 +606,10 @@ class Reports extends MY_Controller
             $ai = "( SELECT adjustment_id, product_id, serial_no, GROUP_CONCAT(CONCAT({$this->db->dbprefix('products')}.name, ' (', (CASE WHEN {$this->db->dbprefix('adjustment_items')}.type  = 'subtraction' THEN (0-{$this->db->dbprefix('adjustment_items')}.quantity) ELSE {$this->db->dbprefix('adjustment_items')}.quantity END), ')') SEPARATOR '\n') as item_nane from {$this->db->dbprefix('adjustment_items')} LEFT JOIN {$this->db->dbprefix('products')} ON {$this->db->dbprefix('products')}.id={$this->db->dbprefix('adjustment_items')}.product_id GROUP BY {$this->db->dbprefix('adjustment_items')}.adjustment_id ) FAI";
 
             $this->db->select("DATE_FORMAT(date, '%Y-%m-%d %T') as date, reference_no, warehouses.name as wh_name, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as created_by, note, FAI.item_nane as iname, {$this->db->dbprefix('adjustments')}.id as id", false)
-            ->from('adjustments')
-            ->join($ai, 'FAI.adjustment_id=adjustments.id', 'left')
-            ->join('users', 'users.id=adjustments.created_by', 'left')
-            ->join('warehouses', 'warehouses.id=adjustments.warehouse_id', 'left');
+                ->from('adjustments')
+                ->join($ai, 'FAI.adjustment_id=adjustments.id', 'left')
+                ->join('users', 'users.id=adjustments.created_by', 'left')
+                ->join('warehouses', 'warehouses.id=adjustments.warehouse_id', 'left');
 
             if ($user) {
                 $this->db->where('adjustments.created_by', $user);
@@ -693,11 +693,11 @@ class Reports extends MY_Controller
             $ai .= " GROUP BY {$this->db->dbprefix('adjustment_items')}.adjustment_id ) FAI";
             $this->load->library('datatables');
             $this->datatables
-            ->select("DATE_FORMAT(date, '%Y-%m-%d %T') as date, reference_no, warehouses.name as wh_name, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as created_by, note, FAI.item_nane as iname, {$this->db->dbprefix('adjustments')}.id as id", false)
-            ->from('adjustments')
-            ->join($ai, 'FAI.adjustment_id=adjustments.id', 'left')
-            ->join('users', 'users.id=adjustments.created_by', 'left')
-            ->join('warehouses', 'warehouses.id=adjustments.warehouse_id', 'left');
+                ->select("DATE_FORMAT(date, '%Y-%m-%d %T') as date, reference_no, warehouses.name as wh_name, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as created_by, note, FAI.item_nane as iname, {$this->db->dbprefix('adjustments')}.id as id", false)
+                ->from('adjustments')
+                ->join($ai, 'FAI.adjustment_id=adjustments.id', 'left')
+                ->join('users', 'users.id=adjustments.created_by', 'left')
+                ->join('warehouses', 'warehouses.id=adjustments.warehouse_id', 'left');
 
             if ($user) {
                 $this->datatables->where('adjustments.created_by', $user);
@@ -725,10 +725,10 @@ class Reports extends MY_Controller
     public function getBrandsReport($pdf = null, $xls = null)
     {
         $this->sma->checkPermissions('products', true);
-        $warehouse  = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
-        $brand      = $this->input->get('brand') ? $this->input->get('brand') : null;
+        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
+        $brand = $this->input->get('brand') ? $this->input->get('brand') : null;
         $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date   = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
 
         $pp = "( SELECT pp.brand as brand, SUM( pi.quantity ) purchasedQty, SUM( pi.subtotal ) totalPurchase from {$this->db->dbprefix('products')} pp
                 left JOIN " . $this->db->dbprefix('purchase_items') . ' pi ON pp.id = pi.product_id
@@ -741,7 +741,7 @@ class Reports extends MY_Controller
             $sp .= ' WHERE ';
             if ($start_date) {
                 $start_date = $this->sma->fld($start_date);
-                $end_date   = $end_date ? $this->sma->fld($end_date) : date('Y-m-d');
+                $end_date = $end_date ? $this->sma->fld($end_date) : date('Y-m-d');
                 $pp .= " p.date >= '{$start_date}' AND p.date < '{$end_date}' ";
                 $sp .= " s.date >= '{$start_date}' AND s.date < '{$end_date}' ";
                 if ($warehouse) {
@@ -795,12 +795,12 @@ class Reports extends MY_Controller
                 $this->excel->getActiveSheet()->SetCellValue('E1', lang('sold_amount'));
                 $this->excel->getActiveSheet()->SetCellValue('F1', lang('profit_loss'));
 
-                $row  = 2;
+                $row = 2;
                 $sQty = 0;
                 $pQty = 0;
                 $sAmt = 0;
                 $pAmt = 0;
-                $pl   = 0;
+                $pl = 0;
                 foreach ($data as $data_row) {
                     $profit = $data_row->TotalSales - $data_row->TotalPurchase;
                     $this->excel->getActiveSheet()->SetCellValue('A' . $row, $data_row->name);
@@ -813,7 +813,7 @@ class Reports extends MY_Controller
                     $sQty += $data_row->SoldQty;
                     $pAmt += $data_row->TotalPurchase;
                     $sAmt += $data_row->TotalSales;
-                    $pl   += $profit;
+                    $pl += $profit;
                     $row++;
                 }
                 $this->excel->getActiveSheet()->getStyle('B' . $row . ':F' . $row)->getBorders()
@@ -863,10 +863,10 @@ class Reports extends MY_Controller
     public function getCategoriesReport($pdf = null, $xls = null)
     {
         $this->sma->checkPermissions('products', true);
-        $warehouse  = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
-        $category   = $this->input->get('category') ? $this->input->get('category') : null;
+        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
+        $category = $this->input->get('category') ? $this->input->get('category') : null;
         $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date   = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
 
         $pp = "( SELECT pp.category_id as category, SUM( pi.quantity ) purchasedQty, SUM( pi.subtotal ) totalPurchase from {$this->db->dbprefix('products')} pp
                 left JOIN " . $this->db->dbprefix('purchase_items') . ' pi ON pp.id = pi.product_id
@@ -879,7 +879,7 @@ class Reports extends MY_Controller
             $sp .= ' WHERE ';
             if ($start_date) {
                 $start_date = $this->sma->fld($start_date);
-                $end_date   = $end_date ? $this->sma->fld($end_date) : date('Y-m-d');
+                $end_date = $end_date ? $this->sma->fld($end_date) : date('Y-m-d');
                 $pp .= " p.date >= '{$start_date}' AND p.date < '{$end_date}' ";
                 $sp .= " s.date >= '{$start_date}' AND s.date < '{$end_date}' ";
                 if ($warehouse) {
@@ -935,12 +935,12 @@ class Reports extends MY_Controller
                 $this->excel->getActiveSheet()->SetCellValue('F1', lang('sold_amount'));
                 $this->excel->getActiveSheet()->SetCellValue('G1', lang('profit_loss'));
 
-                $row  = 2;
+                $row = 2;
                 $sQty = 0;
                 $pQty = 0;
                 $sAmt = 0;
                 $pAmt = 0;
-                $pl   = 0;
+                $pl = 0;
                 foreach ($data as $data_row) {
                     $profit = $data_row->TotalSales - $data_row->TotalPurchase;
                     $this->excel->getActiveSheet()->SetCellValue('A' . $row, $data_row->code);
@@ -954,7 +954,7 @@ class Reports extends MY_Controller
                     $sQty += $data_row->SoldQty;
                     $pAmt += $data_row->TotalPurchase;
                     $sAmt += $data_row->TotalSales;
-                    $pl   += $profit;
+                    $pl += $profit;
                     $row++;
                 }
                 $this->excel->getActiveSheet()->getStyle('C' . $row . ':G' . $row)->getBorders()
@@ -1017,7 +1017,7 @@ class Reports extends MY_Controller
         }
         if ($login_start_date) {
             $login_start_date = $this->sma->fld($login_start_date);
-            $login_end_date   = $login_end_date ? $this->sma->fld($login_end_date) : date('Y-m-d H:i:s');
+            $login_end_date = $login_end_date ? $this->sma->fld($login_end_date) : date('Y-m-d H:i:s');
         }
         $this->load->library('datatables');
         $this->datatables
@@ -1113,25 +1113,25 @@ class Reports extends MY_Controller
         $this->sma->checkPermissions('expenses');
 
         $reference_no = $this->input->get('reference_no') ? $this->input->get('reference_no') : null;
-        $category     = $this->input->get('category') ? $this->input->get('category') : null;
-        $warehouse    = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
-        $note         = $this->input->get('note') ? $this->input->get('note') : null;
-        $user         = $this->input->get('user') ? $this->input->get('user') : null;
-        $start_date   = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date     = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $category = $this->input->get('category') ? $this->input->get('category') : null;
+        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
+        $note = $this->input->get('note') ? $this->input->get('note') : null;
+        $user = $this->input->get('user') ? $this->input->get('user') : null;
+        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
 
         if ($start_date) {
             $start_date = $this->sma->fld($start_date);
-            $end_date   = $this->sma->fld($end_date);
+            $end_date = $this->sma->fld($end_date);
         }
 
         if ($pdf || $xls) {
             $this->db
                 ->select("date, reference, {$this->db->dbprefix('expense_categories')}.name as category, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment, {$this->db->dbprefix('expenses')}.id as id", false)
-            ->from('expenses')
-            ->join('users', 'users.id=expenses.created_by', 'left')
-            ->join('expense_categories', 'expense_categories.id=expenses.category_id', 'left')
-            ->group_by('expenses.id');
+                ->from('expenses')
+                ->join('users', 'users.id=expenses.created_by', 'left')
+                ->join('expense_categories', 'expense_categories.id=expenses.category_id', 'left')
+                ->group_by('expenses.id');
 
             if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
                 $this->db->where('created_by', $this->session->userdata('user_id'));
@@ -1176,7 +1176,7 @@ class Reports extends MY_Controller
                 $this->excel->getActiveSheet()->SetCellValue('E1', lang('note'));
                 $this->excel->getActiveSheet()->SetCellValue('F1', lang('created_by'));
 
-                $row   = 2;
+                $row = 2;
                 $total = 0;
                 foreach ($data as $data_row) {
                     $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($data_row->date));
@@ -1208,11 +1208,11 @@ class Reports extends MY_Controller
         } else {
             $this->load->library('datatables');
             $this->datatables
-            ->select("DATE_FORMAT(date, '%Y-%m-%d %T') as date, reference, {$this->db->dbprefix('expense_categories')}.name as category, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment, {$this->db->dbprefix('expenses')}.id as id", false)
-            ->from('expenses')
-            ->join('users', 'users.id=expenses.created_by', 'left')
-            ->join('expense_categories', 'expense_categories.id=expenses.category_id', 'left')
-            ->group_by('expenses.id');
+                ->select("DATE_FORMAT(date, '%Y-%m-%d %T') as date, reference, {$this->db->dbprefix('expense_categories')}.name as category, amount, note, CONCAT({$this->db->dbprefix('users')}.first_name, ' ', {$this->db->dbprefix('users')}.last_name) as user, attachment, {$this->db->dbprefix('expenses')}.id as id", false)
+                ->from('expenses')
+                ->join('users', 'users.id=expenses.created_by', 'left')
+                ->join('expense_categories', 'expense_categories.id=expenses.category_id', 'left')
+                ->group_by('expenses.id');
 
             if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
                 $this->datatables->where('created_by', $this->session->userdata('user_id'));
@@ -1247,7 +1247,7 @@ class Reports extends MY_Controller
         $date = date('Y-m-d', strtotime('+3 months'));
 
         if (!$this->Owner && !$warehouse_id) {
-            $user         = $this->site->getUser();
+            $user = $this->site->getUser();
             $warehouse_id = $user->warehouse_id;
         }
 
@@ -1279,23 +1279,23 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions('payments', true);
 
-        $user           = $this->input->get('user') ? $this->input->get('user') : null;
-        $supplier       = $this->input->get('supplier') ? $this->input->get('supplier') : null;
-        $customer       = $this->input->get('customer') ? $this->input->get('customer') : null;
-        $biller         = $this->input->get('biller') ? $this->input->get('biller') : null;
-        $payment_ref    = $this->input->get('payment_ref') ? $this->input->get('payment_ref') : null;
-        $paid_by        = $this->input->get('paid_by') ? $this->input->get('paid_by') : null;
-        $sale_ref       = $this->input->get('sale_ref') ? $this->input->get('sale_ref') : null;
-        $purchase_ref   = $this->input->get('purchase_ref') ? $this->input->get('purchase_ref') : null;
-        $card           = $this->input->get('card') ? $this->input->get('card') : null;
-        $cheque         = $this->input->get('cheque') ? $this->input->get('cheque') : null;
+        $user = $this->input->get('user') ? $this->input->get('user') : null;
+        $supplier = $this->input->get('supplier') ? $this->input->get('supplier') : null;
+        $customer = $this->input->get('customer') ? $this->input->get('customer') : null;
+        $biller = $this->input->get('biller') ? $this->input->get('biller') : null;
+        $payment_ref = $this->input->get('payment_ref') ? $this->input->get('payment_ref') : null;
+        $paid_by = $this->input->get('paid_by') ? $this->input->get('paid_by') : null;
+        $sale_ref = $this->input->get('sale_ref') ? $this->input->get('sale_ref') : null;
+        $purchase_ref = $this->input->get('purchase_ref') ? $this->input->get('purchase_ref') : null;
+        $card = $this->input->get('card') ? $this->input->get('card') : null;
+        $cheque = $this->input->get('cheque') ? $this->input->get('cheque') : null;
         $transaction_id = $this->input->get('tid') ? $this->input->get('tid') : null;
-        $start_date     = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date       = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
 
         if ($start_date) {
             $start_date = $this->sma->fld($start_date);
-            $end_date   = $this->sma->fld($end_date);
+            $end_date = $this->sma->fld($end_date);
         }
         if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
             $user = $this->session->userdata('user_id');
@@ -1370,7 +1370,7 @@ class Reports extends MY_Controller
                 $this->excel->getActiveSheet()->SetCellValue('F1', lang('amount'));
                 $this->excel->getActiveSheet()->SetCellValue('G1', lang('type'));
 
-                $row   = 2;
+                $row = 2;
                 $total = 0;
                 foreach ($data as $data_row) {
                     $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($data_row->date));
@@ -1462,20 +1462,20 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions('products', true);
 
-        $product     = $this->input->get('product') ? $this->input->get('product') : null;
-        $user        = $this->input->get('user') ? $this->input->get('user') : null;
-        $category    = $this->input->get('category') ? $this->input->get('category') : null;
-        $brand       = $this->input->get('brand') ? $this->input->get('brand') : null;
+        $product = $this->input->get('product') ? $this->input->get('product') : null;
+        $user = $this->input->get('user') ? $this->input->get('user') : null;
+        $category = $this->input->get('category') ? $this->input->get('category') : null;
+        $brand = $this->input->get('brand') ? $this->input->get('brand') : null;
         $subcategory = $this->input->get('subcategory') ? $this->input->get('subcategory') : null;
-        $warehouse   = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
-        $cf1         = $this->input->get('cf1') ? $this->input->get('cf1') : null;
-        $cf2         = $this->input->get('cf2') ? $this->input->get('cf2') : null;
-        $cf3         = $this->input->get('cf3') ? $this->input->get('cf3') : null;
-        $cf4         = $this->input->get('cf4') ? $this->input->get('cf4') : null;
-        $cf5         = $this->input->get('cf5') ? $this->input->get('cf5') : null;
-        $cf6         = $this->input->get('cf6') ? $this->input->get('cf6') : null;
-        $start_date  = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date    = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
+        $cf1 = $this->input->get('cf1') ? $this->input->get('cf1') : null;
+        $cf2 = $this->input->get('cf2') ? $this->input->get('cf2') : null;
+        $cf3 = $this->input->get('cf3') ? $this->input->get('cf3') : null;
+        $cf4 = $this->input->get('cf4') ? $this->input->get('cf4') : null;
+        $cf5 = $this->input->get('cf5') ? $this->input->get('cf5') : null;
+        $cf6 = $this->input->get('cf6') ? $this->input->get('cf6') : null;
+        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
 
         $pp = "( SELECT product_id, p.date as date, p.created_by as created_by, SUM(CASE WHEN pi.purchase_id IS NOT NULL THEN quantity ELSE 0 END) as purchasedQty, SUM(quantity_balance) as balacneQty, SUM( unit_cost * quantity_balance ) balacneValue, SUM( (CASE WHEN pi.purchase_id IS NOT NULL THEN (pi.subtotal) ELSE 0 END) ) totalPurchase from {$this->db->dbprefix('purchase_items')} pi LEFT JOIN {$this->db->dbprefix('purchases')} p on p.id = pi.purchase_id WHERE pi.status = 'received' ";
         // WHERE p.status != 'pending' AND p.status != 'ordered'
@@ -1484,7 +1484,7 @@ class Reports extends MY_Controller
             $sp .= ' WHERE ';
             if ($start_date) {
                 $start_date = $this->sma->fld($start_date);
-                $end_date   = $end_date ? $this->sma->fld($end_date) : date('Y-m-d');
+                $end_date = $end_date ? $this->sma->fld($end_date) : date('Y-m-d');
                 $pp .= " AND p.date >= '{$start_date}' AND p.date <= '{$end_date}' ";
                 $sp .= " s.date >= '{$start_date}' AND s.date <= '{$end_date}' ";
             }
@@ -1569,14 +1569,14 @@ class Reports extends MY_Controller
                 $this->excel->getActiveSheet()->SetCellValue('H1', lang('profit_loss'));
                 $this->excel->getActiveSheet()->SetCellValue('I1', lang('stock_in_hand'));
 
-                $row  = 2;
+                $row = 2;
                 $sQty = 0;
                 $pQty = 0;
                 $sAmt = 0;
                 $pAmt = 0;
                 $bQty = 0;
                 $bAmt = 0;
-                $pl   = 0;
+                $pl = 0;
                 foreach ($data as $data_row) {
                     $this->excel->getActiveSheet()->SetCellValue('A' . $row, $data_row->code);
                     $this->excel->getActiveSheet()->SetCellValue('B' . $row, $data_row->name);
@@ -1593,7 +1593,7 @@ class Reports extends MY_Controller
                     $pAmt += $data_row->TotalPurchase;
                     $sAmt += $data_row->TotalSales;
                     $bAmt += $data_row->TotalBalance;
-                    $pl   += $data_row->Profit;
+                    $pl += $data_row->Profit;
                     $row++;
                 }
                 $this->excel->getActiveSheet()->getStyle('C' . $row . ':I' . $row)->getBorders()
@@ -1676,17 +1676,17 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions('purchases', true);
 
-        $product      = $this->input->get('product') ? $this->input->get('product') : null;
-        $user         = $this->input->get('user') ? $this->input->get('user') : null;
-        $supplier     = $this->input->get('supplier') ? $this->input->get('supplier') : null;
-        $warehouse    = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
+        $product = $this->input->get('product') ? $this->input->get('product') : null;
+        $user = $this->input->get('user') ? $this->input->get('user') : null;
+        $supplier = $this->input->get('supplier') ? $this->input->get('supplier') : null;
+        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
         $reference_no = $this->input->get('reference_no') ? $this->input->get('reference_no') : null;
-        $start_date   = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date     = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
 
         if ($start_date) {
             $start_date = $this->sma->fld($start_date);
-            $end_date   = $this->sma->fld($end_date);
+            $end_date = $this->sma->fld($end_date);
         }
         if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
             $user = $this->session->userdata('user_id');
@@ -1743,9 +1743,9 @@ class Reports extends MY_Controller
                 $this->excel->getActiveSheet()->SetCellValue('H1', lang('balance'));
                 $this->excel->getActiveSheet()->SetCellValue('I1', lang('status'));
 
-                $row     = 2;
-                $total   = 0;
-                $paid    = 0;
+                $row = 2;
+                $total = 0;
+                $paid = 0;
                 $balance = 0;
                 foreach ($data as $data_row) {
                     $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($data_row->date));
@@ -1757,8 +1757,8 @@ class Reports extends MY_Controller
                     $this->excel->getActiveSheet()->SetCellValue('G' . $row, $data_row->paid);
                     $this->excel->getActiveSheet()->SetCellValue('H' . $row, ($data_row->grand_total - $data_row->paid));
                     $this->excel->getActiveSheet()->SetCellValue('I' . $row, $data_row->status);
-                    $total   += $data_row->grand_total;
-                    $paid    += $data_row->paid;
+                    $total += $data_row->grand_total;
+                    $paid += $data_row->paid;
                     $balance += ($data_row->grand_total - $data_row->paid);
                     $row++;
                 }
@@ -1827,7 +1827,7 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions('quantity_alerts', true);
         if (!$this->Owner && !$warehouse_id) {
-            $user         = $this->site->getUser();
+            $user = $this->site->getUser();
             $warehouse_id = $user->warehouse_id;
         }
 
@@ -1958,7 +1958,7 @@ class Reports extends MY_Controller
         }
         if ($start_date) {
             $start_date = $this->sma->fld($start_date);
-            $end_date   = $this->sma->fld($end_date);
+            $end_date = $this->sma->fld($end_date);
         }
         if ($pdf || $xls) {
             $this->db
@@ -2098,7 +2098,7 @@ class Reports extends MY_Controller
         }
         if ($start_date) {
             $start_date = $this->sma->fld($start_date);
-            $end_date   = $this->sma->fld($end_date);
+            $end_date = $this->sma->fld($end_date);
         }
 
         if ($pdf || $xls) {
@@ -2201,19 +2201,19 @@ class Reports extends MY_Controller
     public function getSalesReport($pdf = null, $xls = null)
     {
         $this->sma->checkPermissions('sales', true);
-        $product      = $this->input->get('product') ? $this->input->get('product') : null;
-        $user         = $this->input->get('user') ? $this->input->get('user') : null;
-        $customer     = $this->input->get('customer') ? $this->input->get('customer') : null;
-        $biller       = $this->input->get('biller') ? $this->input->get('biller') : null;
-        $warehouse    = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
+        $product = $this->input->get('product') ? $this->input->get('product') : null;
+        $user = $this->input->get('user') ? $this->input->get('user') : null;
+        $customer = $this->input->get('customer') ? $this->input->get('customer') : null;
+        $biller = $this->input->get('biller') ? $this->input->get('biller') : null;
+        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
         $reference_no = $this->input->get('reference_no') ? $this->input->get('reference_no') : null;
-        $start_date   = $this->input->get('start_date') ? $this->input->get('start_date') : null;
-        $end_date     = $this->input->get('end_date') ? $this->input->get('end_date') : null;
-        $serial       = $this->input->get('serial') ? $this->input->get('serial') : null;
+        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $serial = $this->input->get('serial') ? $this->input->get('serial') : null;
 
         if ($start_date) {
             $start_date = $this->sma->fld($start_date);
-            $end_date   = $this->sma->fld($end_date);
+            $end_date = $this->sma->fld($end_date);
         }
         if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
             $user = $this->session->userdata('user_id');
@@ -2276,9 +2276,9 @@ class Reports extends MY_Controller
                 $this->excel->getActiveSheet()->SetCellValue('H1', lang('balance'));
                 $this->excel->getActiveSheet()->SetCellValue('I1', lang('payment_status'));
 
-                $row     = 2;
-                $total   = 0;
-                $paid    = 0;
+                $row = 2;
+                $total = 0;
+                $paid = 0;
                 $balance = 0;
                 foreach ($data as $data_row) {
                     $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($data_row->date));
@@ -2290,8 +2290,8 @@ class Reports extends MY_Controller
                     $this->excel->getActiveSheet()->SetCellValue('G' . $row, $data_row->paid);
                     $this->excel->getActiveSheet()->SetCellValue('H' . $row, ($data_row->grand_total - $data_row->paid));
                     $this->excel->getActiveSheet()->SetCellValue('I' . $row, lang($data_row->payment_status));
-                    $total   += $data_row->grand_total;
-                    $paid    += $data_row->paid;
+                    $total += $data_row->grand_total;
+                    $paid += $data_row->paid;
                     $balance += ($data_row->grand_total - $data_row->paid);
                     $row++;
                 }
@@ -2549,7 +2549,7 @@ class Reports extends MY_Controller
         }
         if ($login_start_date) {
             $login_start_date = $this->sma->fld($login_start_date);
-            $login_end_date   = $login_end_date ? $this->sma->fld($login_end_date) : date('Y-m-d H:i:s');
+            $login_end_date = $login_end_date ? $this->sma->fld($login_end_date) : date('Y-m-d H:i:s');
         }
         if ($pdf || $xls) {
             $this->db
@@ -2632,11 +2632,11 @@ class Reports extends MY_Controller
     public function index()
     {
         $this->sma->checkPermissions();
-        $data['error']               = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $this->data['monthly_sales'] = $this->reports_model->getChartData();
-        $this->data['stock']         = $this->reports_model->getStockValue();
-        $bc                          = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('reports')]];
-        $meta                        = ['page_title' => lang('reports'), 'bc' => $bc];
+        $this->data['stock'] = $this->reports_model->getStockValue();
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('reports')]];
+        $meta = ['page_title' => lang('reports'), 'bc' => $bc];
         $this->page_construct('reports/index', $meta, $this->data);
     }
 
@@ -2647,15 +2647,15 @@ class Reports extends MY_Controller
             $this->sma->md();
         }
 
-        $this->data['costing']    = $this->reports_model->getCosting(null, $warehouse_id, $year, $month);
-        $this->data['discount']   = $this->reports_model->getOrderDiscount(null, $warehouse_id, $year, $month);
-        $this->data['expenses']   = $this->reports_model->getExpenses(null, $warehouse_id, $year, $month);
-        $this->data['returns']    = $this->reports_model->getReturns(null, $warehouse_id, $year, $month);
+        $this->data['costing'] = $this->reports_model->getCosting(null, $warehouse_id, $year, $month);
+        $this->data['discount'] = $this->reports_model->getOrderDiscount(null, $warehouse_id, $year, $month);
+        $this->data['expenses'] = $this->reports_model->getExpenses(null, $warehouse_id, $year, $month);
+        $this->data['returns'] = $this->reports_model->getReturns(null, $warehouse_id, $year, $month);
         $this->data['warehouses'] = $this->site->getAllWarehouses();
-        $this->data['swh']        = $warehouse_id;
-        $this->data['year']       = $year;
-        $this->data['month']      = $month;
-        $this->data['date']       = date('F Y', strtotime($year . '-' . $month . '-' . '01'));
+        $this->data['swh'] = $warehouse_id;
+        $this->data['year'] = $year;
+        $this->data['month'] = $month;
+        $this->data['date'] = date('F Y', strtotime($year . '-' . $month . '-' . '01'));
         if ($re) {
             echo $this->load->view($this->theme . 'reports/monthly_profit', $this->data, true);
             exit();
@@ -2676,8 +2676,8 @@ class Reports extends MY_Controller
             $user_id = $this->session->userdata('user_id');
         }
         $this->load->language('calendar');
-        $this->data['error']     = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $this->data['year']      = $year;
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['year'] = $year;
         $this->data['purchases'] = $user_id ? $this->reports_model->getStaffMonthlyPurchases($user_id, $year, $warehouse_id) : $this->reports_model->getMonthlyPurchases($year, $warehouse_id);
         if ($pdf) {
             $html = $this->load->view($this->theme . 'reports/monthly', $this->data, true);
@@ -2685,11 +2685,11 @@ class Reports extends MY_Controller
             $html = str_replace('<p class="introtext">' . lang('reports_calendar_text') . '</p>', '', $html);
             $this->sma->generate_pdf($html, $name, null, null, null, null, null, 'L');
         }
-        $this->data['warehouses']    = $this->site->getAllWarehouses();
-        $this->data['warehouse_id']  = $warehouse_id;
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        $this->data['warehouse_id'] = $warehouse_id;
         $this->data['sel_warehouse'] = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
-        $bc                          = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('monthly_purchases_report')]];
-        $meta                        = ['page_title' => lang('monthly_purchases_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('monthly_purchases_report')]];
+        $meta = ['page_title' => lang('monthly_purchases_report'), 'bc' => $bc];
         $this->page_construct('reports/monthly_purchases', $meta, $this->data);
     }
 
@@ -2707,7 +2707,7 @@ class Reports extends MY_Controller
         }
         $this->load->language('calendar');
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $this->data['year']  = $year;
+        $this->data['year'] = $year;
         $this->data['sales'] = $user_id ? $this->reports_model->getStaffMonthlySales($user_id, $year, $warehouse_id) : $this->reports_model->getMonthlySales($year, $warehouse_id);
         if ($pdf) {
             $html = $this->load->view($this->theme . 'reports/monthly', $this->data, true);
@@ -2715,40 +2715,40 @@ class Reports extends MY_Controller
             $html = str_replace('<p class="introtext">' . lang('reports_calendar_text') . '</p>', '', $html);
             $this->sma->generate_pdf($html, $name, null, null, null, null, null, 'L');
         }
-        $this->data['warehouses']    = $this->site->getAllWarehouses();
-        $this->data['warehouse_id']  = $warehouse_id;
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        $this->data['warehouse_id'] = $warehouse_id;
         $this->data['sel_warehouse'] = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
-        $bc                          = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('monthly_sales_report')]];
-        $meta                        = ['page_title' => lang('monthly_sales_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('monthly_sales_report')]];
+        $meta = ['page_title' => lang('monthly_sales_report'), 'bc' => $bc];
         $this->page_construct('reports/monthly', $meta, $this->data);
     }
 
     public function payments()
     {
         $this->sma->checkPermissions('payments');
-        $this->data['error']        = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $this->data['users']        = $this->reports_model->getStaff();
-        $this->data['billers']      = $this->site->getAllCompanies('biller');
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['users'] = $this->reports_model->getStaff();
+        $this->data['billers'] = $this->site->getAllCompanies('biller');
         $this->data['pos_settings'] = POS ? $this->reports_model->getPOSSetting('biller') : false;
-        $bc                         = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('payments_report')]];
-        $meta                       = ['page_title' => lang('payments_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('payments_report')]];
+        $meta = ['page_title' => lang('payments_report'), 'bc' => $bc];
         $this->page_construct('reports/payments', $meta, $this->data);
     }
 
     public function products()
     {
         $this->sma->checkPermissions();
-        $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+        $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
         $this->data['categories'] = $this->site->getAllCategories();
-        $this->data['brands']     = $this->site->getAllBrands();
-        $this->data['users']      = $this->reports_model->getStaff();
+        $this->data['brands'] = $this->site->getAllBrands();
+        $this->data['users'] = $this->reports_model->getStaff();
         $this->data['warehouses'] = $this->site->getAllWarehouses();
         if ($this->input->post('start_date')) {
             $dt = 'From ' . $this->input->post('start_date') . ' to ' . $this->input->post('end_date');
         } else {
             $dt = 'Till ' . $this->input->post('end_date');
         }
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('products_report')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('products_report')]];
         $meta = ['page_title' => lang('products_report'), 'bc' => $bc];
         $this->page_construct('reports/products', $meta, $this->data);
     }
@@ -2762,13 +2762,13 @@ class Reports extends MY_Controller
         if (!$date) {
             $date = date('Y-m-d');
         }
-        $this->data['costing']    = $this->reports_model->getCosting($date, $warehouse_id);
-        $this->data['discount']   = $this->reports_model->getOrderDiscount($date, $warehouse_id);
-        $this->data['expenses']   = $this->reports_model->getExpenses($date, $warehouse_id);
-        $this->data['returns']    = $this->reports_model->getReturns($date, $warehouse_id);
+        $this->data['costing'] = $this->reports_model->getCosting($date, $warehouse_id);
+        $this->data['discount'] = $this->reports_model->getOrderDiscount($date, $warehouse_id);
+        $this->data['expenses'] = $this->reports_model->getExpenses($date, $warehouse_id);
+        $this->data['returns'] = $this->reports_model->getReturns($date, $warehouse_id);
         $this->data['warehouses'] = $this->site->getAllWarehouses();
-        $this->data['swh']        = $warehouse_id;
-        $this->data['date']       = $date;
+        $this->data['swh'] = $warehouse_id;
+        $this->data['date'] = $date;
         if ($re) {
             echo $this->load->view($this->theme . 'reports/profit', $this->data, true);
             exit();
@@ -2780,51 +2780,51 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions('profit_loss');
         if (!$start_date) {
-            $start      = $this->db->escape(date('Y-m') . '-1');
+            $start = $this->db->escape(date('Y-m') . '-1');
             $start_date = date('Y-m') . '-1';
         } else {
             $start = $this->db->escape(urldecode($start_date));
         }
         if (!$end_date) {
-            $end      = $this->db->escape(date('Y-m-d H:i'));
+            $end = $this->db->escape(date('Y-m-d H:i'));
             $end_date = date('Y-m-d H:i');
         } else {
             $end = $this->db->escape(urldecode($end_date));
         }
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
-        $this->data['total_purchases']       = $this->reports_model->getTotalPurchases($start, $end);
-        $this->data['total_sales']           = $this->reports_model->getTotalSales($start, $end);
-        $this->data['total_return_sales']    = $this->reports_model->getTotalReturnSales($start, $end);
-        $this->data['total_expenses']        = $this->reports_model->getTotalExpenses($start, $end);
-        $this->data['total_paid']            = $this->reports_model->getTotalPaidAmount($start, $end);
-        $this->data['total_received']        = $this->reports_model->getTotalReceivedAmount($start, $end);
-        $this->data['total_received_cash']   = $this->reports_model->getTotalReceivedCashAmount($start, $end);
-        $this->data['total_received_cc']     = $this->reports_model->getTotalReceivedCCAmount($start, $end);
+        $this->data['total_purchases'] = $this->reports_model->getTotalPurchases($start, $end);
+        $this->data['total_sales'] = $this->reports_model->getTotalSales($start, $end);
+        $this->data['total_return_sales'] = $this->reports_model->getTotalReturnSales($start, $end);
+        $this->data['total_expenses'] = $this->reports_model->getTotalExpenses($start, $end);
+        $this->data['total_paid'] = $this->reports_model->getTotalPaidAmount($start, $end);
+        $this->data['total_received'] = $this->reports_model->getTotalReceivedAmount($start, $end);
+        $this->data['total_received_cash'] = $this->reports_model->getTotalReceivedCashAmount($start, $end);
+        $this->data['total_received_cc'] = $this->reports_model->getTotalReceivedCCAmount($start, $end);
         $this->data['total_received_cheque'] = $this->reports_model->getTotalReceivedChequeAmount($start, $end);
-        $this->data['total_received_ppp']    = $this->reports_model->getTotalReceivedPPPAmount($start, $end);
+        $this->data['total_received_ppp'] = $this->reports_model->getTotalReceivedPPPAmount($start, $end);
         $this->data['total_received_stripe'] = $this->reports_model->getTotalReceivedStripeAmount($start, $end);
-        $this->data['total_returned']        = $this->reports_model->getTotalReturnedAmount($start, $end);
-        $this->data['start']                 = urldecode($start_date);
-        $this->data['end']                   = urldecode($end_date);
+        $this->data['total_returned'] = $this->reports_model->getTotalReturnedAmount($start, $end);
+        $this->data['start'] = urldecode($start_date);
+        $this->data['end'] = urldecode($end_date);
 
         $warehouses = $this->site->getAllWarehouses();
         foreach ($warehouses as $warehouse) {
-            $total_purchases     = $this->reports_model->getTotalPurchases($start, $end, $warehouse->id);
-            $total_sales         = $this->reports_model->getTotalSales($start, $end, $warehouse->id);
-            $total_returns       = $this->reports_model->getTotalReturnSales($start, $end, $warehouse->id);
-            $total_expenses      = $this->reports_model->getTotalExpenses($start, $end, $warehouse->id);
+            $total_purchases = $this->reports_model->getTotalPurchases($start, $end, $warehouse->id);
+            $total_sales = $this->reports_model->getTotalSales($start, $end, $warehouse->id);
+            $total_returns = $this->reports_model->getTotalReturnSales($start, $end, $warehouse->id);
+            $total_expenses = $this->reports_model->getTotalExpenses($start, $end, $warehouse->id);
             $warehouses_report[] = [
-                'warehouse'       => $warehouse,
+                'warehouse' => $warehouse,
                 'total_purchases' => $total_purchases,
-                'total_sales'     => $total_sales,
-                'total_returns'   => $total_returns,
-                'total_expenses'  => $total_expenses,
+                'total_sales' => $total_sales,
+                'total_returns' => $total_returns,
+                'total_expenses' => $total_expenses,
             ];
         }
         $this->data['warehouses_report'] = $warehouses_report;
 
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('profit_loss')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('profit_loss')]];
         $meta = ['page_title' => lang('profit_loss'), 'bc' => $bc];
         $this->page_construct('reports/profit_loss', $meta, $this->data);
     }
@@ -2833,40 +2833,40 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions('profit_loss');
         if (!$start_date) {
-            $start      = $this->db->escape(date('Y-m') . '-1');
+            $start = $this->db->escape(date('Y-m') . '-1');
             $start_date = date('Y-m') . '-1';
         } else {
             $start = $this->db->escape(urldecode($start_date));
         }
         if (!$end_date) {
-            $end      = $this->db->escape(date('Y-m-d H:i'));
+            $end = $this->db->escape(date('Y-m-d H:i'));
             $end_date = date('Y-m-d H:i');
         } else {
             $end = $this->db->escape(urldecode($end_date));
         }
 
-        $this->data['total_purchases']       = $this->reports_model->getTotalPurchases($start, $end);
-        $this->data['total_sales']           = $this->reports_model->getTotalSales($start, $end);
-        $this->data['total_expenses']        = $this->reports_model->getTotalExpenses($start, $end);
-        $this->data['total_paid']            = $this->reports_model->getTotalPaidAmount($start, $end);
-        $this->data['total_received']        = $this->reports_model->getTotalReceivedAmount($start, $end);
-        $this->data['total_received_cash']   = $this->reports_model->getTotalReceivedCashAmount($start, $end);
-        $this->data['total_received_cc']     = $this->reports_model->getTotalReceivedCCAmount($start, $end);
+        $this->data['total_purchases'] = $this->reports_model->getTotalPurchases($start, $end);
+        $this->data['total_sales'] = $this->reports_model->getTotalSales($start, $end);
+        $this->data['total_expenses'] = $this->reports_model->getTotalExpenses($start, $end);
+        $this->data['total_paid'] = $this->reports_model->getTotalPaidAmount($start, $end);
+        $this->data['total_received'] = $this->reports_model->getTotalReceivedAmount($start, $end);
+        $this->data['total_received_cash'] = $this->reports_model->getTotalReceivedCashAmount($start, $end);
+        $this->data['total_received_cc'] = $this->reports_model->getTotalReceivedCCAmount($start, $end);
         $this->data['total_received_cheque'] = $this->reports_model->getTotalReceivedChequeAmount($start, $end);
-        $this->data['total_received_ppp']    = $this->reports_model->getTotalReceivedPPPAmount($start, $end);
+        $this->data['total_received_ppp'] = $this->reports_model->getTotalReceivedPPPAmount($start, $end);
         $this->data['total_received_stripe'] = $this->reports_model->getTotalReceivedStripeAmount($start, $end);
-        $this->data['total_returned']        = $this->reports_model->getTotalReturnedAmount($start, $end);
-        $this->data['start']                 = urldecode($start_date);
-        $this->data['end']                   = urldecode($end_date);
+        $this->data['total_returned'] = $this->reports_model->getTotalReturnedAmount($start, $end);
+        $this->data['start'] = urldecode($start_date);
+        $this->data['end'] = urldecode($end_date);
 
         $warehouses = $this->site->getAllWarehouses();
         foreach ($warehouses as $warehouse) {
-            $total_purchases     = $this->reports_model->getTotalPurchases($start, $end, $warehouse->id);
-            $total_sales         = $this->reports_model->getTotalSales($start, $end, $warehouse->id);
+            $total_purchases = $this->reports_model->getTotalPurchases($start, $end, $warehouse->id);
+            $total_sales = $this->reports_model->getTotalSales($start, $end, $warehouse->id);
             $warehouses_report[] = [
-                'warehouse'       => $warehouse,
+                'warehouse' => $warehouse,
                 'total_purchases' => $total_purchases,
-                'total_sales'     => $total_sales,
+                'total_sales' => $total_sales,
             ];
         }
         $this->data['warehouses_report'] = $warehouses_report;
@@ -2879,11 +2879,11 @@ class Reports extends MY_Controller
     public function purchases()
     {
         $this->sma->checkPermissions('purchases');
-        $this->data['error']      = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $this->data['users']      = $this->reports_model->getStaff();
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['users'] = $this->reports_model->getStaff();
         $this->data['warehouses'] = $this->site->getAllWarehouses();
-        $bc                       = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('purchases_report')]];
-        $meta                     = ['page_title' => lang('purchases_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('purchases_report')]];
+        $meta = ['page_title' => lang('purchases_report'), 'bc' => $bc];
         $this->page_construct('reports/purchases', $meta, $this->data);
     }
 
@@ -2893,17 +2893,17 @@ class Reports extends MY_Controller
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
         if ($this->Owner || $this->Admin || !$this->session->userdata('warehouse_id')) {
-            $this->data['warehouses']   = $this->site->getAllWarehouses();
+            $this->data['warehouses'] = $this->site->getAllWarehouses();
             $this->data['warehouse_id'] = $warehouse_id;
-            $this->data['warehouse']    = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
+            $this->data['warehouse'] = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
         } else {
-            $user                       = $this->site->getUser();
-            $this->data['warehouses']   = null;
+            $user = $this->site->getUser();
+            $this->data['warehouses'] = null;
             $this->data['warehouse_id'] = $user->warehouse_id;
-            $this->data['warehouse']    = $user->warehouse_id ? $this->site->getWarehouseByID($user->warehouse_id) : null;
+            $this->data['warehouse'] = $user->warehouse_id ? $this->site->getWarehouseByID($user->warehouse_id) : null;
         }
 
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('product_quantity_alerts')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('product_quantity_alerts')]];
         $meta = ['page_title' => lang('product_quantity_alerts'), 'bc' => $bc];
         $this->page_construct('reports/quantity_alerts', $meta, $this->data);
     }
@@ -2913,20 +2913,20 @@ class Reports extends MY_Controller
         $this->sma->checkPermissions('register');
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         $this->data['users'] = $this->reports_model->getStaff();
-        $bc                  = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('register_report')]];
-        $meta                = ['page_title' => lang('register_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('register_report')]];
+        $meta = ['page_title' => lang('register_report'), 'bc' => $bc];
         $this->page_construct('reports/register', $meta, $this->data);
     }
 
     public function sales()
     {
         $this->sma->checkPermissions('sales');
-        $this->data['error']      = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $this->data['users']      = $this->reports_model->getStaff();
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['users'] = $this->reports_model->getStaff();
         $this->data['warehouses'] = $this->site->getAllWarehouses();
-        $this->data['billers']    = $this->site->getAllCompanies('biller');
-        $bc                       = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('sales_report')]];
-        $meta                     = ['page_title' => lang('sales_report'), 'bc' => $bc];
+        $this->data['billers'] = $this->site->getAllCompanies('biller');
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('sales_report')]];
+        $meta = ['page_title' => lang('sales_report'), 'bc' => $bc];
         $this->page_construct('reports/sales', $meta, $this->data);
     }
 
@@ -2937,10 +2937,10 @@ class Reports extends MY_Controller
             $this->session->set_flashdata('error', lang('no_user_selected'));
             admin_redirect('reports/users');
         }
-        $this->data['error']      = validation_errors() ? validation_errors() : $this->session->flashdata('error');
-        $this->data['purchases']  = $this->reports_model->getStaffPurchases($user_id);
-        $this->data['sales']      = $this->reports_model->getStaffSales($user_id);
-        $this->data['billers']    = $this->site->getAllCompanies('biller');
+        $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
+        $this->data['purchases'] = $this->reports_model->getStaffPurchases($user_id);
+        $this->data['sales'] = $this->reports_model->getStaffSales($user_id);
+        $this->data['billers'] = $this->site->getAllCompanies('biller');
         $this->data['warehouses'] = $this->site->getAllWarehouses();
 
         if (!$year) {
@@ -2958,9 +2958,9 @@ class Reports extends MY_Controller
         }
         $config = [
             'show_next_prev' => true,
-            'next_prev_url'  => admin_url('reports/staff_report/' . $user_id),
-            'month_type'     => 'long',
-            'day_type'       => 'long',
+            'next_prev_url' => admin_url('reports/staff_report/' . $user_id),
+            'month_type' => 'long',
+            'day_type' => 'long',
         ];
 
         $config['template'] = '{table_open}<div class="table-responsive"><table border="0" cellpadding="0" cellspacing="0" class="table table-bordered dfTable reports-table">{/table_open}
@@ -3002,12 +3002,12 @@ class Reports extends MY_Controller
         $this->data['calender'] = $this->calendar->generate($year, $month, $daily_sale);
         if ($this->input->get('pdf')) {
         }
-        $this->data['year']    = $year;
-        $this->data['month']   = $month;
-        $this->data['msales']  = $this->reports_model->getStaffMonthlySales($user_id, $year);
+        $this->data['year'] = $year;
+        $this->data['month'] = $month;
+        $this->data['msales'] = $this->reports_model->getStaffMonthlySales($user_id, $year);
         $this->data['user_id'] = $user_id;
-        $bc                    = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('staff_report')]];
-        $meta                  = ['page_title' => lang('staff_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('staff_report')]];
+        $meta = ['page_title' => lang('staff_report'), 'bc' => $bc];
         $this->page_construct('reports/staff_report', $meta, $this->data);
     }
 
@@ -3037,16 +3037,16 @@ class Reports extends MY_Controller
             admin_redirect('reports/suppliers');
         }
 
-        $this->data['purchases']       = $this->reports_model->getPurchasesTotals($user_id);
+        $this->data['purchases'] = $this->reports_model->getPurchasesTotals($user_id);
         $this->data['total_purchases'] = $this->reports_model->getSupplierPurchases($user_id);
-        $this->data['users']           = $this->reports_model->getStaff();
-        $this->data['warehouses']      = $this->site->getAllWarehouses();
+        $this->data['users'] = $this->reports_model->getStaff();
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
 
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
 
         $this->data['user_id'] = $user_id;
-        $bc                    = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('suppliers_report')]];
-        $meta                  = ['page_title' => lang('suppliers_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('suppliers_report')]];
+        $meta = ['page_title' => lang('suppliers_report'), 'bc' => $bc];
         $this->page_construct('reports/supplier_report', $meta, $this->data);
     }
 
@@ -3055,7 +3055,7 @@ class Reports extends MY_Controller
         $this->sma->checkPermissions('suppliers');
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
 
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('suppliers_report')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('suppliers_report')]];
         $meta = ['page_title' => lang('suppliers_report'), 'bc' => $bc];
         $this->page_construct('reports/suppliers', $meta, $this->data);
     }
@@ -3064,18 +3064,18 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions();
         $start_date = $this->input->post('start_date') ? $this->input->post('start_date') : null;
-        $end_date   = $this->input->post('end_date') ? $this->input->post('end_date') : null;
+        $end_date = $this->input->post('end_date') ? $this->input->post('end_date') : null;
         if ($start_date) {
             $start_date = $this->sma->fld($start_date);
-            $end_date   = $this->sma->fld($end_date);
+            $end_date = $this->sma->fld($end_date);
         }
-        $this->data['error']        = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $this->data['warehouses']   = $this->site->getAllWarehouses();
-        $this->data['billers']      = $this->site->getAllCompanies('biller');
-        $this->data['sale_tax']     = $this->reports_model->getSalesTax($start_date, $end_date);
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        $this->data['billers'] = $this->site->getAllCompanies('biller');
+        $this->data['sale_tax'] = $this->reports_model->getSalesTax($start_date, $end_date);
         $this->data['purchase_tax'] = $this->reports_model->getPurchasesTax($start_date, $end_date);
-        $bc                         = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('tax_report')]];
-        $meta                       = ['page_title' => lang('tax_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('tax_report')]];
+        $meta = ['page_title' => lang('tax_report'), 'bc' => $bc];
         $this->page_construct('reports/tax', $meta, $this->data);
     }
 
@@ -3083,8 +3083,8 @@ class Reports extends MY_Controller
     {
         $this->sma->checkPermissions('staff');
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $bc                  = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('staff_report')]];
-        $meta                = ['page_title' => lang('staff_report'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('staff_report')]];
+        $meta = ['page_title' => lang('staff_report'), 'bc' => $bc];
         $this->page_construct('reports/users', $meta, $this->data);
     }
 
@@ -3096,13 +3096,176 @@ class Reports extends MY_Controller
             $warehouse = $this->input->get('warehouse');
         }
 
-        $this->data['stock']        = $warehouse ? $this->reports_model->getWarehouseStockValue($warehouse) : $this->reports_model->getStockValue();
-        $this->data['warehouses']   = $this->site->getAllWarehouses();
+        $this->data['stock'] = $warehouse ? $this->reports_model->getWarehouseStockValue($warehouse) : $this->reports_model->getStockValue();
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
         $this->data['warehouse_id'] = $warehouse;
-        $this->data['warehouse']    = $warehouse ? $this->site->getWarehouseByID($warehouse) : null;
-        $this->data['totals']       = $this->reports_model->getWarehouseTotals($warehouse);
-        $bc                         = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('reports')]];
-        $meta                       = ['page_title' => lang('reports'), 'bc' => $bc];
+        $this->data['warehouse'] = $warehouse ? $this->site->getWarehouseByID($warehouse) : null;
+        $this->data['totals'] = $this->reports_model->getWarehouseTotals($warehouse);
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('reports')]];
+        $meta = ['page_title' => lang('reports'), 'bc' => $bc];
         $this->page_construct('reports/warehouse_stock', $meta, $this->data);
+    }
+
+//    a.kader
+    public function return_history()
+    {
+        $this->sma->checkPermissions('return_history');
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $this->data['users'] = $this->reports_model->getStaff();
+        $this->data['warehouses'] = $this->site->getAllWarehouses();
+        $this->data['billers'] = $this->site->getAllCompanies('biller');
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('reports'), 'page' => lang('reports')], ['link' => '#', 'page' => lang('Return_History_Report')]];
+        $meta = ['page_title' => lang('Return_History_Report'), 'bc' => $bc];
+        $this->page_construct('reports/return_history', $meta, $this->data);
+    }
+
+    public function getReturnHistoryReport($pdf = null, $xls = null)
+    {
+        $this->sma->checkPermissions('return_history', true);
+        $product = $this->input->get('product') ? $this->input->get('product') : null;
+        $user = $this->input->get('user') ? $this->input->get('user') : null;
+        $customer = $this->input->get('customer') ? $this->input->get('customer') : null;
+        $biller = $this->input->get('biller') ? $this->input->get('biller') : null;
+        $warehouse = $this->input->get('warehouse') ? $this->input->get('warehouse') : null;
+        $reference_no = $this->input->get('reference_no') ? $this->input->get('reference_no') : null;
+        $start_date = $this->input->get('start_date') ? $this->input->get('start_date') : null;
+        $end_date = $this->input->get('end_date') ? $this->input->get('end_date') : null;
+        $serial = $this->input->get('serial') ? $this->input->get('serial') : null;
+
+        if ($start_date) {
+            $start_date = $this->sma->fld($start_date);
+            $end_date = $this->sma->fld($end_date);
+        }
+        if (!$this->Owner && !$this->Admin && !$this->session->userdata('view_right')) {
+            $user = $this->session->userdata('user_id');
+        }
+
+        if ($pdf || $xls) {
+
+            $this->db
+                ->select("DATE_FORMAT( {$this->db->dbprefix('sale_return_history')}.created_date, '%Y-%m-%d %T') as date,  {$this->db->dbprefix('sale_return_history')}.reference_no,  {$this->db->dbprefix('sales')}.biller,  {$this->db->dbprefix('sales')}.customer,  {$this->db->dbprefix('sale_return_history')}.product_code,  {$this->db->dbprefix('sale_return_history')}.product_name, {$this->db->dbprefix('sale_return_history')}.return_quantity, {$this->db->dbprefix('units')}.name as u_name, {$this->db->dbprefix('warehouses')}.name, {$this->db->dbprefix('sales')}.sale_status, {$this->db->dbprefix('sales')}.id as id", false)
+                ->from('sale_return_history')
+                ->join('sales', 'sales.id=sale_return_history.sale_return_id', 'inner')
+                ->join('sma_warehouses', 'sma_warehouses.id=sale_return_history.warehouse_id', 'inner')
+                ->join('sma_units', 'sma_units.id=sale_return_history.product_unit_id', 'inner')
+                ->order_by('sale_return_history.created_date desc');
+
+            if ($user) {
+                $this->db->where('sale_return_history.created_by', $user);
+            }
+            if ($product) {
+                $this->db->where('sale_return_history.product_id', $product);
+            }
+            if ($serial) {
+                $this->db->like('sale_return_history.product_code', $serial);
+            }
+            if ($biller) {
+                $this->db->where('sales.biller_id', $biller);
+            }
+            if ($customer) {
+                $this->db->where('sales.customer_id', $customer);
+            }
+            if ($warehouse) {
+                $this->db->where('sale_return_history.warehouse_id', $warehouse);
+            }
+            if ($reference_no) {
+                $this->db->like('sale_return_history.reference_no', $reference_no, 'both');
+            }
+            if ($start_date) {
+                $this->db->where($this->db->dbprefix('sale_return_history') . '.created_date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
+            }
+            $q = $this->db->get();
+            if ($q->num_rows() > 0) {
+                foreach (($q->result()) as $row) {
+                    $data[] = $row;
+                }
+            } else {
+                $data = null;
+            }
+
+            if (!empty($data)) {
+                $this->load->library('excel');
+                $this->excel->setActiveSheetIndex(0);
+                $this->excel->getActiveSheet()->setTitle(lang('Return_History_Report'));
+                $this->excel->getActiveSheet()->SetCellValue('A1', lang('date'));
+                $this->excel->getActiveSheet()->SetCellValue('B1', lang('reference_no'));
+                $this->excel->getActiveSheet()->SetCellValue('C1', lang('biller'));
+                $this->excel->getActiveSheet()->SetCellValue('D1', lang('customer'));
+                $this->excel->getActiveSheet()->SetCellValue('E1', lang('product_code'));
+                $this->excel->getActiveSheet()->SetCellValue('F1', lang('product_name'));
+                $this->excel->getActiveSheet()->SetCellValue('G1', lang('product_qty'));
+                $this->excel->getActiveSheet()->SetCellValue('H1', lang('UM'));
+                $this->excel->getActiveSheet()->SetCellValue('I1', lang('warehouse'));
+                $this->excel->getActiveSheet()->SetCellValue('J1', lang('sale_status'));
+
+                $row = 2;
+                foreach ($data as $data_row) {
+                    $this->excel->getActiveSheet()->SetCellValue('A' . $row, $this->sma->hrld($data_row->date));
+                    $this->excel->getActiveSheet()->SetCellValue('B' . $row, $data_row->reference_no);
+                    $this->excel->getActiveSheet()->SetCellValue('C' . $row, $data_row->biller);
+                    $this->excel->getActiveSheet()->SetCellValue('D' . $row, $data_row->customer);
+                    $this->excel->getActiveSheet()->SetCellValue('E' . $row, $data_row->product_code);
+                    $this->excel->getActiveSheet()->SetCellValue('F' . $row, $data_row->product_name);
+                    $this->excel->getActiveSheet()->SetCellValue('G' . $row, $data_row->return_quantity);
+                    $this->excel->getActiveSheet()->SetCellValue('H' . $row, ($data_row->u_name));
+                    $this->excel->getActiveSheet()->SetCellValue('I' . $row, ($data_row->name));
+                    $this->excel->getActiveSheet()->SetCellValue('J' . $row, lang($data_row->sale_status));
+                    $row++;
+                }
+
+                $this->excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+                $this->excel->getActiveSheet()->getColumnDimension('E')->setWidth(30);
+                $this->excel->getActiveSheet()->getColumnDimension('F')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('G')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('H')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('I')->setWidth(15);
+                $this->excel->getActiveSheet()->getColumnDimension('J')->setWidth(20);
+                $this->excel->getDefaultStyle()->getAlignment()->setVertical('center');
+                $this->excel->getActiveSheet()->getStyle('E2:E' . $row)->getAlignment()->setWrapText(true);
+                $filename = 'Return_History_Report';
+                $this->load->helper('excel');
+                create_excel($this->excel, $filename);
+            }
+            $this->session->set_flashdata('error', lang('nothing_found'));
+            redirect($_SERVER['HTTP_REFERER']);
+        } else {
+            $this->load->library('datatables');
+            $this->datatables
+                ->select("DATE_FORMAT( {$this->db->dbprefix('sale_return_history')}.created_date, '%Y-%m-%d %T') as date,  {$this->db->dbprefix('sale_return_history')}.reference_no,  {$this->db->dbprefix('sales')}.biller,  {$this->db->dbprefix('sales')}.customer,  {$this->db->dbprefix('sale_return_history')}.product_code,  {$this->db->dbprefix('sale_return_history')}.product_name, {$this->db->dbprefix('sale_return_history')}.return_quantity,{$this->db->dbprefix('units')}.name as u_name, {$this->db->dbprefix('warehouses')}.name, {$this->db->dbprefix('sales')}.sale_status, {$this->db->dbprefix('sales')}.id as id", false)
+                ->from('sale_return_history')
+                ->join('sales', 'sales.id=sale_return_history.sale_return_id', 'inner')
+                ->join('sma_warehouses', 'sma_warehouses.id=sale_return_history.warehouse_id', 'inner')
+                ->join('sma_units', 'sma_units.id=sale_return_history.product_unit_id', 'inner');
+
+            if ($user) {
+                $this->datatables->where('sale_return_history.created_by', $user);
+            }
+            if ($product) {
+                $this->datatables->where('sale_return_history.product_id', $product);
+            }
+            if ($serial) {
+                $this->datatables->like('sale_return_history.product_code', $serial);
+            }
+            if ($biller) {
+                $this->datatables->where('sales.biller_id', $biller);
+            }
+            if ($customer) {
+                $this->datatables->where('sales.customer_id', $customer);
+            }
+            if ($warehouse) {
+                $this->datatables->where('sale_return_history.warehouse_id', $warehouse);
+            }
+            if ($reference_no) {
+                $this->datatables->like('sale_return_history.reference_no', $reference_no, 'both');
+            }
+            if ($start_date) {
+                $this->datatables->where($this->db->dbprefix('sale_return_history') . '.created_date BETWEEN "' . $start_date . '" and "' . $end_date . '"');
+            }
+
+            echo $this->datatables->generate();
+        }
     }
 }

@@ -2348,6 +2348,9 @@ class system_settings extends MY_Controller
                 'returns-email' => $this->input->post('returns-email'),
                 'returns-pdf' => $this->input->post('returns-pdf'),
                 'reports-tax' => $this->input->post('reports-tax'),
+//                a.kader
+                'sales-return_history' => $this->input->post('sales-return_history'),
+                'reports-return_history' => $this->input->post('reports-return_history'),
             ];
 
             if (POS) {

@@ -20,12 +20,12 @@ class Sales extends MY_Controller
         $this->load->library('form_validation');
         $this->load->admin_model('sales_model');
         $this->digital_upload_path = 'files/';
-        $this->upload_path         = 'assets/uploads/';
-        $this->thumbs_path         = 'assets/uploads/thumbs/';
-        $this->image_types         = 'gif|jpg|jpeg|png|tif';
-        $this->digital_file_types  = 'zip|psd|ai|rar|pdf|doc|docx|xls|xlsx|ppt|pptx|gif|jpg|jpeg|png|tif|txt';
-        $this->allowed_file_size   = '1024';
-        $this->data['logo']        = true;
+        $this->upload_path = 'assets/uploads/';
+        $this->thumbs_path = 'assets/uploads/thumbs/';
+        $this->image_types = 'gif|jpg|jpeg|png|tif';
+        $this->digital_file_types = 'zip|psd|ai|rar|pdf|doc|docx|xls|xlsx|ppt|pptx|gif|jpg|jpeg|png|tif|txt';
+        $this->allowed_file_size = '1024';
+        $this->data['logo'] = true;
     }
 
     /* ------------------------------------------------------------------ */
@@ -48,44 +48,44 @@ class Sales extends MY_Controller
             } else {
                 $date = date('Y-m-d H:i:s');
             }
-            $warehouse_id     = $this->input->post('warehouse');
-            $customer_id      = $this->input->post('customer');
-            $biller_id        = $this->input->post('biller');
-            $total_items      = $this->input->post('total_items');
-            $sale_status      = $this->input->post('sale_status');
-            $payment_status   = $this->input->post('payment_status');
-            $payment_term     = $this->input->post('payment_term');
-            $due_date         = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days', strtotime($date))) : null;
-            $shipping         = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
+            $warehouse_id = $this->input->post('warehouse');
+            $customer_id = $this->input->post('customer');
+            $biller_id = $this->input->post('biller');
+            $total_items = $this->input->post('total_items');
+            $sale_status = $this->input->post('sale_status');
+            $payment_status = $this->input->post('payment_status');
+            $payment_term = $this->input->post('payment_term');
+            $due_date = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days', strtotime($date))) : null;
+            $shipping = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
             $customer_details = $this->site->getCompanyByID($customer_id);
-            $customer         = !empty($customer_details->company) && $customer_details->company != '-' ? $customer_details->company : $customer_details->name;
-            $biller_details   = $this->site->getCompanyByID($biller_id);
-            $biller           = !empty($biller_details->company) && $biller_details->company != '-' ? $biller_details->company : $biller_details->name;
-            $note             = $this->sma->clear_tags($this->input->post('note'));
-            $staff_note       = $this->sma->clear_tags($this->input->post('staff_note'));
-            $quote_id         = $this->input->post('quote_id') ? $this->input->post('quote_id') : null;
+            $customer = !empty($customer_details->company) && $customer_details->company != '-' ? $customer_details->company : $customer_details->name;
+            $biller_details = $this->site->getCompanyByID($biller_id);
+            $biller = !empty($biller_details->company) && $biller_details->company != '-' ? $biller_details->company : $biller_details->name;
+            $note = $this->sma->clear_tags($this->input->post('note'));
+            $staff_note = $this->sma->clear_tags($this->input->post('staff_note'));
+            $quote_id = $this->input->post('quote_id') ? $this->input->post('quote_id') : null;
 
-            $total            = 0;
-            $product_tax      = 0;
+            $total = 0;
+            $product_tax = 0;
             $product_discount = 0;
-            $digital          = false;
-            $gst_data         = [];
-            $total_cgst       = $total_sgst       = $total_igst       = 0;
-            $i                = isset($_POST['product_code']) ? sizeof($_POST['product_code']) : 0;
+            $digital = false;
+            $gst_data = [];
+            $total_cgst = $total_sgst = $total_igst = 0;
+            $i = isset($_POST['product_code']) ? sizeof($_POST['product_code']) : 0;
             for ($r = 0; $r < $i; $r++) {
-                $item_id            = $_POST['product_id'][$r];
-                $item_type          = $_POST['product_type'][$r];
-                $item_code          = $_POST['product_code'][$r];
-                $item_name          = $_POST['product_name'][$r];
-                $item_option        = isset($_POST['product_option'][$r]) && $_POST['product_option'][$r] != 'false' && $_POST['product_option'][$r] != 'null' ? $_POST['product_option'][$r] : null;
-                $real_unit_price    = $this->sma->formatDecimal($_POST['real_unit_price'][$r]);
-                $unit_price         = $this->sma->formatDecimal($_POST['unit_price'][$r]);
+                $item_id = $_POST['product_id'][$r];
+                $item_type = $_POST['product_type'][$r];
+                $item_code = $_POST['product_code'][$r];
+                $item_name = $_POST['product_name'][$r];
+                $item_option = isset($_POST['product_option'][$r]) && $_POST['product_option'][$r] != 'false' && $_POST['product_option'][$r] != 'null' ? $_POST['product_option'][$r] : null;
+                $real_unit_price = $this->sma->formatDecimal($_POST['real_unit_price'][$r]);
+                $unit_price = $this->sma->formatDecimal($_POST['unit_price'][$r]);
                 $item_unit_quantity = $_POST['quantity'][$r];
-                $item_serial        = $_POST['serial'][$r]           ?? '';
-                $item_tax_rate      = $_POST['product_tax'][$r]      ?? null;
-                $item_discount      = $_POST['product_discount'][$r] ?? null;
-                $item_unit          = $_POST['product_unit'][$r];
-                $item_quantity      = $_POST['product_base_quantity'][$r];
+                $item_serial = $_POST['serial'][$r] ?? '';
+                $item_tax_rate = $_POST['product_tax'][$r] ?? null;
+                $item_discount = $_POST['product_discount'][$r] ?? null;
+                $item_unit = $_POST['product_unit'][$r];
+                $item_quantity = $_POST['product_base_quantity'][$r];
 
                 if (isset($item_code) && isset($real_unit_price) && isset($unit_price) && isset($item_quantity)) {
                     $product_details = $item_type != 'manual' ? $this->sales_model->getProductByCode($item_code) : null;
@@ -93,19 +93,19 @@ class Sales extends MY_Controller
                     if ($item_type == 'digital') {
                         $digital = true;
                     }
-                    $pr_discount      = $this->site->calculateDiscount($item_discount, $unit_price);
-                    $unit_price       = $this->sma->formatDecimal($unit_price - $pr_discount);
-                    $item_net_price   = $unit_price;
+                    $pr_discount = $this->site->calculateDiscount($item_discount, $unit_price);
+                    $unit_price = $this->sma->formatDecimal($unit_price - $pr_discount);
+                    $item_net_price = $unit_price;
                     $pr_item_discount = $this->sma->formatDecimal($pr_discount * $item_unit_quantity);
                     $product_discount += $pr_item_discount;
                     $pr_item_tax = $item_tax = 0;
-                    $tax         = '';
+                    $tax = '';
 
                     if (isset($item_tax_rate) && $item_tax_rate != 0) {
                         $tax_details = $this->site->getTaxRateByID($item_tax_rate);
-                        $ctax        = $this->site->calculateTax($product_details, $tax_details, $unit_price);
-                        $item_tax    = $this->sma->formatDecimal($ctax['amount']);
-                        $tax         = $ctax['tax'];
+                        $ctax = $this->site->calculateTax($product_details, $tax_details, $unit_price);
+                        $item_tax = $this->sma->formatDecimal($ctax['amount']);
+                        $tax = $ctax['tax'];
                         if (!$product_details || (!empty($product_details) && $product_details->tax_method != 1)) {
                             $item_net_price = $unit_price - $item_tax;
                         }
@@ -119,29 +119,29 @@ class Sales extends MY_Controller
 
                     $product_tax += $pr_item_tax;
                     $subtotal = (($item_net_price * $item_unit_quantity) + $pr_item_tax);
-                    $unit     = $this->site->getUnitByID($item_unit);
+                    $unit = $this->site->getUnitByID($item_unit);
 
                     $product = [
-                        'product_id'        => $item_id,
-                        'product_code'      => $item_code,
-                        'product_name'      => $item_name,
-                        'product_type'      => $item_type,
-                        'option_id'         => $item_option,
-                        'net_unit_price'    => $item_net_price,
-                        'unit_price'        => $this->sma->formatDecimal($item_net_price + $item_tax),
-                        'quantity'          => $item_quantity,
-                        'product_unit_id'   => $unit ? $unit->id : null,
+                        'product_id' => $item_id,
+                        'product_code' => $item_code,
+                        'product_name' => $item_name,
+                        'product_type' => $item_type,
+                        'option_id' => $item_option,
+                        'net_unit_price' => $item_net_price,
+                        'unit_price' => $this->sma->formatDecimal($item_net_price + $item_tax),
+                        'quantity' => $item_quantity,
+                        'product_unit_id' => $unit ? $unit->id : null,
                         'product_unit_code' => $unit ? $unit->code : null,
-                        'unit_quantity'     => $item_unit_quantity,
-                        'warehouse_id'      => $warehouse_id,
-                        'item_tax'          => $pr_item_tax,
-                        'tax_rate_id'       => $item_tax_rate,
-                        'tax'               => $tax,
-                        'discount'          => $item_discount,
-                        'item_discount'     => $pr_item_discount,
-                        'subtotal'          => $this->sma->formatDecimal($subtotal),
-                        'serial_no'         => $item_serial,
-                        'real_unit_price'   => $real_unit_price,
+                        'unit_quantity' => $item_unit_quantity,
+                        'warehouse_id' => $warehouse_id,
+                        'item_tax' => $pr_item_tax,
+                        'tax_rate_id' => $item_tax_rate,
+                        'tax' => $tax,
+                        'discount' => $item_discount,
+                        'item_discount' => $pr_item_discount,
+                        'subtotal' => $this->sma->formatDecimal($subtotal),
+                        'serial_no' => $item_serial,
+                        'real_unit_price' => $real_unit_price,
                     ];
 
                     $products[] = ($product + $gst_data);
@@ -156,37 +156,37 @@ class Sales extends MY_Controller
 
             $order_discount = $this->site->calculateDiscount($this->input->post('order_discount'), ($total + $product_tax), true);
             $total_discount = $this->sma->formatDecimal(($order_discount + $product_discount), 4);
-            $order_tax      = $this->site->calculateOrderTax($this->input->post('order_tax'), ($total + $product_tax - $order_discount));
-            $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
-            $grand_total    = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
-            $data           = ['date' => $date,
-                'reference_no'        => $reference,
-                'customer_id'         => $customer_id,
-                'customer'            => $customer,
-                'biller_id'           => $biller_id,
-                'biller'              => $biller,
-                'warehouse_id'        => $warehouse_id,
-                'note'                => $note,
-                'staff_note'          => $staff_note,
-                'total'               => $total,
-                'product_discount'    => $product_discount,
-                'order_discount_id'   => $this->input->post('order_discount'),
-                'order_discount'      => $order_discount,
-                'total_discount'      => $total_discount,
-                'product_tax'         => $product_tax,
-                'order_tax_id'        => $this->input->post('order_tax'),
-                'order_tax'           => $order_tax,
-                'total_tax'           => $total_tax,
-                'shipping'            => $this->sma->formatDecimal($shipping),
-                'grand_total'         => $grand_total,
-                'total_items'         => $total_items,
-                'sale_status'         => $sale_status,
-                'payment_status'      => $payment_status,
-                'payment_term'        => $payment_term,
-                'due_date'            => $due_date,
-                'paid'                => 0,
-                'created_by'          => $this->session->userdata('user_id'),
-                'hash'                => hash('sha256', microtime() . mt_rand()),
+            $order_tax = $this->site->calculateOrderTax($this->input->post('order_tax'), ($total + $product_tax - $order_discount));
+            $total_tax = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
+            $grand_total = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
+            $data = ['date' => $date,
+                'reference_no' => $reference,
+                'customer_id' => $customer_id,
+                'customer' => $customer,
+                'biller_id' => $biller_id,
+                'biller' => $biller,
+                'warehouse_id' => $warehouse_id,
+                'note' => $note,
+                'staff_note' => $staff_note,
+                'total' => $total,
+                'product_discount' => $product_discount,
+                'order_discount_id' => $this->input->post('order_discount'),
+                'order_discount' => $order_discount,
+                'total_discount' => $total_discount,
+                'product_tax' => $product_tax,
+                'order_tax_id' => $this->input->post('order_tax'),
+                'order_tax' => $order_tax,
+                'total_tax' => $total_tax,
+                'shipping' => $this->sma->formatDecimal($shipping),
+                'grand_total' => $grand_total,
+                'total_items' => $total_items,
+                'sale_status' => $sale_status,
+                'payment_status' => $payment_status,
+                'payment_term' => $payment_term,
+                'due_date' => $due_date,
+                'paid' => 0,
+                'created_by' => $this->session->userdata('user_id'),
+                'hash' => hash('sha256', microtime() . mt_rand()),
             ];
             if ($this->Settings->indian_gst) {
                 $data['cgst'] = $total_cgst;
@@ -202,40 +202,40 @@ class Sales extends MY_Controller
                     }
                 }
                 if ($this->input->post('paid_by') == 'gift_card') {
-                    $gc            = $this->site->getGiftCardByNO($this->input->post('gift_card_no'));
+                    $gc = $this->site->getGiftCardByNO($this->input->post('gift_card_no'));
                     $amount_paying = $grand_total >= $gc->balance ? $gc->balance : $grand_total;
-                    $gc_balance    = $gc->balance - $amount_paying;
-                    $payment       = [
-                        'date'         => $date,
+                    $gc_balance = $gc->balance - $amount_paying;
+                    $payment = [
+                        'date' => $date,
                         'reference_no' => $this->input->post('payment_reference_no'),
-                        'amount'       => $this->sma->formatDecimal($amount_paying),
-                        'paid_by'      => $this->input->post('paid_by'),
-                        'cheque_no'    => $this->input->post('cheque_no'),
-                        'cc_no'        => $this->input->post('gift_card_no'),
-                        'cc_holder'    => $this->input->post('pcc_holder'),
-                        'cc_month'     => $this->input->post('pcc_month'),
-                        'cc_year'      => $this->input->post('pcc_year'),
-                        'cc_type'      => $this->input->post('pcc_type'),
-                        'created_by'   => $this->session->userdata('user_id'),
-                        'note'         => $this->input->post('payment_note'),
-                        'type'         => 'received',
-                        'gc_balance'   => $gc_balance,
+                        'amount' => $this->sma->formatDecimal($amount_paying),
+                        'paid_by' => $this->input->post('paid_by'),
+                        'cheque_no' => $this->input->post('cheque_no'),
+                        'cc_no' => $this->input->post('gift_card_no'),
+                        'cc_holder' => $this->input->post('pcc_holder'),
+                        'cc_month' => $this->input->post('pcc_month'),
+                        'cc_year' => $this->input->post('pcc_year'),
+                        'cc_type' => $this->input->post('pcc_type'),
+                        'created_by' => $this->session->userdata('user_id'),
+                        'note' => $this->input->post('payment_note'),
+                        'type' => 'received',
+                        'gc_balance' => $gc_balance,
                     ];
                 } else {
                     $payment = [
-                        'date'         => $date,
+                        'date' => $date,
                         'reference_no' => $this->input->post('payment_reference_no'),
-                        'amount'       => $this->sma->formatDecimal($this->input->post('amount-paid')),
-                        'paid_by'      => $this->input->post('paid_by'),
-                        'cheque_no'    => $this->input->post('cheque_no'),
-                        'cc_no'        => $this->input->post('pcc_no'),
-                        'cc_holder'    => $this->input->post('pcc_holder'),
-                        'cc_month'     => $this->input->post('pcc_month'),
-                        'cc_year'      => $this->input->post('pcc_year'),
-                        'cc_type'      => $this->input->post('pcc_type'),
-                        'created_by'   => $this->session->userdata('user_id'),
-                        'note'         => $this->input->post('payment_note'),
-                        'type'         => 'received',
+                        'amount' => $this->sma->formatDecimal($this->input->post('amount-paid')),
+                        'paid_by' => $this->input->post('paid_by'),
+                        'cheque_no' => $this->input->post('cheque_no'),
+                        'cc_no' => $this->input->post('pcc_no'),
+                        'cc_holder' => $this->input->post('pcc_holder'),
+                        'cc_month' => $this->input->post('pcc_month'),
+                        'cc_year' => $this->input->post('pcc_year'),
+                        'cc_type' => $this->input->post('pcc_type'),
+                        'created_by' => $this->session->userdata('user_id'),
+                        'note' => $this->input->post('payment_note'),
+                        'type' => 'received',
                     ];
                 }
             } else {
@@ -244,18 +244,18 @@ class Sales extends MY_Controller
 
             if ($_FILES['document']['size'] > 0) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = $this->digital_file_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload('document')) {
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     redirect($_SERVER['HTTP_REFERER']);
                 }
-                $photo              = $this->upload->file_name;
+                $photo = $this->upload->file_name;
                 $data['attachment'] = $photo;
             }
 
@@ -273,48 +273,48 @@ class Sales extends MY_Controller
             if ($quote_id || $sale_id) {
                 if ($quote_id) {
                     $this->data['quote'] = $this->sales_model->getQuoteByID($quote_id);
-                    $items               = $this->sales_model->getAllQuoteItems($quote_id);
+                    $items = $this->sales_model->getAllQuoteItems($quote_id);
                 } elseif ($sale_id) {
                     $this->data['quote'] = $this->sales_model->getInvoiceByID($sale_id);
-                    $items               = $this->sales_model->getAllInvoiceItems($sale_id);
+                    $items = $this->sales_model->getAllInvoiceItems($sale_id);
                 }
                 krsort($items);
                 $c = rand(100000, 9999999);
                 foreach ($items as $item) {
                     $row = $this->site->getProductByID($item->product_id);
                     if (!$row) {
-                        $row             = json_decode('{}');
+                        $row = json_decode('{}');
                         $row->tax_method = 0;
                     } else {
                         unset($row->cost, $row->details, $row->product_details, $row->image, $row->barcode_symbology, $row->cf1, $row->cf2, $row->cf3, $row->cf4, $row->cf5, $row->cf6, $row->supplier1price, $row->supplier2price, $row->cfsupplier3price, $row->supplier4price, $row->supplier5price, $row->supplier1, $row->supplier2, $row->supplier3, $row->supplier4, $row->supplier5, $row->supplier1_part_no, $row->supplier2_part_no, $row->supplier3_part_no, $row->supplier4_part_no, $row->supplier5_part_no);
                     }
                     $row->quantity = 0;
-                    $pis           = $this->site->getPurchasedItems($item->product_id, $item->warehouse_id, $item->option_id);
+                    $pis = $this->site->getPurchasedItems($item->product_id, $item->warehouse_id, $item->option_id);
                     if ($pis) {
                         foreach ($pis as $pi) {
                             $row->quantity += $pi->quantity_balance;
                         }
                     }
-                    $row->id              = $item->product_id;
-                    $row->code            = $item->product_code;
-                    $row->name            = $item->product_name;
-                    $row->type            = $item->product_type;
-                    $row->qty             = $item->quantity;
-                    $row->base_quantity   = $item->quantity;
-                    $row->base_unit       = isset($row->unit) ? $row->unit : $item->product_unit_id;
+                    $row->id = $item->product_id;
+                    $row->code = $item->product_code;
+                    $row->name = $item->product_name;
+                    $row->type = $item->product_type;
+                    $row->qty = $item->quantity;
+                    $row->base_quantity = $item->quantity;
+                    $row->base_unit = isset($row->unit) ? $row->unit : $item->product_unit_id;
                     $row->base_unit_price = isset($row->price) ? $row->price : $item->unit_price;
-                    $row->unit            = $item->product_unit_id;
-                    $row->qty             = $item->unit_quantity;
-                    $row->discount        = $item->discount ? $item->discount : '0';
-                    $row->item_tax        = $item->item_tax      > 0 ? $item->item_tax      / $item->quantity : 0;
-                    $row->item_discount   = $item->item_discount > 0 ? $item->item_discount / $item->quantity : 0;
-                    $row->price           = $this->sma->formatDecimal($item->net_unit_price + $this->sma->formatDecimal($row->item_discount));
-                    $row->unit_price      = $row->tax_method ? $item->unit_price + $this->sma->formatDecimal($row->item_discount) + $this->sma->formatDecimal($row->item_tax) : $item->unit_price + ($row->item_discount);
+                    $row->unit = $item->product_unit_id;
+                    $row->qty = $item->unit_quantity;
+                    $row->discount = $item->discount ? $item->discount : '0';
+                    $row->item_tax = $item->item_tax > 0 ? $item->item_tax / $item->quantity : 0;
+                    $row->item_discount = $item->item_discount > 0 ? $item->item_discount / $item->quantity : 0;
+                    $row->price = $this->sma->formatDecimal($item->net_unit_price + $this->sma->formatDecimal($row->item_discount));
+                    $row->unit_price = $row->tax_method ? $item->unit_price + $this->sma->formatDecimal($row->item_discount) + $this->sma->formatDecimal($row->item_tax) : $item->unit_price + ($row->item_discount);
                     $row->real_unit_price = $item->real_unit_price;
-                    $row->tax_rate        = $item->tax_rate_id;
-                    $row->serial          = '';
-                    $row->option          = $item->option_id;
-                    $options              = $this->sales_model->getProductOptions($row->id, $item->warehouse_id);
+                    $row->tax_rate = $item->tax_rate_id;
+                    $row->serial = '';
+                    $row->option = $item->option_id;
+                    $options = $this->sales_model->getProductOptions($row->id, $item->warehouse_id);
                     if ($options) {
                         $option_quantity = 0;
                         foreach ($options as $option) {
@@ -333,28 +333,28 @@ class Sales extends MY_Controller
                     if ($row->type == 'combo') {
                         $combo_items = $this->sales_model->getProductComboItems($row->id, $item->warehouse_id);
                     }
-                    $units    = $this->site->getUnitsByBUID($row->base_unit);
+                    $units = $this->site->getUnitsByBUID($row->base_unit);
                     $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
-                    $ri       = $this->Settings->item_addition ? $row->id : $c;
+                    $ri = $this->Settings->item_addition ? $row->id : $c;
 
                     $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                        'row'        => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                        'row' => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,];
                     $c++;
                 }
                 $this->data['quote_items'] = json_encode($pr);
             }
 
-            $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $this->data['quote_id']   = $quote_id ? $quote_id : $sale_id;
-            $this->data['billers']    = $this->site->getAllCompanies('biller');
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['quote_id'] = $quote_id ? $quote_id : $sale_id;
+            $this->data['billers'] = $this->site->getAllCompanies('biller');
             $this->data['warehouses'] = $this->site->getAllWarehouses();
-            $this->data['tax_rates']  = $this->site->getAllTaxRates();
-            $this->data['units']      = $this->site->getAllBaseUnits();
+            $this->data['tax_rates'] = $this->site->getAllTaxRates();
+            $this->data['units'] = $this->site->getAllBaseUnits();
             //$this->data['currencies'] = $this->sales_model->getAllCurrencies();
-            $this->data['slnumber']    = ''; //$this->site->getReference('so');
+            $this->data['slnumber'] = ''; //$this->site->getReference('so');
             $this->data['payment_ref'] = ''; //$this->site->getReference('pay');
-            $bc                        = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('add_sale')]];
-            $meta                      = ['page_title' => lang('add_sale'), 'bc' => $bc];
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('add_sale')]];
+            $meta = ['page_title' => lang('add_sale'), 'bc' => $bc];
             $this->page_construct('sales/add', $meta, $this->data);
         }
     }
@@ -386,32 +386,32 @@ class Sales extends MY_Controller
                     $date = date('Y-m-d H:i:s');
                 }
                 $dlDetails = [
-                    'date'              => $date,
-                    'sale_id'           => $this->input->post('sale_id'),
-                    'do_reference_no'   => $this->input->post('do_reference_no') ? $this->input->post('do_reference_no') : $this->site->getReference('do'),
+                    'date' => $date,
+                    'sale_id' => $this->input->post('sale_id'),
+                    'do_reference_no' => $this->input->post('do_reference_no') ? $this->input->post('do_reference_no') : $this->site->getReference('do'),
                     'sale_reference_no' => $this->input->post('sale_reference_no'),
-                    'customer'          => $this->input->post('customer'),
-                    'address'           => $this->input->post('address'),
-                    'status'            => $this->input->post('status'),
-                    'delivered_by'      => $this->input->post('delivered_by'),
-                    'received_by'       => $this->input->post('received_by'),
-                    'note'              => $this->sma->clear_tags($this->input->post('note')),
-                    'created_by'        => $this->session->userdata('user_id'),
+                    'customer' => $this->input->post('customer'),
+                    'address' => $this->input->post('address'),
+                    'status' => $this->input->post('status'),
+                    'delivered_by' => $this->input->post('delivered_by'),
+                    'received_by' => $this->input->post('received_by'),
+                    'note' => $this->sma->clear_tags($this->input->post('note')),
+                    'created_by' => $this->session->userdata('user_id'),
                 ];
                 if ($_FILES['document']['size'] > 0) {
                     $this->load->library('upload');
-                    $config['upload_path']   = $this->digital_upload_path;
+                    $config['upload_path'] = $this->digital_upload_path;
                     $config['allowed_types'] = $this->digital_file_types;
-                    $config['max_size']      = $this->allowed_file_size;
-                    $config['overwrite']     = false;
-                    $config['encrypt_name']  = true;
+                    $config['max_size'] = $this->allowed_file_size;
+                    $config['overwrite'] = false;
+                    $config['encrypt_name'] = true;
                     $this->upload->initialize($config);
                     if (!$this->upload->do_upload('document')) {
                         $error = $this->upload->display_errors();
                         $this->session->set_flashdata('error', $error);
                         redirect($_SERVER['HTTP_REFERER']);
                     }
-                    $photo                   = $this->upload->file_name;
+                    $photo = $this->upload->file_name;
                     $dlDetails['attachment'] = $photo;
                 }
             } elseif ($this->input->post('add_delivery')) {
@@ -427,12 +427,12 @@ class Sales extends MY_Controller
                 $this->session->set_flashdata('message', lang('delivery_added'));
                 admin_redirect('sales/deliveries');
             } else {
-                $this->data['error']           = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-                $this->data['customer']        = $this->site->getCompanyByID($sale->customer_id);
-                $this->data['address']         = $this->site->getAddressByID($sale->address_id);
-                $this->data['inv']             = $sale;
+                $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+                $this->data['customer'] = $this->site->getCompanyByID($sale->customer_id);
+                $this->data['address'] = $this->site->getAddressByID($sale->address_id);
+                $this->data['inv'] = $sale;
                 $this->data['do_reference_no'] = ''; //$this->site->getReference('do');
-                $this->data['modal_js']        = $this->site->modal_js();
+                $this->data['modal_js'] = $this->site->modal_js();
 
                 $this->load->view($this->theme . 'sales/add_delivery', $this->data);
             }
@@ -448,20 +448,20 @@ class Sales extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             $customer_details = $this->input->post('customer') ? $this->site->getCompanyByID($this->input->post('customer')) : null;
-            $customer         = $customer_details ? $customer_details->company : null;
-            $data             = ['card_no' => $this->input->post('card_no'),
-                'value'                    => $this->input->post('value'),
-                'customer_id'              => $this->input->post('customer') ? $this->input->post('customer') : null,
-                'customer'                 => $customer,
-                'balance'                  => $this->input->post('value'),
-                'expiry'                   => $this->input->post('expiry') ? $this->sma->fsd($this->input->post('expiry')) : null,
-                'created_by'               => $this->session->userdata('user_id'),
+            $customer = $customer_details ? $customer_details->company : null;
+            $data = ['card_no' => $this->input->post('card_no'),
+                'value' => $this->input->post('value'),
+                'customer_id' => $this->input->post('customer') ? $this->input->post('customer') : null,
+                'customer' => $customer,
+                'balance' => $this->input->post('value'),
+                'expiry' => $this->input->post('expiry') ? $this->sma->fsd($this->input->post('expiry')) : null,
+                'created_by' => $this->session->userdata('user_id'),
             ];
             $sa_data = [];
             $ca_data = [];
             if ($this->input->post('staff_points')) {
                 $sa_points = $this->input->post('sa_points');
-                $user      = $this->site->getUser($this->input->post('user'));
+                $user = $this->site->getUser($this->input->post('user'));
                 if ($user->award_points < $sa_points) {
                     $this->session->set_flashdata('error', lang('award_points_wrong'));
                     admin_redirect('sales/gift_cards');
@@ -485,9 +485,9 @@ class Sales extends MY_Controller
             $this->session->set_flashdata('message', lang('gift_card_added'));
             admin_redirect('sales/gift_cards');
         } else {
-            $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $this->data['modal_js']   = $this->site->modal_js();
-            $this->data['users']      = $this->sales_model->getStaff();
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['modal_js'] = $this->site->modal_js();
+            $this->data['users'] = $this->sales_model->getStaff();
             $this->data['page_title'] = lang('new_gift_card');
             $this->load->view($this->theme . 'sales/add_gift_card', $this->data);
         }
@@ -527,36 +527,36 @@ class Sales extends MY_Controller
                 $date = date('Y-m-d H:i:s');
             }
             $payment = [
-                'date'         => $date,
-                'sale_id'      => $this->input->post('sale_id'),
+                'date' => $date,
+                'sale_id' => $this->input->post('sale_id'),
                 'reference_no' => $this->input->post('reference_no') ? $this->input->post('reference_no') : $this->site->getReference('pay'),
-                'amount'       => $this->input->post('amount-paid'),
-                'paid_by'      => $this->input->post('paid_by'),
-                'cheque_no'    => $this->input->post('cheque_no'),
-                'cc_no'        => $this->input->post('paid_by') == 'gift_card' ? $this->input->post('gift_card_no') : $this->input->post('pcc_no'),
-                'cc_holder'    => $this->input->post('pcc_holder'),
-                'cc_month'     => $this->input->post('pcc_month'),
-                'cc_year'      => $this->input->post('pcc_year'),
-                'cc_type'      => $this->input->post('pcc_type'),
-                'note'         => $this->input->post('note'),
-                'created_by'   => $this->session->userdata('user_id'),
-                'type'         => $sale->sale_status == 'returned' ? 'returned' : 'received',
+                'amount' => $this->input->post('amount-paid'),
+                'paid_by' => $this->input->post('paid_by'),
+                'cheque_no' => $this->input->post('cheque_no'),
+                'cc_no' => $this->input->post('paid_by') == 'gift_card' ? $this->input->post('gift_card_no') : $this->input->post('pcc_no'),
+                'cc_holder' => $this->input->post('pcc_holder'),
+                'cc_month' => $this->input->post('pcc_month'),
+                'cc_year' => $this->input->post('pcc_year'),
+                'cc_type' => $this->input->post('pcc_type'),
+                'note' => $this->input->post('note'),
+                'created_by' => $this->session->userdata('user_id'),
+                'type' => $sale->sale_status == 'returned' ? 'returned' : 'received',
             ];
 
             if ($_FILES['userfile']['size'] > 0) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = $this->digital_file_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload()) {
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     redirect($_SERVER['HTTP_REFERER']);
                 }
-                $photo                 = $this->upload->file_name;
+                $photo = $this->upload->file_name;
                 $payment['attachment'] = $photo;
             }
 
@@ -579,9 +579,9 @@ class Sales extends MY_Controller
                 $this->session->set_flashdata('warning', lang('payment_was_returned'));
                 $this->sma->md();
             }
-            $this->data['inv']         = $sale;
+            $this->data['inv'] = $sale;
             $this->data['payment_ref'] = ''; //$this->site->getReference('pay');
-            $this->data['modal_js']    = $this->site->modal_js();
+            $this->data['modal_js'] = $this->site->modal_js();
 
             $this->load->view($this->theme . 'sales/add_payment', $this->data);
         }
@@ -593,28 +593,28 @@ class Sales extends MY_Controller
 
         foreach ($sales_id as $id) {
             $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-            $inv                 = $this->sales_model->getInvoiceByID($id);
+            $inv = $this->sales_model->getInvoiceByID($id);
             if (!$this->session->userdata('view_right')) {
                 $this->sma->view_rights($inv->created_by);
             }
-            $this->data['barcode']     = "<img src='" . admin_url('products/gen_barcode/' . $inv->reference_no) . "' alt='" . $inv->reference_no . "' class='pull-left' />";
-            $this->data['customer']    = $this->site->getCompanyByID($inv->customer_id);
-            $this->data['payments']    = $this->sales_model->getPaymentsForSale($id);
-            $this->data['biller']      = $this->site->getCompanyByID($inv->biller_id);
-            $this->data['user']        = $this->site->getUser($inv->created_by);
-            $this->data['warehouse']   = $this->site->getWarehouseByID($inv->warehouse_id);
-            $this->data['inv']         = $inv;
-            $this->data['rows']        = $this->sales_model->getAllInvoiceItems($id);
+            $this->data['barcode'] = "<img src='" . admin_url('products/gen_barcode/' . $inv->reference_no) . "' alt='" . $inv->reference_no . "' class='pull-left' />";
+            $this->data['customer'] = $this->site->getCompanyByID($inv->customer_id);
+            $this->data['payments'] = $this->sales_model->getPaymentsForSale($id);
+            $this->data['biller'] = $this->site->getCompanyByID($inv->biller_id);
+            $this->data['user'] = $this->site->getUser($inv->created_by);
+            $this->data['warehouse'] = $this->site->getWarehouseByID($inv->warehouse_id);
+            $this->data['inv'] = $inv;
+            $this->data['rows'] = $this->sales_model->getAllInvoiceItems($id);
             $this->data['return_sale'] = $inv->return_id ? $this->sales_model->getInvoiceByID($inv->return_id) : null;
             $this->data['return_rows'] = $inv->return_id ? $this->sales_model->getAllInvoiceItems($inv->return_id) : null;
-            $html_data                 = $this->load->view($this->theme . 'sales/pdf', $this->data, true);
+            $html_data = $this->load->view($this->theme . 'sales/pdf', $this->data, true);
             if (!$this->Settings->barcode_img) {
                 $html_data = preg_replace("'\<\?xml(.*)\?\>'", '', $html_data);
             }
 
             $html[] = [
                 'content' => $html_data,
-                'footer'  => $this->data['biller']->invoice_footer,
+                'footer' => $this->data['biller']->invoice_footer,
             ];
         }
 
@@ -707,8 +707,8 @@ class Sales extends MY_Controller
         $this->sma->checkPermissions();
 
         $data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-        $bc            = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('deliveries')]];
-        $meta          = ['page_title' => lang('deliveries'), 'bc' => $bc];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('deliveries')]];
+        $meta = ['page_title' => lang('deliveries'), 'bc' => $bc];
         $this->page_construct('sales/deliveries', $meta, $this->data);
     }
 
@@ -804,59 +804,59 @@ class Sales extends MY_Controller
             } else {
                 $date = $inv->date;
             }
-            $warehouse_id     = $this->input->post('warehouse');
-            $customer_id      = $this->input->post('customer');
-            $biller_id        = $this->input->post('biller');
-            $total_items      = $this->input->post('total_items');
-            $sale_status      = $this->input->post('sale_status');
-            $payment_status   = $this->input->post('payment_status');
-            $payment_term     = $this->input->post('payment_term');
-            $due_date         = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days', strtotime($date))) : null;
-            $shipping         = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
+            $warehouse_id = $this->input->post('warehouse');
+            $customer_id = $this->input->post('customer');
+            $biller_id = $this->input->post('biller');
+            $total_items = $this->input->post('total_items');
+            $sale_status = $this->input->post('sale_status');
+            $payment_status = $this->input->post('payment_status');
+            $payment_term = $this->input->post('payment_term');
+            $due_date = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days', strtotime($date))) : null;
+            $shipping = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
             $customer_details = $this->site->getCompanyByID($customer_id);
-            $customer         = !empty($customer_details->company) && $customer_details->company != '-' ? $customer_details->company : $customer_details->name;
-            $biller_details   = $this->site->getCompanyByID($biller_id);
-            $biller           = !empty($biller_details->company) && $biller_details->company != '-' ? $biller_details->company : $biller_details->name;
-            $note             = $this->sma->clear_tags($this->input->post('note'));
-            $staff_note       = $this->sma->clear_tags($this->input->post('staff_note'));
+            $customer = !empty($customer_details->company) && $customer_details->company != '-' ? $customer_details->company : $customer_details->name;
+            $biller_details = $this->site->getCompanyByID($biller_id);
+            $biller = !empty($biller_details->company) && $biller_details->company != '-' ? $biller_details->company : $biller_details->name;
+            $note = $this->sma->clear_tags($this->input->post('note'));
+            $staff_note = $this->sma->clear_tags($this->input->post('staff_note'));
 
-            $total            = 0;
-            $product_tax      = 0;
+            $total = 0;
+            $product_tax = 0;
             $product_discount = 0;
-            $gst_data         = [];
-            $total_cgst       = $total_sgst       = $total_igst       = 0;
-            $i                = isset($_POST['product_code']) ? sizeof($_POST['product_code']) : 0;
+            $gst_data = [];
+            $total_cgst = $total_sgst = $total_igst = 0;
+            $i = isset($_POST['product_code']) ? sizeof($_POST['product_code']) : 0;
             for ($r = 0; $r < $i; $r++) {
-                $item_id            = $_POST['product_id'][$r];
-                $item_type          = $_POST['product_type'][$r];
-                $item_code          = $_POST['product_code'][$r];
-                $item_name          = $_POST['product_name'][$r];
-                $item_option        = isset($_POST['product_option'][$r]) && $_POST['product_option'][$r] != 'false' && $_POST['product_option'][$r] != 'null' ? $_POST['product_option'][$r] : null;
-                $real_unit_price    = $this->sma->formatDecimal($_POST['real_unit_price'][$r]);
-                $unit_price         = $this->sma->formatDecimal($_POST['unit_price'][$r]);
+                $item_id = $_POST['product_id'][$r];
+                $item_type = $_POST['product_type'][$r];
+                $item_code = $_POST['product_code'][$r];
+                $item_name = $_POST['product_name'][$r];
+                $item_option = isset($_POST['product_option'][$r]) && $_POST['product_option'][$r] != 'false' && $_POST['product_option'][$r] != 'null' ? $_POST['product_option'][$r] : null;
+                $real_unit_price = $this->sma->formatDecimal($_POST['real_unit_price'][$r]);
+                $unit_price = $this->sma->formatDecimal($_POST['unit_price'][$r]);
                 $item_unit_quantity = $_POST['quantity'][$r];
-                $item_serial        = $_POST['serial'][$r]           ?? '';
-                $item_tax_rate      = $_POST['product_tax'][$r]      ?? null;
-                $item_discount      = $_POST['product_discount'][$r] ?? null;
-                $item_unit          = $_POST['product_unit'][$r];
-                $item_quantity      = $_POST['product_base_quantity'][$r];
+                $item_serial = $_POST['serial'][$r] ?? '';
+                $item_tax_rate = $_POST['product_tax'][$r] ?? null;
+                $item_discount = $_POST['product_discount'][$r] ?? null;
+                $item_unit = $_POST['product_unit'][$r];
+                $item_quantity = $_POST['product_base_quantity'][$r];
 
                 if (isset($item_code) && isset($real_unit_price) && isset($unit_price) && isset($item_quantity)) {
                     $product_details = $item_type != 'manual' ? $this->sales_model->getProductByCode($item_code) : null;
 
-                    $pr_discount      = $this->site->calculateDiscount($item_discount, $unit_price);
-                    $unit_price       = $this->sma->formatDecimal($unit_price - $pr_discount);
-                    $item_net_price   = $unit_price;
+                    $pr_discount = $this->site->calculateDiscount($item_discount, $unit_price);
+                    $unit_price = $this->sma->formatDecimal($unit_price - $pr_discount);
+                    $item_net_price = $unit_price;
                     $pr_item_discount = $this->sma->formatDecimal($pr_discount * $item_unit_quantity);
                     $product_discount += $pr_item_discount;
                     $pr_item_tax = $item_tax = 0;
-                    $tax         = '';
+                    $tax = '';
 
                     if (isset($item_tax_rate) && $item_tax_rate != 0) {
                         $tax_details = $this->site->getTaxRateByID($item_tax_rate);
-                        $ctax        = $this->site->calculateTax($product_details, $tax_details, $unit_price);
-                        $item_tax    = $this->sma->formatDecimal($ctax['amount']);
-                        $tax         = $ctax['tax'];
+                        $ctax = $this->site->calculateTax($product_details, $tax_details, $unit_price);
+                        $item_tax = $this->sma->formatDecimal($ctax['amount']);
+                        $tax = $ctax['tax'];
                         if (!$product_details || (!empty($product_details) && $product_details->tax_method != 1)) {
                             $item_net_price = $unit_price - $item_tax;
                         }
@@ -870,29 +870,29 @@ class Sales extends MY_Controller
 
                     $product_tax += $pr_item_tax;
                     $subtotal = (($item_net_price * $item_unit_quantity) + $pr_item_tax);
-                    $unit     = $this->site->getUnitByID($item_unit);
+                    $unit = $this->site->getUnitByID($item_unit);
 
                     $product = [
-                        'product_id'        => $item_id,
-                        'product_code'      => $item_code,
-                        'product_name'      => $item_name,
-                        'product_type'      => $item_type,
-                        'option_id'         => $item_option,
-                        'net_unit_price'    => $item_net_price,
-                        'unit_price'        => $this->sma->formatDecimal($item_net_price + $item_tax),
-                        'quantity'          => $item_quantity,
-                        'product_unit_id'   => $unit ? $unit->id : null,
+                        'product_id' => $item_id,
+                        'product_code' => $item_code,
+                        'product_name' => $item_name,
+                        'product_type' => $item_type,
+                        'option_id' => $item_option,
+                        'net_unit_price' => $item_net_price,
+                        'unit_price' => $this->sma->formatDecimal($item_net_price + $item_tax),
+                        'quantity' => $item_quantity,
+                        'product_unit_id' => $unit ? $unit->id : null,
                         'product_unit_code' => $unit ? $unit->code : null,
-                        'unit_quantity'     => $item_unit_quantity,
-                        'warehouse_id'      => $warehouse_id,
-                        'item_tax'          => $pr_item_tax,
-                        'tax_rate_id'       => $item_tax_rate,
-                        'tax'               => $tax,
-                        'discount'          => $item_discount,
-                        'item_discount'     => $pr_item_discount,
-                        'subtotal'          => $this->sma->formatDecimal($subtotal),
-                        'serial_no'         => $item_serial,
-                        'real_unit_price'   => $real_unit_price,
+                        'unit_quantity' => $item_unit_quantity,
+                        'warehouse_id' => $warehouse_id,
+                        'item_tax' => $pr_item_tax,
+                        'tax_rate_id' => $item_tax_rate,
+                        'tax' => $tax,
+                        'discount' => $item_discount,
+                        'item_discount' => $pr_item_discount,
+                        'subtotal' => $this->sma->formatDecimal($subtotal),
+                        'serial_no' => $item_serial,
+                        'real_unit_price' => $real_unit_price,
                     ];
 
                     $products[] = ($product + $gst_data);
@@ -907,36 +907,36 @@ class Sales extends MY_Controller
 
             $order_discount = $this->site->calculateDiscount($this->input->post('order_discount'), ($total + $product_tax), true);
             $total_discount = $this->sma->formatDecimal(($order_discount + $product_discount), 4);
-            $order_tax      = $this->site->calculateOrderTax($this->input->post('order_tax'), ($total + $product_tax - $order_discount));
-            $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
-            $grand_total    = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
-            $data           = ['date' => $date,
-                'reference_no'        => $reference,
-                'customer_id'         => $customer_id,
-                'customer'            => $customer,
-                'biller_id'           => $biller_id,
-                'biller'              => $biller,
-                'warehouse_id'        => $warehouse_id,
-                'note'                => $note,
-                'staff_note'          => $staff_note,
-                'total'               => $total,
-                'product_discount'    => $product_discount,
-                'order_discount_id'   => $this->input->post('order_discount'),
-                'order_discount'      => $order_discount,
-                'total_discount'      => $total_discount,
-                'product_tax'         => $product_tax,
-                'order_tax_id'        => $this->input->post('order_tax'),
-                'order_tax'           => $order_tax,
-                'total_tax'           => $total_tax,
-                'shipping'            => $this->sma->formatDecimal($shipping),
-                'grand_total'         => $grand_total,
-                'total_items'         => $total_items,
-                'sale_status'         => $sale_status,
-                'payment_status'      => $payment_status,
-                'payment_term'        => $payment_term,
-                'due_date'            => $due_date,
-                'updated_by'          => $this->session->userdata('user_id'),
-                'updated_at'          => date('Y-m-d H:i:s'),
+            $order_tax = $this->site->calculateOrderTax($this->input->post('order_tax'), ($total + $product_tax - $order_discount));
+            $total_tax = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
+            $grand_total = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
+            $data = ['date' => $date,
+                'reference_no' => $reference,
+                'customer_id' => $customer_id,
+                'customer' => $customer,
+                'biller_id' => $biller_id,
+                'biller' => $biller,
+                'warehouse_id' => $warehouse_id,
+                'note' => $note,
+                'staff_note' => $staff_note,
+                'total' => $total,
+                'product_discount' => $product_discount,
+                'order_discount_id' => $this->input->post('order_discount'),
+                'order_discount' => $order_discount,
+                'total_discount' => $total_discount,
+                'product_tax' => $product_tax,
+                'order_tax_id' => $this->input->post('order_tax'),
+                'order_tax' => $order_tax,
+                'total_tax' => $total_tax,
+                'shipping' => $this->sma->formatDecimal($shipping),
+                'grand_total' => $grand_total,
+                'total_items' => $total_items,
+                'sale_status' => $sale_status,
+                'payment_status' => $payment_status,
+                'payment_term' => $payment_term,
+                'due_date' => $due_date,
+                'updated_by' => $this->session->userdata('user_id'),
+                'updated_at' => date('Y-m-d H:i:s'),
             ];
             if ($this->Settings->indian_gst) {
                 $data['cgst'] = $total_cgst;
@@ -946,18 +946,18 @@ class Sales extends MY_Controller
 
             if ($_FILES['document']['size'] > 0) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = $this->digital_file_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload('document')) {
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     redirect($_SERVER['HTTP_REFERER']);
                 }
-                $photo              = $this->upload->file_name;
+                $photo = $this->upload->file_name;
                 $data['attachment'] = $photo;
             }
 
@@ -985,9 +985,9 @@ class Sales extends MY_Controller
                 // $row = $this->site->getProductByID($item->product_id);
                 $row = $this->sales_model->getWarehouseProduct($item->product_id, $item->warehouse_id);
                 if (!$row) {
-                    $row             = json_decode('{}');
+                    $row = json_decode('{}');
                     $row->tax_method = 0;
-                    $row->quantity   = 0;
+                    $row->quantity = 0;
                 } else {
                     unset($row->cost, $row->details, $row->product_details, $row->image, $row->barcode_symbology, $row->cf1, $row->cf2, $row->cf3, $row->cf4, $row->cf5, $row->cf6, $row->supplier1price, $row->supplier2price, $row->cfsupplier3price, $row->supplier4price, $row->supplier5price, $row->supplier1, $row->supplier2, $row->supplier3, $row->supplier4, $row->supplier5, $row->supplier1_part_no, $row->supplier2_part_no, $row->supplier3_part_no, $row->supplier4_part_no, $row->supplier5_part_no);
                 }
@@ -998,26 +998,26 @@ class Sales extends MY_Controller
                         $row->quantity += $pi->quantity_balance;
                     }
                 }
-                $row->id              = $item->product_id;
-                $row->code            = $item->product_code;
-                $row->name            = $item->product_name;
-                $row->type            = $item->product_type;
-                $row->base_quantity   = $item->quantity;
-                $row->base_unit       = !empty($row->unit) ? $row->unit : $item->product_unit_id;
+                $row->id = $item->product_id;
+                $row->code = $item->product_code;
+                $row->name = $item->product_name;
+                $row->type = $item->product_type;
+                $row->base_quantity = $item->quantity;
+                $row->base_unit = !empty($row->unit) ? $row->unit : $item->product_unit_id;
                 $row->base_unit_price = !empty($row->price) ? $row->price : $item->unit_price;
-                $row->unit            = $item->product_unit_id;
-                $row->qty             = $item->unit_quantity;
+                $row->unit = $item->product_unit_id;
+                $row->qty = $item->unit_quantity;
                 $row->quantity += $item->quantity;
-                $row->discount        = $item->discount ? $item->discount : '0';
-                $row->item_tax        = $item->item_tax      > 0 ? $item->item_tax      / $item->quantity : 0;
-                $row->item_discount   = $item->item_discount > 0 ? $item->item_discount / $item->quantity : 0;
-                $row->price           = $this->sma->formatDecimal($item->net_unit_price + $this->sma->formatDecimal($row->item_discount));
-                $row->unit_price      = $row->tax_method ? $item->unit_price + $this->sma->formatDecimal($row->item_discount) + $this->sma->formatDecimal($row->item_tax) : $item->unit_price + ($row->item_discount);
+                $row->discount = $item->discount ? $item->discount : '0';
+                $row->item_tax = $item->item_tax > 0 ? $item->item_tax / $item->quantity : 0;
+                $row->item_discount = $item->item_discount > 0 ? $item->item_discount / $item->quantity : 0;
+                $row->price = $this->sma->formatDecimal($item->net_unit_price + $this->sma->formatDecimal($row->item_discount));
+                $row->unit_price = $row->tax_method ? $item->unit_price + $this->sma->formatDecimal($row->item_discount) + $this->sma->formatDecimal($row->item_tax) : $item->unit_price + ($row->item_discount);
                 $row->real_unit_price = $item->real_unit_price;
-                $row->tax_rate        = $item->tax_rate_id;
-                $row->serial          = $item->serial_no;
-                $row->option          = $item->option_id;
-                $options              = $this->sales_model->getProductOptions($row->id, $item->warehouse_id);
+                $row->tax_rate = $item->tax_rate_id;
+                $row->serial = $item->serial_no;
+                $row->option = $item->option_id;
+                $options = $this->sales_model->getProductOptions($row->id, $item->warehouse_id);
 
                 if ($options) {
                     $option_quantity = 0;
@@ -1038,29 +1038,29 @@ class Sales extends MY_Controller
                 $combo_items = false;
                 if ($row->type == 'combo') {
                     $combo_items = $this->sales_model->getProductComboItems($row->id, $item->warehouse_id);
-                    $te          = $combo_items;
+                    $te = $combo_items;
                     foreach ($combo_items as $combo_item) {
                         $combo_item->quantity = $combo_item->qty * $item->quantity;
                     }
                 }
-                $units    = !empty($row->base_unit) ? $this->site->getUnitsByBUID($row->base_unit) : null;
+                $units = !empty($row->base_unit) ? $this->site->getUnitsByBUID($row->base_unit) : null;
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
-                $ri       = $this->Settings->item_addition ? $row->id : $c;
+                $ri = $this->Settings->item_addition ? $row->id : $c;
 
                 $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')',
-                    'row'        => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                    'row' => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,];
                 $c++;
             }
 
             $this->data['inv_items'] = json_encode($pr);
-            $this->data['id']        = $id;
+            $this->data['id'] = $id;
             //$this->data['currencies'] = $this->site->getAllCurrencies();
-            $this->data['billers']    = ($this->Owner || $this->Admin || !$this->session->userdata('biller_id')) ? $this->site->getAllCompanies('biller') : null;
-            $this->data['units']      = $this->site->getAllBaseUnits();
-            $this->data['tax_rates']  = $this->site->getAllTaxRates();
+            $this->data['billers'] = ($this->Owner || $this->Admin || !$this->session->userdata('biller_id')) ? $this->site->getAllCompanies('biller') : null;
+            $this->data['units'] = $this->site->getAllBaseUnits();
+            $this->data['tax_rates'] = $this->site->getAllTaxRates();
             $this->data['warehouses'] = $this->site->getAllWarehouses();
 
-            $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('edit_sale')]];
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('edit_sale')]];
             $meta = ['page_title' => lang('edit_sale'), 'bc' => $bc];
             $this->page_construct('sales/edit', $meta, $this->data);
         }
@@ -1081,37 +1081,37 @@ class Sales extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             $dlDetails = [
-                'sale_id'           => $this->input->post('sale_id'),
-                'do_reference_no'   => $this->input->post('do_reference_no'),
+                'sale_id' => $this->input->post('sale_id'),
+                'do_reference_no' => $this->input->post('do_reference_no'),
                 'sale_reference_no' => $this->input->post('sale_reference_no'),
-                'customer'          => $this->input->post('customer'),
-                'address'           => $this->input->post('address'),
-                'status'            => $this->input->post('status'),
-                'delivered_by'      => $this->input->post('delivered_by'),
-                'received_by'       => $this->input->post('received_by'),
-                'note'              => $this->sma->clear_tags($this->input->post('note')),
-                'created_by'        => $this->session->userdata('user_id'),
+                'customer' => $this->input->post('customer'),
+                'address' => $this->input->post('address'),
+                'status' => $this->input->post('status'),
+                'delivered_by' => $this->input->post('delivered_by'),
+                'received_by' => $this->input->post('received_by'),
+                'note' => $this->sma->clear_tags($this->input->post('note')),
+                'created_by' => $this->session->userdata('user_id'),
             ];
 
             if ($_FILES['document']['size'] > 0) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = $this->digital_file_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload('document')) {
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     redirect($_SERVER['HTTP_REFERER']);
                 }
-                $photo                   = $this->upload->file_name;
+                $photo = $this->upload->file_name;
                 $dlDetails['attachment'] = $photo;
             }
 
             if ($this->Owner || $this->Admin) {
-                $date              = $this->sma->fld(trim($this->input->post('date')));
+                $date = $this->sma->fld(trim($this->input->post('date')));
                 $dlDetails['date'] = $date;
             }
         } elseif ($this->input->post('edit_delivery')) {
@@ -1123,7 +1123,7 @@ class Sales extends MY_Controller
             $this->session->set_flashdata('message', lang('delivery_updated'));
             admin_redirect('sales/deliveries');
         } else {
-            $this->data['error']    = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['delivery'] = $this->sales_model->getDeliveryByID($id);
             $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'sales/edit_delivery', $this->data);
@@ -1143,15 +1143,15 @@ class Sales extends MY_Controller
         //$this->form_validation->set_rules('customer', lang("customer"), 'xss_clean');
 
         if ($this->form_validation->run() == true) {
-            $gift_card        = $this->site->getGiftCardByID($id);
+            $gift_card = $this->site->getGiftCardByID($id);
             $customer_details = $this->input->post('customer') ? $this->site->getCompanyByID($this->input->post('customer')) : null;
-            $customer         = $customer_details ? $customer_details->company : null;
-            $data             = ['card_no' => $this->input->post('card_no'),
-                'value'                    => $this->input->post('value'),
-                'customer_id'              => $this->input->post('customer') ? $this->input->post('customer') : null,
-                'customer'                 => $customer,
-                'balance'                  => ($this->input->post('value') - $gift_card->value) + $gift_card->balance,
-                'expiry'                   => $this->input->post('expiry') ? $this->sma->fsd($this->input->post('expiry')) : null,
+            $customer = $customer_details ? $customer_details->company : null;
+            $data = ['card_no' => $this->input->post('card_no'),
+                'value' => $this->input->post('value'),
+                'customer_id' => $this->input->post('customer') ? $this->input->post('customer') : null,
+                'customer' => $customer,
+                'balance' => ($this->input->post('value') - $gift_card->value) + $gift_card->balance,
+                'expiry' => $this->input->post('expiry') ? $this->sma->fsd($this->input->post('expiry')) : null,
             ];
         } elseif ($this->input->post('edit_gift_card')) {
             $this->session->set_flashdata('error', validation_errors());
@@ -1162,10 +1162,10 @@ class Sales extends MY_Controller
             $this->session->set_flashdata('message', lang('gift_card_updated'));
             admin_redirect('sales/gift_cards');
         } else {
-            $this->data['error']     = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
             $this->data['gift_card'] = $this->site->getGiftCardByID($id);
-            $this->data['id']        = $id;
-            $this->data['modal_js']  = $this->site->modal_js();
+            $this->data['id'] = $id;
+            $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'sales/edit_gift_card', $this->data);
         }
     }
@@ -1188,9 +1188,9 @@ class Sales extends MY_Controller
         $this->form_validation->set_rules('userfile', lang('attachment'), 'xss_clean');
         if ($this->form_validation->run() == true) {
             if ($this->input->post('paid_by') == 'deposit') {
-                $sale        = $this->sales_model->getInvoiceByID($this->input->post('sale_id'));
+                $sale = $this->sales_model->getInvoiceByID($this->input->post('sale_id'));
                 $customer_id = $sale->customer_id;
-                $amount      = $this->input->post('amount-paid') - $payment->amount;
+                $amount = $this->input->post('amount-paid') - $payment->amount;
                 if (!$this->site->check_customer_deposit($customer_id, $amount)) {
                     $this->session->set_flashdata('error', lang('amount_greater_than_deposit'));
                     redirect($_SERVER['HTTP_REFERER']);
@@ -1204,35 +1204,35 @@ class Sales extends MY_Controller
                 $date = $payment->date;
             }
             $payment = [
-                'date'         => $date,
-                'sale_id'      => $this->input->post('sale_id'),
+                'date' => $date,
+                'sale_id' => $this->input->post('sale_id'),
                 'reference_no' => $this->input->post('reference_no'),
-                'amount'       => $this->input->post('amount-paid'),
-                'paid_by'      => $this->input->post('paid_by'),
-                'cheque_no'    => $this->input->post('cheque_no'),
-                'cc_no'        => $this->input->post('pcc_no'),
-                'cc_holder'    => $this->input->post('pcc_holder'),
-                'cc_month'     => $this->input->post('pcc_month'),
-                'cc_year'      => $this->input->post('pcc_year'),
-                'cc_type'      => $this->input->post('pcc_type'),
-                'note'         => $this->input->post('note'),
-                'created_by'   => $this->session->userdata('user_id'),
+                'amount' => $this->input->post('amount-paid'),
+                'paid_by' => $this->input->post('paid_by'),
+                'cheque_no' => $this->input->post('cheque_no'),
+                'cc_no' => $this->input->post('pcc_no'),
+                'cc_holder' => $this->input->post('pcc_holder'),
+                'cc_month' => $this->input->post('pcc_month'),
+                'cc_year' => $this->input->post('pcc_year'),
+                'cc_type' => $this->input->post('pcc_type'),
+                'note' => $this->input->post('note'),
+                'created_by' => $this->session->userdata('user_id'),
             ];
 
             if ($_FILES['userfile']['size'] > 0) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = $this->digital_file_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload()) {
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     redirect($_SERVER['HTTP_REFERER']);
                 }
-                $photo                 = $this->upload->file_name;
+                $photo = $this->upload->file_name;
                 $payment['attachment'] = $photo;
             }
 
@@ -1246,8 +1246,8 @@ class Sales extends MY_Controller
             $this->session->set_flashdata('message', lang('payment_updated'));
             admin_redirect('sales');
         } else {
-            $this->data['error']    = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $this->data['payment']  = $payment;
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['payment'] = $payment;
             $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'sales/edit_payment', $this->data);
         }
@@ -1271,7 +1271,7 @@ class Sales extends MY_Controller
             if (!$this->session->userdata('view_right')) {
                 $this->sma->view_rights($inv->created_by);
             }
-            $to      = $this->input->post('to');
+            $to = $this->input->post('to');
             $subject = $this->input->post('subject');
             if ($this->input->post('cc')) {
                 $cc = $this->input->post('cc');
@@ -1284,21 +1284,21 @@ class Sales extends MY_Controller
                 $bcc = null;
             }
             $customer = $this->site->getCompanyByID($inv->customer_id);
-            $biller   = $this->site->getCompanyByID($inv->biller_id);
+            $biller = $this->site->getCompanyByID($inv->biller_id);
             $this->load->library('parser');
             $parse_data = [
                 'reference_number' => $inv->reference_no,
-                'contact_person'   => $customer->name,
-                'company'          => $customer->company && $customer->company != '-' ? '(' . $customer->company . ')' : '',
-                'order_link'       => $inv->shop ? shop_url('orders/' . $inv->id . '/' . ($this->loggedIn ? '' : $inv->hash)) : base_url(),
-                'site_link'        => base_url(),
-                'site_name'        => $this->Settings->site_name,
-                'logo'             => '<img src="' . base_url() . 'assets/uploads/logos/' . $biller->logo . '" alt="' . ($biller->company && $biller->company != '-' ? $biller->company : $biller->name) . '"/>',
+                'contact_person' => $customer->name,
+                'company' => $customer->company && $customer->company != '-' ? '(' . $customer->company . ')' : '',
+                'order_link' => $inv->shop ? shop_url('orders/' . $inv->id . '/' . ($this->loggedIn ? '' : $inv->hash)) : base_url(),
+                'site_link' => base_url(),
+                'site_name' => $this->Settings->site_name,
+                'logo' => '<img src="' . base_url() . 'assets/uploads/logos/' . $biller->logo . '" alt="' . ($biller->company && $biller->company != '-' ? $biller->company : $biller->name) . '"/>',
             ];
-            $msg      = $this->input->post('note');
-            $message  = $this->parser->parse_string($msg, $parse_data);
-            $paypal   = $this->sales_model->getPaypalSettings();
-            $skrill   = $this->sales_model->getSkrillSettings();
+            $msg = $this->input->post('note');
+            $message = $this->parser->parse_string($msg, $parse_data);
+            $paypal = $this->sales_model->getPaypalSettings();
+            $skrill = $this->sales_model->getSkrillSettings();
             $btn_code = '<div id="payment_buttons" class="text-center margin010">';
             if ($paypal->active == '1' && $inv->grand_total != '0.00') {
                 if (trim(strtolower($customer->country)) == $biller->country) {
@@ -1318,7 +1318,7 @@ class Sales extends MY_Controller
             }
 
             $btn_code .= '<div class="clearfix"></div></div>';
-            $message    = $message . $btn_code;
+            $message = $message . $btn_code;
             $attachment = $this->pdf($id, null, 'S');
 
             try {
@@ -1343,18 +1343,18 @@ class Sales extends MY_Controller
             }
 
             $this->data['subject'] = ['name' => 'subject',
-                'id'                         => 'subject',
-                'type'                       => 'text',
-                'value'                      => $this->form_validation->set_value('subject', lang('invoice') . ' (' . $inv->reference_no . ') ' . lang('from') . ' ' . $this->Settings->site_name),
+                'id' => 'subject',
+                'type' => 'text',
+                'value' => $this->form_validation->set_value('subject', lang('invoice') . ' (' . $inv->reference_no . ') ' . lang('from') . ' ' . $this->Settings->site_name),
             ];
             $this->data['note'] = ['name' => 'note',
-                'id'                      => 'note',
-                'type'                    => 'text',
-                'value'                   => $this->form_validation->set_value('note', $sale_temp),
+                'id' => 'note',
+                'type' => 'text',
+                'value' => $this->form_validation->set_value('note', $sale_temp),
             ];
             $this->data['customer'] = $this->site->getCompanyByID($inv->customer_id);
 
-            $this->data['id']       = $id;
+            $this->data['id'] = $id;
             $this->data['modal_js'] = $this->site->modal_js();
             $this->load->view($this->theme . 'sales/email', $this->data);
         }
@@ -1363,18 +1363,18 @@ class Sales extends MY_Controller
     public function email_payment($id = null)
     {
         $this->sma->checkPermissions('payments', true);
-        $payment              = $this->sales_model->getPaymentByID($id);
-        $inv                  = $this->sales_model->getInvoiceByID($payment->sale_id);
+        $payment = $this->sales_model->getPaymentByID($id);
+        $inv = $this->sales_model->getInvoiceByID($payment->sale_id);
         $this->data['biller'] = $this->site->getCompanyByID($inv->biller_id);
-        $customer             = $this->site->getCompanyByID($inv->customer_id);
+        $customer = $this->site->getCompanyByID($inv->customer_id);
         if (!$customer->email) {
             $this->sma->send_json(['msg' => lang('update_customer_email')]);
         }
-        $this->data['inv']        = $inv;
-        $this->data['payment']    = $payment;
-        $this->data['customer']   = $customer;
+        $this->data['inv'] = $inv;
+        $this->data['payment'] = $payment;
+        $this->data['customer'] = $customer;
         $this->data['page_title'] = lang('payment_note');
-        $html                     = $this->load->view($this->theme . 'sales/payment_note', $this->data, true);
+        $html = $this->load->view($this->theme . 'sales/payment_note', $this->data, true);
 
         $html = str_replace(['<i class="fa fa-2x">&times;</i>', 'modal-', '<p>&nbsp;</p>', '<p style="border-bottom: 1px solid #666;">&nbsp;</p>', '<p>' . lang('stamp_sign') . '</p>'], '', $html);
         $html = preg_replace("/<img[^>]+\>/i", '', $html);
@@ -1383,15 +1383,15 @@ class Sales extends MY_Controller
         $this->load->library('parser');
         $parse_data = [
             'stylesheet' => '<link href="' . $this->data['assets'] . 'styles/helpers/bootstrap.min.css" rel="stylesheet"/>',
-            'name'       => $customer->company && $customer->company != '-' ? $customer->company : $customer->name,
-            'email'      => $customer->email,
-            'heading'    => lang('payment_note') . '<hr>',
-            'msg'        => $html,
-            'site_link'  => base_url(),
-            'site_name'  => $this->Settings->site_name,
-            'logo'       => '<img src="' . base_url('assets/uploads/logos/' . $this->Settings->logo) . '" alt="' . $this->Settings->site_name . '"/>',
+            'name' => $customer->company && $customer->company != '-' ? $customer->company : $customer->name,
+            'email' => $customer->email,
+            'heading' => lang('payment_note') . '<hr>',
+            'msg' => $html,
+            'site_link' => base_url(),
+            'site_name' => $this->Settings->site_name,
+            'logo' => '<img src="' . base_url('assets/uploads/logos/' . $this->Settings->logo) . '" alt="' . $this->Settings->site_name . '"/>',
         ];
-        $msg     = file_get_contents('./themes/' . $this->Settings->theme . '/admin/views/email_templates/email_con.html');
+        $msg = file_get_contents('./themes/' . $this->Settings->theme . '/admin/views/email_templates/email_con.html');
         $message = $this->parser->parse_string($msg, $parse_data);
         $subject = lang('payment_note') . ' - ' . $this->Settings->site_name;
 
@@ -1415,16 +1415,16 @@ class Sales extends MY_Controller
         $this->sma->checkPermissions('deliveries');
 
         $detail_link = anchor('admin/sales/view_delivery/$1', '<i class="fa fa-file-text-o"></i> ' . lang('delivery_details'), 'data-toggle="modal" data-target="#myModal"');
-        $email_link  = anchor('admin/sales/email_delivery/$1', '<i class="fa fa-envelope"></i> ' . lang('email_delivery'), 'data-toggle="modal" data-target="#myModal"');
-        $edit_link   = anchor('admin/sales/edit_delivery/$1', '<i class="fa fa-edit"></i> ' . lang('edit_delivery'), 'data-toggle="modal" data-target="#myModal"');
-        $pdf_link    = anchor('admin/sales/pdf_delivery/$1', '<i class="fa fa-file-pdf-o"></i> ' . lang('download_pdf'));
+        $email_link = anchor('admin/sales/email_delivery/$1', '<i class="fa fa-envelope"></i> ' . lang('email_delivery'), 'data-toggle="modal" data-target="#myModal"');
+        $edit_link = anchor('admin/sales/edit_delivery/$1', '<i class="fa fa-edit"></i> ' . lang('edit_delivery'), 'data-toggle="modal" data-target="#myModal"');
+        $pdf_link = anchor('admin/sales/pdf_delivery/$1', '<i class="fa fa-file-pdf-o"></i> ' . lang('download_pdf'));
         $delete_link = "<a href='#' class='po' title='<b>" . lang('delete_delivery') . "</b>' data-content=\"<p>"
-        . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('sales/delete_delivery/$1') . "'>"
-        . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
-        . lang('delete_delivery') . '</a>';
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('sales/delete_delivery/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('delete_delivery') . '</a>';
         $action = '<div class="text-center"><div class="btn-group text-left">'
-        . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
-        . lang('actions') . ' <span class="caret"></span></button>
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
     <ul class="dropdown-menu pull-right" role="menu">
         <li>' . $detail_link . '</li>
         <li>' . $edit_link . '</li>
@@ -1463,27 +1463,27 @@ class Sales extends MY_Controller
         $this->sma->checkPermissions('index');
 
         if ((!$this->Owner || !$this->Admin) && !$warehouse_id) {
-            $user         = $this->site->getUser();
+            $user = $this->site->getUser();
             $warehouse_id = $user->warehouse_id;
         }
-        $detail_link       = anchor('admin/sales/view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('sale_details'));
-        $qr_link       = anchor('admin/pos/qr_view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('view_qr'));
-        $duplicate_link    = anchor('admin/sales/add?sale_id=$1', '<i class="fa fa-plus-circle"></i> ' . lang('duplicate_sale'));
-        $payments_link     = anchor('admin/sales/payments/$1', '<i class="fa fa-money"></i> ' . lang('view_payments'), 'data-toggle="modal" data-target="#myModal"');
-        $add_payment_link  = anchor('admin/sales/add_payment/$1', '<i class="fa fa-money"></i> ' . lang('add_payment'), 'data-toggle="modal" data-target="#myModal"');
-        $packagink_link    = anchor('admin/sales/packaging/$1', '<i class="fa fa-archive"></i> ' . lang('packaging'), 'data-toggle="modal" data-target="#myModal"');
+        $detail_link = anchor('admin/sales/view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('sale_details'));
+        $qr_link = anchor('admin/pos/qr_view/$1', '<i class="fa fa-file-text-o"></i> ' . lang('view_qr'));
+        $duplicate_link = anchor('admin/sales/add?sale_id=$1', '<i class="fa fa-plus-circle"></i> ' . lang('duplicate_sale'));
+        $payments_link = anchor('admin/sales/payments/$1', '<i class="fa fa-money"></i> ' . lang('view_payments'), 'data-toggle="modal" data-target="#myModal"');
+        $add_payment_link = anchor('admin/sales/add_payment/$1', '<i class="fa fa-money"></i> ' . lang('add_payment'), 'data-toggle="modal" data-target="#myModal"');
+        $packagink_link = anchor('admin/sales/packaging/$1', '<i class="fa fa-archive"></i> ' . lang('packaging'), 'data-toggle="modal" data-target="#myModal"');
         $add_delivery_link = anchor('admin/sales/add_delivery/$1', '<i class="fa fa-truck"></i> ' . lang('add_delivery'), 'data-toggle="modal" data-target="#myModal"');
-        $email_link        = anchor('admin/sales/email/$1', '<i class="fa fa-envelope"></i> ' . lang('email_sale'), 'data-toggle="modal" data-target="#myModal"');
-        $edit_link         = anchor('admin/sales/edit/$1', '<i class="fa fa-edit"></i> ' . lang('edit_sale'), 'class="sledit"');
-        $pdf_link          = anchor('admin/sales/pdf/$1', '<i class="fa fa-file-pdf-o"></i> ' . lang('download_pdf'));
-        $return_link       = anchor('admin/sales/return_sale/$1', '<i class="fa fa-angle-double-left"></i> ' . lang('return_sale'));
-        $delete_link       = "<a href='#' class='po' title='<b>" . lang('delete_sale') . "</b>' data-content=\"<p>"
-        . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('sales/delete/$1') . "'>"
-        . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
-        . lang('delete_sale') . '</a>';
+        $email_link = anchor('admin/sales/email/$1', '<i class="fa fa-envelope"></i> ' . lang('email_sale'), 'data-toggle="modal" data-target="#myModal"');
+        $edit_link = anchor('admin/sales/edit/$1', '<i class="fa fa-edit"></i> ' . lang('edit_sale'), 'class="sledit"');
+        $pdf_link = anchor('admin/sales/pdf/$1', '<i class="fa fa-file-pdf-o"></i> ' . lang('download_pdf'));
+        $return_link = anchor('admin/sales/return_sale/$1', '<i class="fa fa-angle-double-left"></i> ' . lang('return_sale'));
+        $delete_link = "<a href='#' class='po' title='<b>" . lang('delete_sale') . "</b>' data-content=\"<p>"
+            . lang('r_u_sure') . "</p><a class='btn btn-danger po-delete' href='" . admin_url('sales/delete/$1') . "'>"
+            . lang('i_m_sure') . "</a> <button class='btn po-close'>" . lang('no') . "</button>\"  rel='popover'><i class=\"fa fa-trash-o\"></i> "
+            . lang('delete_sale') . '</a>';
         $action = '<div class="text-center"><div class="btn-group text-left">'
-        . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
-        . lang('actions') . ' <span class="caret"></span></button>
+            . '<button type="button" class="btn btn-default btn-xs btn-primary dropdown-toggle" data-toggle="dropdown">'
+            . lang('actions') . ' <span class="caret"></span></button>
         <ul class="dropdown-menu pull-right" role="menu">
             <li>' . $detail_link . '</li>
             <li>' . $qr_link . '</li>
@@ -1519,8 +1519,8 @@ class Sales extends MY_Controller
         }
         if ($this->input->get('delivery') == 'no') {
             $this->datatables->join('deliveries', 'deliveries.sale_id=sales.id', 'left')
-            ->where('sales.sale_status', 'completed')->where('sales.payment_status', 'paid')
-            ->where("({$this->db->dbprefix('deliveries')}.status != 'delivered' OR {$this->db->dbprefix('deliveries')}.status IS NULL)", null);
+                ->where('sales.sale_status', 'completed')->where('sales.payment_status', 'paid')
+                ->where("({$this->db->dbprefix('deliveries')}.status != 'delivered' OR {$this->db->dbprefix('deliveries')}.status IS NULL)", null);
         }
         if ($this->input->get('attachment') == 'yes') {
             $this->datatables->where('payment_status !=', 'paid')->where('attachment !=', null);
@@ -1596,7 +1596,7 @@ class Sales extends MY_Controller
 
         $this->data['error'] = validation_errors() ? validation_errors() : $this->session->flashdata('error');
 
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('gift_cards')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('gift_cards')]];
         $meta = ['page_title' => lang('gift_cards'), 'bc' => $bc];
         $this->page_construct('sales/gift_cards', $meta, $this->data);
     }
@@ -1607,16 +1607,16 @@ class Sales extends MY_Controller
 
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
         if ($this->Owner || $this->Admin || !$this->session->userdata('warehouse_id')) {
-            $this->data['warehouses']   = $this->site->getAllWarehouses();
+            $this->data['warehouses'] = $this->site->getAllWarehouses();
             $this->data['warehouse_id'] = $warehouse_id;
-            $this->data['warehouse']    = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
+            $this->data['warehouse'] = $warehouse_id ? $this->site->getWarehouseByID($warehouse_id) : null;
         } else {
-            $this->data['warehouses']   = null;
+            $this->data['warehouses'] = null;
             $this->data['warehouse_id'] = $this->session->userdata('warehouse_id');
-            $this->data['warehouse']    = $this->session->userdata('warehouse_id') ? $this->site->getWarehouseByID($this->session->userdata('warehouse_id')) : null;
+            $this->data['warehouse'] = $this->session->userdata('warehouse_id') ? $this->site->getWarehouseByID($this->session->userdata('warehouse_id')) : null;
         }
 
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('sales')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('sales')]];
         $meta = ['page_title' => lang('sales'), 'bc' => $bc];
         $this->page_construct('sales/index', $meta, $this->data);
     }
@@ -1629,17 +1629,17 @@ class Sales extends MY_Controller
             $id = $this->input->get('id');
         }
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $inv                 = $this->sales_model->getInvoiceByID($id);
+        $inv = $this->sales_model->getInvoiceByID($id);
         if (!$this->session->userdata('view_right')) {
             $this->sma->view_rights($inv->created_by, true);
         }
-        $this->data['customer']    = $this->site->getCompanyByID($inv->customer_id);
-        $this->data['biller']      = $this->site->getCompanyByID($inv->biller_id);
-        $this->data['created_by']  = $this->site->getUser($inv->created_by);
-        $this->data['updated_by']  = $inv->updated_by ? $this->site->getUser($inv->updated_by) : null;
-        $this->data['warehouse']   = $this->site->getWarehouseByID($inv->warehouse_id);
-        $this->data['inv']         = $inv;
-        $this->data['rows']        = $this->sales_model->getAllInvoiceItems($id);
+        $this->data['customer'] = $this->site->getCompanyByID($inv->customer_id);
+        $this->data['biller'] = $this->site->getCompanyByID($inv->biller_id);
+        $this->data['created_by'] = $this->site->getUser($inv->created_by);
+        $this->data['updated_by'] = $inv->updated_by ? $this->site->getUser($inv->updated_by) : null;
+        $this->data['warehouse'] = $this->site->getWarehouseByID($inv->warehouse_id);
+        $this->data['inv'] = $inv;
+        $this->data['rows'] = $this->sales_model->getAllInvoiceItems($id);
         $this->data['return_sale'] = $inv->return_id ? $this->sales_model->getInvoiceByID($inv->return_id) : null;
         $this->data['return_rows'] = $inv->return_id ? $this->sales_model->getAllInvoiceItems($inv->return_id) : null;
 
@@ -1648,23 +1648,23 @@ class Sales extends MY_Controller
 
     public function packaging($id)
     {
-        $sale                   = $this->sales_model->getInvoiceByID($id);
+        $sale = $this->sales_model->getInvoiceByID($id);
         $this->data['returned'] = false;
         if ($sale->sale_status == 'returned' || $sale->return_id) {
             $this->data['returned'] = true;
         }
         $this->data['warehouse'] = $this->site->getWarehouseByID($sale->warehouse_id);
-        $items                   = $this->sales_model->getAllInvoiceItems($sale->id);
+        $items = $this->sales_model->getAllInvoiceItems($sale->id);
         foreach ($items as $item) {
             $packaging[] = [
-                'name'     => $item->product_code . ' - ' . $item->product_name,
+                'name' => $item->product_code . ' - ' . $item->product_name,
                 'quantity' => $item->quantity,
-                'unit'     => $item->product_unit_code,
-                'rack'     => $this->sales_model->getItemRack($item->product_id, $sale->warehouse_id),
+                'unit' => $item->product_unit_code,
+                'rack' => $this->sales_model->getItemRack($item->product_id, $sale->warehouse_id),
             ];
         }
         $this->data['packaging'] = $packaging;
-        $this->data['sale']      = $sale;
+        $this->data['sale'] = $sale;
 
         $this->load->view($this->theme . 'sales/packaging', $this->data);
     }
@@ -1672,12 +1672,12 @@ class Sales extends MY_Controller
     public function payment_note($id = null)
     {
         $this->sma->checkPermissions('payments', true);
-        $payment                  = $this->sales_model->getPaymentByID($id);
-        $inv                      = $this->sales_model->getInvoiceByID($payment->sale_id);
-        $this->data['biller']     = $this->site->getCompanyByID($inv->biller_id);
-        $this->data['customer']   = $this->site->getCompanyByID($inv->customer_id);
-        $this->data['inv']        = $inv;
-        $this->data['payment']    = $payment;
+        $payment = $this->sales_model->getPaymentByID($id);
+        $inv = $this->sales_model->getInvoiceByID($payment->sale_id);
+        $this->data['biller'] = $this->site->getCompanyByID($inv->biller_id);
+        $this->data['customer'] = $this->site->getCompanyByID($inv->customer_id);
+        $this->data['inv'] = $inv;
+        $this->data['payment'] = $payment;
         $this->data['page_title'] = lang('payment_note');
 
         $this->load->view($this->theme . 'sales/payment_note', $this->data);
@@ -1689,7 +1689,7 @@ class Sales extends MY_Controller
     {
         $this->sma->checkPermissions(false, true);
         $this->data['payments'] = $this->sales_model->getInvoicePayments($id);
-        $this->data['inv']      = $this->sales_model->getInvoiceByID($id);
+        $this->data['inv'] = $this->sales_model->getInvoiceByID($id);
         $this->load->view($this->theme . 'sales/payments', $this->data);
     }
 
@@ -1702,18 +1702,18 @@ class Sales extends MY_Controller
         }
 
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $inv                 = $this->sales_model->getInvoiceByID($id);
+        $inv = $this->sales_model->getInvoiceByID($id);
         if (!$this->session->userdata('view_right')) {
             $this->sma->view_rights($inv->created_by);
         }
-        $this->data['barcode']     = "<img src='" . admin_url('products/gen_barcode/' . $inv->reference_no) . "' alt='" . $inv->reference_no . "' class='pull-left' />";
-        $this->data['customer']    = $this->site->getCompanyByID($inv->customer_id);
-        $this->data['payments']    = $this->sales_model->getPaymentsForSale($id);
-        $this->data['biller']      = $this->site->getCompanyByID($inv->biller_id);
-        $this->data['user']        = $this->site->getUser($inv->created_by);
-        $this->data['warehouse']   = $this->site->getWarehouseByID($inv->warehouse_id);
-        $this->data['inv']         = $inv;
-        $this->data['rows']        = $this->sales_model->getAllInvoiceItems($id);
+        $this->data['barcode'] = "<img src='" . admin_url('products/gen_barcode/' . $inv->reference_no) . "' alt='" . $inv->reference_no . "' class='pull-left' />";
+        $this->data['customer'] = $this->site->getCompanyByID($inv->customer_id);
+        $this->data['payments'] = $this->sales_model->getPaymentsForSale($id);
+        $this->data['biller'] = $this->site->getCompanyByID($inv->biller_id);
+        $this->data['user'] = $this->site->getUser($inv->created_by);
+        $this->data['warehouse'] = $this->site->getWarehouseByID($inv->warehouse_id);
+        $this->data['inv'] = $inv;
+        $this->data['rows'] = $this->sales_model->getAllInvoiceItems($id);
         $this->data['return_sale'] = $inv->return_id ? $this->sales_model->getInvoiceByID($inv->return_id) : null;
         $this->data['return_rows'] = $inv->return_id ? $this->sales_model->getAllInvoiceItems($inv->return_id) : null;
         //$this->data['paypal'] = $this->sales_model->getPaypalSettings();
@@ -1742,13 +1742,13 @@ class Sales extends MY_Controller
             $id = $this->input->get('id');
         }
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-        $deli                = $this->sales_model->getDeliveryByID($id);
+        $deli = $this->sales_model->getDeliveryByID($id);
 
         $this->data['delivery'] = $deli;
-        $sale                   = $this->sales_model->getInvoiceByID($deli->sale_id);
-        $this->data['biller']   = $this->site->getCompanyByID($sale->biller_id);
-        $this->data['rows']     = $this->sales_model->getAllInvoiceItemsWithDetails($deli->sale_id);
-        $this->data['user']     = $this->site->getUser($deli->created_by);
+        $sale = $this->sales_model->getInvoiceByID($deli->sale_id);
+        $this->data['biller'] = $this->site->getCompanyByID($sale->biller_id);
+        $this->data['rows'] = $this->sales_model->getAllInvoiceItemsWithDetails($deli->sale_id);
+        $this->data['user'] = $this->site->getUser($deli->created_by);
 
         $name = lang('delivery') . '_' . str_replace('/', '_', $deli->do_reference_no) . '.pdf';
         $html = $this->load->view($this->theme . 'sales/pdf_delivery', $this->data, true);
@@ -1790,49 +1790,49 @@ class Sales extends MY_Controller
             }
 
             $return_surcharge = $this->input->post('return_surcharge') ? $this->input->post('return_surcharge') : 0;
-            $shipping         = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
-            $note             = $this->sma->clear_tags($this->input->post('note'));
+            $shipping = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
+            $note = $this->sma->clear_tags($this->input->post('note'));
             $customer_details = $this->site->getCompanyByID($sale->customer_id);
-            $biller_details   = $this->site->getCompanyByID($sale->biller_id);
+            $biller_details = $this->site->getCompanyByID($sale->biller_id);
 
-            $total            = 0;
-            $product_tax      = 0;
+            $total = 0;
+            $product_tax = 0;
             $product_discount = 0;
-            $gst_data         = [];
-            $total_cgst       = $total_sgst       = $total_igst       = 0;
-            $i                = isset($_POST['product_code']) ? sizeof($_POST['product_code']) : 0;
+            $gst_data = [];
+            $total_cgst = $total_sgst = $total_igst = 0;
+            $i = isset($_POST['product_code']) ? sizeof($_POST['product_code']) : 0;
             for ($r = 0; $r < $i; $r++) {
-                $item_id            = $_POST['product_id'][$r];
-                $item_type          = $_POST['product_type'][$r];
-                $item_code          = $_POST['product_code'][$r];
-                $item_name          = $_POST['product_name'][$r];
-                $sale_item_id       = $_POST['sale_item_id'][$r];
-                $item_option        = isset($_POST['product_option'][$r]) && $_POST['product_option'][$r] != 'false' && $_POST['product_option'][$r] != 'null' ? $_POST['product_option'][$r] : null;
-                $real_unit_price    = $this->sma->formatDecimal($_POST['real_unit_price'][$r]);
-                $unit_price         = $this->sma->formatDecimal($_POST['unit_price'][$r]);
+                $item_id = $_POST['product_id'][$r];
+                $item_type = $_POST['product_type'][$r];
+                $item_code = $_POST['product_code'][$r];
+                $item_name = $_POST['product_name'][$r];
+                $sale_item_id = $_POST['sale_item_id'][$r];
+                $item_option = isset($_POST['product_option'][$r]) && $_POST['product_option'][$r] != 'false' && $_POST['product_option'][$r] != 'null' ? $_POST['product_option'][$r] : null;
+                $real_unit_price = $this->sma->formatDecimal($_POST['real_unit_price'][$r]);
+                $unit_price = $this->sma->formatDecimal($_POST['unit_price'][$r]);
                 $item_unit_quantity = (0 - $_POST['quantity'][$r]);
-                $item_serial        = $_POST['serial'][$r]           ?? '';
-                $item_tax_rate      = $_POST['product_tax'][$r]      ?? null;
-                $item_discount      = $_POST['product_discount'][$r] ?? null;
-                $item_unit          = $_POST['product_unit'][$r];
-                $item_quantity      = (0 - $_POST['product_base_quantity'][$r]);
+                $item_serial = $_POST['serial'][$r] ?? '';
+                $item_tax_rate = $_POST['product_tax'][$r] ?? null;
+                $item_discount = $_POST['product_discount'][$r] ?? null;
+                $item_unit = $_POST['product_unit'][$r];
+                $item_quantity = (0 - $_POST['product_base_quantity'][$r]);
 
                 if (isset($item_code) && isset($real_unit_price) && isset($unit_price) && isset($item_quantity)) {
                     $product_details = $item_type != 'manual' ? $this->sales_model->getProductByCode($item_code) : null;
                     // $unit_price = $real_unit_price;
-                    $pr_discount      = $this->site->calculateDiscount($item_discount, $unit_price);
-                    $unit_price       = $this->sma->formatDecimal(($unit_price - $pr_discount), 4);
-                    $item_net_price   = $unit_price;
+                    $pr_discount = $this->site->calculateDiscount($item_discount, $unit_price);
+                    $unit_price = $this->sma->formatDecimal(($unit_price - $pr_discount), 4);
+                    $item_net_price = $unit_price;
                     $pr_item_discount = $this->sma->formatDecimal($pr_discount * $item_unit_quantity, 4);
                     $product_discount += $pr_item_discount;
                     $pr_item_tax = $item_tax = 0;
-                    $tax         = '';
+                    $tax = '';
 
                     if (isset($item_tax_rate) && $item_tax_rate != 0) {
                         $tax_details = $this->site->getTaxRateByID($item_tax_rate);
-                        $ctax        = $this->site->calculateTax($product_details, $tax_details, $unit_price);
-                        $item_tax    = $this->sma->formatDecimal($ctax['amount']);
-                        $tax         = $ctax['tax'];
+                        $ctax = $this->site->calculateTax($product_details, $tax_details, $unit_price);
+                        $item_tax = $this->sma->formatDecimal($ctax['amount']);
+                        $tax = $ctax['tax'];
                         if (!$product_details || (!empty($product_details) && $product_details->tax_method != 1)) {
                             $item_net_price = $unit_price - $item_tax;
                         }
@@ -1846,40 +1846,57 @@ class Sales extends MY_Controller
 
                     $product_tax += $pr_item_tax;
                     $subtotal = $this->sma->formatDecimal((($item_net_price * $item_unit_quantity) + $pr_item_tax), 4);
-                    $unit     = $item_unit ? $this->site->getUnitByID($item_unit) : false;
+                    $unit = $item_unit ? $this->site->getUnitByID($item_unit) : false;
 
                     $product = [
-                        'product_id'        => $item_id,
-                        'product_code'      => $item_code,
-                        'product_name'      => $item_name,
-                        'product_type'      => $item_type,
-                        'option_id'         => $item_option,
-                        'net_unit_price'    => $item_net_price,
-                        'unit_price'        => $this->sma->formatDecimal($item_net_price + $item_tax),
-                        'quantity'          => $item_quantity,
-                        'product_unit_id'   => $item_unit,
+                        'product_id' => $item_id,
+                        'product_code' => $item_code,
+                        'product_name' => $item_name,
+                        'product_type' => $item_type,
+                        'option_id' => $item_option,
+                        'net_unit_price' => $item_net_price,
+                        'unit_price' => $this->sma->formatDecimal($item_net_price + $item_tax),
+                        'quantity' => $item_quantity,
+                        'product_unit_id' => $item_unit,
                         'product_unit_code' => $unit ? $unit->code : null,
-                        'unit_quantity'     => $item_unit_quantity,
-                        'warehouse_id'      => $sale->warehouse_id,
-                        'item_tax'          => $pr_item_tax,
-                        'tax_rate_id'       => $item_tax_rate,
-                        'tax'               => $tax,
-                        'discount'          => $item_discount,
-                        'item_discount'     => $pr_item_discount,
-                        'subtotal'          => $this->sma->formatDecimal($subtotal),
-                        'serial_no'         => $item_serial,
-                        'real_unit_price'   => $real_unit_price,
-                        'sale_item_id'      => $sale_item_id,
+                        'unit_quantity' => $item_unit_quantity,
+                        'warehouse_id' => $sale->warehouse_id,
+                        'item_tax' => $pr_item_tax,
+                        'tax_rate_id' => $item_tax_rate,
+                        'tax' => $tax,
+                        'discount' => $item_discount,
+                        'item_discount' => $pr_item_discount,
+                        'subtotal' => $this->sma->formatDecimal($subtotal),
+                        'serial_no' => $item_serial,
+                        'real_unit_price' => $real_unit_price,
+                        'sale_item_id' => $sale_item_id,
                     ];
 
                     $si_return[] = [
-                        'id'           => $sale_item_id,
-                        'sale_id'      => $id,
-                        'product_id'   => $item_id,
-                        'option_id'    => $item_option,
-                        'quantity'     => (0 - $item_quantity),
+                        'id' => $sale_item_id,
+                        'sale_id' => $id,
+                        'product_id' => $item_id,
+                        'option_id' => $item_option,
+                        'quantity' => (0 - $item_quantity),
                         'warehouse_id' => $sale->warehouse_id,
                     ];
+
+                    $si_return_history[] = [
+                        'sale_return_id' => $sale_item_id,
+                        'sale_id' => $id,
+                        'product_id' => $item_id,
+                        'product_code' => $item_code,
+                        'product_name' => $item_name,
+                        'return_quantity' => (0 - $item_quantity),
+                        'warehouse_id' => $sale->warehouse_id,
+                        'reference_no' => $reference,
+                        'customer_id' => $sale->customer_id,
+                        'product_unit_id' => $item_unit,
+                        'customer' => $sale->customer,
+                        'created_by' => $this->session->userdata('user_id'),
+                        'created_date' => date("Y-m-d H:i:s"),
+                    ];
+
 
                     $products[] = ($product + $gst_data);
                     $total += $this->sma->formatDecimal(($item_net_price * $item_unit_quantity), 4);
@@ -1893,36 +1910,36 @@ class Sales extends MY_Controller
 
             $order_discount = (0 - $this->site->calculateDiscount($this->input->post('order_discount'), ($total + $product_tax)));
             $total_discount = $this->sma->formatDecimal(($order_discount + $product_discount), 4);
-            $order_tax      = $this->site->calculateOrderTax($this->input->post('order_tax'), ($total + $product_tax - $order_discount));
-            $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
-            $grand_total    = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($return_surcharge) + (0 - $shipping) - $this->sma->formatDecimal($order_discount)), 4);
-            $data           = [
-                'date'              => $date,
-                'sale_id'           => $id,
-                'reference_no'      => $sale->reference_no,
-                'customer_id'       => $sale->customer_id,
-                'customer'          => $sale->customer,
-                'biller_id'         => $sale->biller_id,
-                'biller'            => $sale->biller,
-                'warehouse_id'      => $sale->warehouse_id,
-                'note'              => $note,
-                'total'             => $total,
-                'product_discount'  => $product_discount,
+            $order_tax = $this->site->calculateOrderTax($this->input->post('order_tax'), ($total + $product_tax - $order_discount));
+            $total_tax = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
+            $grand_total = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($return_surcharge) + (0 - $shipping) - $this->sma->formatDecimal($order_discount)), 4);
+            $data = [
+                'date' => $date,
+                'sale_id' => $id,
+                'reference_no' => $sale->reference_no,
+                'customer_id' => $sale->customer_id,
+                'customer' => $sale->customer,
+                'biller_id' => $sale->biller_id,
+                'biller' => $sale->biller,
+                'warehouse_id' => $sale->warehouse_id,
+                'note' => $note,
+                'total' => $total,
+                'product_discount' => $product_discount,
                 'order_discount_id' => $this->input->post('discount') ? $this->input->post('order_discount') : null,
-                'order_discount'    => $order_discount,
-                'total_discount'    => $total_discount,
-                'product_tax'       => $product_tax,
-                'order_tax_id'      => $this->input->post('order_tax'),
-                'order_tax'         => $order_tax,
-                'total_tax'         => $total_tax,
-                'surcharge'         => $this->sma->formatDecimal($return_surcharge),
-                'grand_total'       => $grand_total,
-                'created_by'        => $this->session->userdata('user_id'),
-                'return_sale_ref'   => $reference,
-                'shipping'          => $shipping,
-                'sale_status'       => 'returned',
-                'pos'               => $sale->pos,
-                'payment_status'    => $sale->payment_status == 'paid' ? 'due' : 'pending',
+                'order_discount' => $order_discount,
+                'total_discount' => $total_discount,
+                'product_tax' => $product_tax,
+                'order_tax_id' => $this->input->post('order_tax'),
+                'order_tax' => $order_tax,
+                'total_tax' => $total_tax,
+                'surcharge' => $this->sma->formatDecimal($return_surcharge),
+                'grand_total' => $grand_total,
+                'created_by' => $this->session->userdata('user_id'),
+                'return_sale_ref' => $reference,
+                'shipping' => $shipping,
+                'sale_status' => 'returned',
+                'pos' => $sale->pos,
+                'payment_status' => $sale->payment_status == 'paid' ? 'due' : 'pending',
             ];
             if ($this->Settings->indian_gst) {
                 $data['cgst'] = $total_cgst;
@@ -1933,18 +1950,18 @@ class Sales extends MY_Controller
             if ($this->input->post('amount-paid') && $this->input->post('amount-paid') > 0) {
                 $pay_ref = $this->input->post('payment_reference_no') ? $this->input->post('payment_reference_no') : $this->site->getReference('pay');
                 $payment = [
-                    'date'         => $date,
+                    'date' => $date,
                     'reference_no' => $pay_ref,
-                    'amount'       => (0 - $this->input->post('amount-paid')),
-                    'paid_by'      => $this->input->post('paid_by'),
-                    'cheque_no'    => $this->input->post('cheque_no'),
-                    'cc_no'        => $this->input->post('pcc_no'),
-                    'cc_holder'    => $this->input->post('pcc_holder'),
-                    'cc_month'     => $this->input->post('pcc_month'),
-                    'cc_year'      => $this->input->post('pcc_year'),
-                    'cc_type'      => $this->input->post('pcc_type'),
-                    'created_by'   => $this->session->userdata('user_id'),
-                    'type'         => 'returned',
+                    'amount' => (0 - $this->input->post('amount-paid')),
+                    'paid_by' => $this->input->post('paid_by'),
+                    'cheque_no' => $this->input->post('cheque_no'),
+                    'cc_no' => $this->input->post('pcc_no'),
+                    'cc_holder' => $this->input->post('pcc_holder'),
+                    'cc_month' => $this->input->post('pcc_month'),
+                    'cc_year' => $this->input->post('pcc_year'),
+                    'cc_type' => $this->input->post('pcc_type'),
+                    'created_by' => $this->session->userdata('user_id'),
+                    'type' => 'returned',
                 ];
                 $data['payment_status'] = $grand_total == $this->input->post('amount-paid') ? 'paid' : 'partial';
             } else {
@@ -1953,25 +1970,25 @@ class Sales extends MY_Controller
 
             if ($_FILES['document']['size'] > 0) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = $this->digital_file_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload('document')) {
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     redirect($_SERVER['HTTP_REFERER']);
                 }
-                $photo              = $this->upload->file_name;
+                $photo = $this->upload->file_name;
                 $data['attachment'] = $photo;
             }
 
             // $this->sma->print_arrays($data, $products, $si_return, $payment);
         }
 
-        if ($this->form_validation->run() == true && $this->sales_model->addSale($data, $products, $payment, $si_return)) {
+        if ($this->form_validation->run() == true && $this->sales_model->addSale($data, $products, $payment, $si_return, $si_return_history)) {
             $this->session->set_flashdata('message', lang('return_sale_added'));
             admin_redirect($sale->pos ? 'pos/sales' : 'sales');
         } else {
@@ -1994,9 +2011,9 @@ class Sales extends MY_Controller
             foreach ($inv_items as $item) {
                 $row = $this->site->getProductByID($item->product_id);
                 if (!$row) {
-                    $row             = json_decode('{}');
+                    $row = json_decode('{}');
                     $row->tax_method = 0;
-                    $row->quantity   = 0;
+                    $row->quantity = 0;
                 } else {
                     unset($row->cost, $row->details, $row->product_details, $row->image, $row->barcode_symbology, $row->cf1, $row->cf2, $row->cf3, $row->cf4, $row->cf5, $row->cf6, $row->supplier1price, $row->supplier2price, $row->cfsupplier3price, $row->supplier4price, $row->supplier5price, $row->supplier1, $row->supplier2, $row->supplier3, $row->supplier4, $row->supplier5, $row->supplier1_part_no, $row->supplier2_part_no, $row->supplier3_part_no, $row->supplier4_part_no, $row->supplier5_part_no);
                 }
@@ -2007,41 +2024,41 @@ class Sales extends MY_Controller
                         $row->quantity += $pi->quantity_balance;
                     }
                 }
-                $row->id              = $item->product_id;
-                $row->sale_item_id    = $item->id;
-                $row->code            = $item->product_code;
-                $row->name            = $item->product_name;
-                $row->type            = $item->product_type;
-                $row->unit            = $item->product_unit_id;
-                $row->qty             = $item->unit_quantity;
-                $row->oqty            = $item->unit_quantity;
-                $row->discount        = $item->discount ? $item->discount : '0';
-                $row->item_tax        = $item->item_tax      > 0 ? $item->item_tax      / $item->quantity : 0;
-                $row->item_discount   = $item->item_discount > 0 ? $item->item_discount / $item->quantity : 0;
-                $row->price           = $this->sma->formatDecimal($item->net_unit_price + $this->sma->formatDecimal($item->item_discount / $item->unit_quantity));
-                $row->unit_price      = $row->tax_method ? $item->unit_price + $this->sma->formatDecimal($item->item_discount / $item->unit_quantity) - $this->sma->formatDecimal($item->item_tax / $item->unit_quantity) : $item->unit_price + ($item->item_discount / $item->unit_quantity);
+                $row->id = $item->product_id;
+                $row->sale_item_id = $item->id;
+                $row->code = $item->product_code;
+                $row->name = $item->product_name;
+                $row->type = $item->product_type;
+                $row->unit = $item->product_unit_id;
+                $row->qty = $item->unit_quantity;
+                $row->oqty = $item->unit_quantity;
+                $row->discount = $item->discount ? $item->discount : '0';
+                $row->item_tax = $item->item_tax > 0 ? $item->item_tax / $item->quantity : 0;
+                $row->item_discount = $item->item_discount > 0 ? $item->item_discount / $item->quantity : 0;
+                $row->price = $this->sma->formatDecimal($item->net_unit_price + $this->sma->formatDecimal($item->item_discount / $item->unit_quantity));
+                $row->unit_price = $row->tax_method ? $item->unit_price + $this->sma->formatDecimal($item->item_discount / $item->unit_quantity) - $this->sma->formatDecimal($item->item_tax / $item->unit_quantity) : $item->unit_price + ($item->item_discount / $item->unit_quantity);
                 $row->real_unit_price = $item->real_unit_price;
-                $row->base_quantity   = $item->quantity;
-                $row->base_unit       = isset($row->unit) ? $row->unit : $item->product_unit_id;
+                $row->base_quantity = $item->quantity;
+                $row->base_unit = isset($row->unit) ? $row->unit : $item->product_unit_id;
                 $row->base_unit_price = isset($row->unit_price) ? $row->unit_price : $item->unit_price;
-                $row->tax_rate        = $item->tax_rate_id;
-                $row->serial          = $item->serial_no;
-                $row->option          = $item->option_id;
-                $options              = $this->sales_model->getProductOptions($row->id, $item->warehouse_id, true);
-                $units                = $this->site->getUnitsByBUID($row->base_unit);
-                $tax_rate             = $this->site->getTaxRateByID($row->tax_rate);
-                $ri                   = $this->Settings->item_addition ? $row->id : $c;
+                $row->tax_rate = $item->tax_rate_id;
+                $row->serial = $item->serial_no;
+                $row->option = $item->option_id;
+                $options = $this->sales_model->getProductOptions($row->id, $item->warehouse_id, true);
+                $units = $this->site->getUnitsByBUID($row->base_unit);
+                $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
+                $ri = $this->Settings->item_addition ? $row->id : $c;
 
                 $pr[$ri] = ['id' => $c, 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'row' => $row, 'units' => $units, 'tax_rate' => $tax_rate, 'options' => $options];
                 $c++;
             }
-            $this->data['inv_items']   = json_encode($pr);
-            $this->data['id']          = $id;
+            $this->data['inv_items'] = json_encode($pr);
+            $this->data['id'] = $id;
             $this->data['payment_ref'] = '';
-            $this->data['reference']   = ''; // $this->site->getReference('re');
-            $this->data['tax_rates']   = $this->site->getAllTaxRates();
-            $bc                        = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('return_sale')]];
-            $meta                      = ['page_title' => lang('return_sale'), 'bc' => $bc];
+            $this->data['reference'] = ''; // $this->site->getReference('re');
+            $this->data['tax_rates'] = $this->site->getAllTaxRates();
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('return_sale')]];
+            $meta = ['page_title' => lang('return_sale'), 'bc' => $bc];
             $this->page_construct('sales/return_sale', $meta, $this->data);
         }
     }
@@ -2128,33 +2145,33 @@ class Sales extends MY_Controller
             } else {
                 $date = date('Y-m-d H:i:s');
             }
-            $warehouse_id     = $this->input->post('warehouse');
-            $customer_id      = $this->input->post('customer');
-            $biller_id        = $this->input->post('biller');
-            $total_items      = $this->input->post('total_items');
-            $sale_status      = $this->input->post('sale_status');
-            $payment_status   = $this->input->post('payment_status');
-            $payment_term     = $this->input->post('payment_term');
-            $due_date         = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days')) : null;
-            $shipping         = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
+            $warehouse_id = $this->input->post('warehouse');
+            $customer_id = $this->input->post('customer');
+            $biller_id = $this->input->post('biller');
+            $total_items = $this->input->post('total_items');
+            $sale_status = $this->input->post('sale_status');
+            $payment_status = $this->input->post('payment_status');
+            $payment_term = $this->input->post('payment_term');
+            $due_date = $payment_term ? date('Y-m-d', strtotime('+' . $payment_term . ' days')) : null;
+            $shipping = $this->input->post('shipping') ? $this->input->post('shipping') : 0;
             $customer_details = $this->site->getCompanyByID($customer_id);
-            $customer         = $customer_details->company && $customer_details->company != '-' ? $customer_details->company : $customer_details->name;
-            $biller_details   = $this->site->getCompanyByID($biller_id);
-            $biller           = $biller_details->company && $biller_details->company != '-' ? $biller_details->company : $biller_details->name;
-            $note             = $this->sma->clear_tags($this->input->post('note'));
-            $staff_note       = $this->sma->clear_tags($this->input->post('staff_note'));
+            $customer = $customer_details->company && $customer_details->company != '-' ? $customer_details->company : $customer_details->name;
+            $biller_details = $this->site->getCompanyByID($biller_id);
+            $biller = $biller_details->company && $biller_details->company != '-' ? $biller_details->company : $biller_details->name;
+            $note = $this->sma->clear_tags($this->input->post('note'));
+            $staff_note = $this->sma->clear_tags($this->input->post('staff_note'));
 
-            $total            = 0;
-            $product_tax      = 0;
+            $total = 0;
+            $product_tax = 0;
             $product_discount = 0;
-            $gst_data         = [];
-            $total_cgst       = $total_sgst       = $total_igst       = 0;
+            $gst_data = [];
+            $total_cgst = $total_sgst = $total_igst = 0;
             if (isset($_FILES['userfile'])) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = 'csv';
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload()) {
                     $error = $this->upload->display_errors();
@@ -2164,7 +2181,7 @@ class Sales extends MY_Controller
                 $csv = $this->upload->file_name;
 
                 $arrResult = [];
-                $handle    = fopen($this->digital_upload_path . $csv, 'r');
+                $handle = fopen($this->digital_upload_path . $csv, 'r');
                 if ($handle) {
                     while (($row = fgetcsv($handle, 1000, ',')) !== false) {
                         $arrResult[] = $row;
@@ -2173,7 +2190,7 @@ class Sales extends MY_Controller
                 }
                 $titles = array_shift($arrResult);
 
-                $keys  = ['code', 'net_unit_price', 'quantity', 'variant', 'item_tax_rate', 'discount', 'serial'];
+                $keys = ['code', 'net_unit_price', 'quantity', 'variant', 'item_tax_rate', 'discount', 'serial'];
                 $final = [];
                 foreach ($arrResult as $key => $value) {
                     $final[] = array_combine($keys, $value);
@@ -2189,35 +2206,35 @@ class Sales extends MY_Controller
                                     redirect($_SERVER['HTTP_REFERER']);
                                 }
                             } else {
-                                $item_option     = json_decode('{}');
+                                $item_option = json_decode('{}');
                                 $item_option->id = null;
                             }
 
-                            $item_id        = $product_details->id;
-                            $item_type      = $product_details->type;
-                            $item_code      = $product_details->code;
-                            $item_name      = $product_details->name;
+                            $item_id = $product_details->id;
+                            $item_type = $product_details->type;
+                            $item_code = $product_details->code;
+                            $item_name = $product_details->name;
                             $item_net_price = $this->sma->formatDecimal($csv_pr['net_unit_price']);
-                            $item_quantity  = $csv_pr['quantity'];
-                            $item_tax_rate  = $csv_pr['item_tax_rate'];
-                            $item_discount  = $csv_pr['discount'];
-                            $item_serial    = $csv_pr['serial'];
+                            $item_quantity = $csv_pr['quantity'];
+                            $item_tax_rate = $csv_pr['item_tax_rate'];
+                            $item_discount = $csv_pr['discount'];
+                            $item_serial = $csv_pr['serial'];
 
                             if (isset($item_code) && isset($item_net_price) && isset($item_quantity)) {
-                                $product_details  = $this->sales_model->getProductByCode($item_code);
-                                $pr_discount      = $this->site->calculateDiscount($item_discount, $item_net_price);
-                                $item_net_price   = $this->sma->formatDecimal(($item_net_price - $pr_discount), 4);
+                                $product_details = $this->sales_model->getProductByCode($item_code);
+                                $pr_discount = $this->site->calculateDiscount($item_discount, $item_net_price);
+                                $item_net_price = $this->sma->formatDecimal(($item_net_price - $pr_discount), 4);
                                 $pr_item_discount = $this->sma->formatDecimal(($pr_discount * $item_quantity), 4);
                                 $product_discount += $pr_item_discount;
 
-                                $tax         = '';
+                                $tax = '';
                                 $pr_item_tax = 0;
-                                $unit_price  = $item_net_price;
+                                $unit_price = $item_net_price;
                                 $tax_details = ((isset($item_tax_rate) && !empty($item_tax_rate)) ? $this->sales_model->getTaxRateByName($item_tax_rate) : $this->site->getTaxRateByID($product_details->tax_rate));
                                 if ($tax_details) {
-                                    $ctax     = $this->site->calculateTax($product_details, $tax_details, $unit_price);
+                                    $ctax = $this->site->calculateTax($product_details, $tax_details, $unit_price);
                                     $item_tax = $this->sma->formatDecimal($ctax['amount']);
-                                    $tax      = $ctax['tax'];
+                                    $tax = $ctax['tax'];
                                     // $this->sma->print_arrays($product_details);
                                     // if (!$product_details || (!empty($product_details) && $product_details->tax_method != 1)) {
                                     $unit_price = $unit_price + $item_tax;
@@ -2232,29 +2249,29 @@ class Sales extends MY_Controller
 
                                 $product_tax += $pr_item_tax;
                                 $subtotal = $this->sma->formatDecimal(($unit_price * $item_quantity), 4);
-                                $unit     = $this->site->getUnitByID($product_details->unit);
+                                $unit = $this->site->getUnitByID($product_details->unit);
 
                                 $product = [
-                                    'product_id'        => $product_details->id,
-                                    'product_code'      => $item_code,
-                                    'product_name'      => $item_name,
-                                    'product_type'      => $item_type,
-                                    'option_id'         => $item_option->id,
-                                    'net_unit_price'    => $item_net_price,
-                                    'quantity'          => $item_quantity,
-                                    'product_unit_id'   => $product_details->unit,
+                                    'product_id' => $product_details->id,
+                                    'product_code' => $item_code,
+                                    'product_name' => $item_name,
+                                    'product_type' => $item_type,
+                                    'option_id' => $item_option->id,
+                                    'net_unit_price' => $item_net_price,
+                                    'quantity' => $item_quantity,
+                                    'product_unit_id' => $product_details->unit,
                                     'product_unit_code' => $unit->code,
-                                    'unit_quantity'     => $item_quantity,
-                                    'warehouse_id'      => $warehouse_id,
-                                    'item_tax'          => $pr_item_tax,
-                                    'tax_rate_id'       => $tax_details ? $tax_details->id : null,
-                                    'tax'               => $tax,
-                                    'discount'          => $item_discount,
-                                    'item_discount'     => $pr_item_discount,
-                                    'subtotal'          => $subtotal,
-                                    'serial_no'         => $item_serial,
-                                    'unit_price'        => $this->sma->formatDecimal($unit_price, 4),
-                                    'real_unit_price'   => $this->sma->formatDecimal(($unit_price + $pr_discount), 4),
+                                    'unit_quantity' => $item_quantity,
+                                    'warehouse_id' => $warehouse_id,
+                                    'item_tax' => $pr_item_tax,
+                                    'tax_rate_id' => $tax_details ? $tax_details->id : null,
+                                    'tax' => $tax,
+                                    'discount' => $item_discount,
+                                    'item_discount' => $pr_item_discount,
+                                    'subtotal' => $subtotal,
+                                    'serial_no' => $item_serial,
+                                    'unit_price' => $this->sma->formatDecimal($unit_price, 4),
+                                    'real_unit_price' => $this->sma->formatDecimal(($unit_price + $pr_discount), 4),
                                 ];
 
                                 $products[] = ($product + $gst_data);
@@ -2271,36 +2288,36 @@ class Sales extends MY_Controller
 
             $order_discount = $this->site->calculateDiscount($this->input->post('order_discount'), ($total + $product_tax), true);
             $total_discount = $this->sma->formatDecimal(($order_discount + $product_discount), 4);
-            $order_tax      = $this->site->calculateOrderTax($this->input->post('order_tax'), ($total + $product_tax - $order_discount));
-            $total_tax      = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
-            $grand_total    = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
-            $data           = ['date' => $date,
-                'reference_no'        => $reference,
-                'customer_id'         => $customer_id,
-                'customer'            => $customer,
-                'biller_id'           => $biller_id,
-                'biller'              => $biller,
-                'warehouse_id'        => $warehouse_id,
-                'note'                => $note,
-                'staff_note'          => $staff_note,
-                'total'               => $total,
-                'product_discount'    => $product_discount,
-                'order_discount_id'   => $this->input->post('order_discount'),
-                'order_discount'      => $order_discount,
-                'total_discount'      => $total_discount,
-                'product_tax'         => $product_tax,
-                'order_tax_id'        => $this->input->post('order_tax'),
-                'order_tax'           => $order_tax,
-                'total_tax'           => $total_tax,
-                'shipping'            => $this->sma->formatDecimal($shipping),
-                'grand_total'         => $grand_total,
-                'total_items'         => $total_items,
-                'sale_status'         => $sale_status,
-                'payment_status'      => $payment_status,
-                'payment_term'        => $payment_term,
-                'due_date'            => $due_date,
-                'paid'                => 0,
-                'created_by'          => $this->session->userdata('user_id'),
+            $order_tax = $this->site->calculateOrderTax($this->input->post('order_tax'), ($total + $product_tax - $order_discount));
+            $total_tax = $this->sma->formatDecimal(($product_tax + $order_tax), 4);
+            $grand_total = $this->sma->formatDecimal(($this->sma->formatDecimal($total) + $this->sma->formatDecimal($total_tax) + $this->sma->formatDecimal($shipping) - $this->sma->formatDecimal($order_discount)), 4);
+            $data = ['date' => $date,
+                'reference_no' => $reference,
+                'customer_id' => $customer_id,
+                'customer' => $customer,
+                'biller_id' => $biller_id,
+                'biller' => $biller,
+                'warehouse_id' => $warehouse_id,
+                'note' => $note,
+                'staff_note' => $staff_note,
+                'total' => $total,
+                'product_discount' => $product_discount,
+                'order_discount_id' => $this->input->post('order_discount'),
+                'order_discount' => $order_discount,
+                'total_discount' => $total_discount,
+                'product_tax' => $product_tax,
+                'order_tax_id' => $this->input->post('order_tax'),
+                'order_tax' => $order_tax,
+                'total_tax' => $total_tax,
+                'shipping' => $this->sma->formatDecimal($shipping),
+                'grand_total' => $grand_total,
+                'total_items' => $total_items,
+                'sale_status' => $sale_status,
+                'payment_status' => $payment_status,
+                'payment_term' => $payment_term,
+                'due_date' => $due_date,
+                'paid' => 0,
+                'created_by' => $this->session->userdata('user_id'),
             ];
             if ($this->Settings->indian_gst) {
                 $data['cgst'] = $total_cgst;
@@ -2310,19 +2327,19 @@ class Sales extends MY_Controller
 
             if ($payment_status == 'paid') {
                 $payment = [
-                    'date'         => $date,
+                    'date' => $date,
                     'reference_no' => $this->site->getReference('pay'),
-                    'amount'       => $grand_total,
-                    'paid_by'      => 'cash',
-                    'cheque_no'    => '',
-                    'cc_no'        => '',
-                    'cc_holder'    => '',
-                    'cc_month'     => '',
-                    'cc_year'      => '',
-                    'cc_type'      => '',
-                    'created_by'   => $this->session->userdata('user_id'),
-                    'note'         => lang('auto_added_for_sale_by_csv') . ' (' . lang('sale_reference_no') . ' ' . $reference . ')',
-                    'type'         => 'received',
+                    'amount' => $grand_total,
+                    'paid_by' => 'cash',
+                    'cheque_no' => '',
+                    'cc_no' => '',
+                    'cc_holder' => '',
+                    'cc_month' => '',
+                    'cc_year' => '',
+                    'cc_type' => '',
+                    'created_by' => $this->session->userdata('user_id'),
+                    'note' => lang('auto_added_for_sale_by_csv') . ' (' . lang('sale_reference_no') . ' ' . $reference . ')',
+                    'type' => 'received',
                 ];
             } else {
                 $payment = [];
@@ -2330,18 +2347,18 @@ class Sales extends MY_Controller
 
             if ($_FILES['document']['size'] > 0) {
                 $this->load->library('upload');
-                $config['upload_path']   = $this->digital_upload_path;
+                $config['upload_path'] = $this->digital_upload_path;
                 $config['allowed_types'] = $this->digital_file_types;
-                $config['max_size']      = $this->allowed_file_size;
-                $config['overwrite']     = false;
-                $config['encrypt_name']  = true;
+                $config['max_size'] = $this->allowed_file_size;
+                $config['overwrite'] = false;
+                $config['encrypt_name'] = true;
                 $this->upload->initialize($config);
                 if (!$this->upload->do_upload('document')) {
                     $error = $this->upload->display_errors();
                     $this->session->set_flashdata('error', $error);
                     redirect($_SERVER['HTTP_REFERER']);
                 }
-                $photo              = $this->upload->file_name;
+                $photo = $this->upload->file_name;
                 $data['attachment'] = $photo;
             }
 
@@ -2356,11 +2373,11 @@ class Sales extends MY_Controller
             $data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
 
             $this->data['warehouses'] = $this->site->getAllWarehouses();
-            $this->data['tax_rates']  = $this->site->getAllTaxRates();
-            $this->data['billers']    = $this->site->getAllCompanies('biller');
-            $this->data['slnumber']   = $this->site->getReference('so');
+            $this->data['tax_rates'] = $this->site->getAllTaxRates();
+            $this->data['billers'] = $this->site->getAllCompanies('biller');
+            $this->data['slnumber'] = $this->site->getReference('so');
 
-            $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('add_sale_by_csv')]];
+            $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('add_sale_by_csv')]];
             $meta = ['page_title' => lang('add_sale_by_csv'), 'bc' => $bc];
             $this->page_construct('sales/sale_by_csv', $meta, $this->data);
         }
@@ -2369,7 +2386,7 @@ class Sales extends MY_Controller
     public function sell_gift_card()
     {
         $this->sma->checkPermissions('gift_cards', true);
-        $error  = null;
+        $error = null;
         $gcData = $this->input->get('gcdata');
         if (empty($gcData[0])) {
             $error = lang('value') . ' ' . lang('is_required');
@@ -2379,14 +2396,14 @@ class Sales extends MY_Controller
         }
 
         $customer_details = (!empty($gcData[2])) ? $this->site->getCompanyByID($gcData[2]) : null;
-        $customer         = $customer_details ? $customer_details->company : null;
-        $data             = ['card_no' => $gcData[0],
-            'value'                    => $gcData[1],
-            'customer_id'              => (!empty($gcData[2])) ? $gcData[2] : null,
-            'customer'                 => $customer,
-            'balance'                  => $gcData[1],
-            'expiry'                   => (!empty($gcData[3])) ? $this->sma->fsd($gcData[3]) : null,
-            'created_by'               => $this->session->userdata('user_id'),
+        $customer = $customer_details ? $customer_details->company : null;
+        $data = ['card_no' => $gcData[0],
+            'value' => $gcData[1],
+            'customer_id' => (!empty($gcData[2])) ? $gcData[2] : null,
+            'customer' => $customer,
+            'balance' => $gcData[1],
+            'expiry' => (!empty($gcData[3])) ? $this->sma->fsd($gcData[3]) : null,
+            'created_by' => $this->session->userdata('user_id'),
         ];
 
         if (!$error) {
@@ -2402,54 +2419,54 @@ class Sales extends MY_Controller
 
     public function suggestions($pos = 0)
     {
-        $term         = $this->input->get('term', true);
+        $term = $this->input->get('term', true);
 
         $warehouse_id = $this->input->get('warehouse_id', true);
-        $customer_id  = $this->input->get('customer_id', true);
+        $customer_id = $this->input->get('customer_id', true);
 
         if (strlen($term) < 1 || !$term) {
             die("<script type='text/javascript'>setTimeout(function(){ window.top.location.href = '" . admin_url('welcome') . "'; }, 10);</script>");
         }
 
         if (str_contains($term, 'Product Number')) {
-            $obj=explode("|",$term);
-            if(isset($obj)) $term=$obj[1];
+            $obj = explode("|", $term);
+            if (isset($obj)) $term = $obj[1];
         }
-        $analyzed  = $this->sma->analyze_term($term);
-        $sr        = $analyzed['term'];
+        $analyzed = $this->sma->analyze_term($term);
+        $sr = $analyzed['term'];
         $option_id = $analyzed['option_id'];
-        $sr        = addslashes($sr);
-        $qty       = $analyzed['quantity'] ?? null;
-        $bprice    = $analyzed['price']    ?? null;
+        $sr = addslashes($sr);
+        $qty = $analyzed['quantity'] ?? null;
+        $bprice = $analyzed['price'] ?? null;
 
-        $warehouse      = $this->site->getWarehouseByID($warehouse_id);
-        $customer       = $this->site->getCompanyByID($customer_id);
+        $warehouse = $this->site->getWarehouseByID($warehouse_id);
+        $customer = $this->site->getCompanyByID($customer_id);
         $customer_group = $this->site->getCustomerGroupByID($customer->customer_group_id);
-        $rows           = $this->sales_model->getProductNames($sr, $warehouse_id, $pos);
+        $rows = $this->sales_model->getProductNames($sr, $warehouse_id, $pos);
         if ($rows) {
             $r = 0;
             foreach ($rows as $row) {
                 $c = uniqid(mt_rand(), true);
                 unset($row->cost, $row->details, $row->product_details, $row->image, $row->barcode_symbology, $row->cf1, $row->cf2, $row->cf3, $row->cf4, $row->cf5, $row->cf6, $row->supplier1price, $row->supplier2price, $row->cfsupplier3price, $row->supplier4price, $row->supplier5price, $row->supplier1, $row->supplier2, $row->supplier3, $row->supplier4, $row->supplier5, $row->supplier1_part_no, $row->supplier2_part_no, $row->supplier3_part_no, $row->supplier4_part_no, $row->supplier5_part_no);
-                $option               = false;
-                $row->quantity        = 0;
+                $option = false;
+                $row->quantity = 0;
                 $row->item_tax_method = $row->tax_method;
-                $row->qty             = 1;
-                $row->discount        = '0';
-                $row->serial          = '';
-                $options              = $this->sales_model->getProductOptions($row->id, $warehouse_id);
+                $row->qty = 1;
+                $row->discount = '0';
+                $row->serial = '';
+                $options = $this->sales_model->getProductOptions($row->id, $warehouse_id);
                 if ($options) {
                     $opt = $option_id && $r == 0 ? $this->sales_model->getProductOptionByID($option_id) : $options[0];
                     if (!$option_id || $r > 0) {
                         $option_id = $opt->id;
                     }
                 } else {
-                    $opt        = json_decode('{}');
+                    $opt = json_decode('{}');
                     $opt->price = 0;
-                    $option_id  = false;
+                    $option_id = false;
                 }
                 $row->option = $option_id;
-                $pis         = $this->site->getPurchasedItems($row->id, $warehouse_id, $row->option);
+                $pis = $this->site->getPurchasedItems($row->id, $warehouse_id, $row->option);
                 if ($pis) {
                     $row->quantity = 0;
                     foreach ($pis as $pi) {
@@ -2487,21 +2504,21 @@ class Sales extends MY_Controller
                     $row->price = $row->price + (($row->price * $customer_group->percent) / 100);
                 }
                 $row->real_unit_price = $row->price;
-                $row->base_quantity   = 1;
-                $row->base_unit       = $row->unit;
+                $row->base_quantity = 1;
+                $row->base_unit = $row->unit;
                 $row->base_unit_price = $row->price;
-                $row->unit            = $row->sale_unit ? $row->sale_unit : $row->unit;
-                $row->comment         = '';
-                $combo_items          = false;
+                $row->unit = $row->sale_unit ? $row->sale_unit : $row->unit;
+                $row->comment = '';
+                $combo_items = false;
                 if ($row->type == 'combo') {
                     $combo_items = $this->sales_model->getProductComboItems($row->id, $warehouse_id);
                 }
                 $row->qty = $qty ? $qty : ($bprice ? $bprice / $row->price : 1);
-                $units    = $this->site->getUnitsByBUID($row->base_unit);
+                $units = $this->site->getUnitsByBUID($row->base_unit);
                 $tax_rate = $this->site->getTaxRateByID($row->tax_rate);
 
                 $pr[] = ['id' => sha1($c . $r), 'item_id' => $row->id, 'label' => $row->name . ' (' . $row->code . ')', 'category' => $row->category_id,
-                    'row'     => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options, ];
+                    'row' => $row, 'combo_items' => $combo_items, 'tax_rate' => $tax_rate, 'units' => $units, 'options' => $options,];
                 $r++;
             }
             $this->sma->send_json($pr);
@@ -2518,9 +2535,9 @@ class Sales extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             $data = ['card_id' => $card_id,
-                'amount'       => $this->input->post('amount'),
-                'date'         => date('Y-m-d H:i:s'),
-                'created_by'   => $this->session->userdata('user_id'),
+                'amount' => $this->input->post('amount'),
+                'date' => date('Y-m-d H:i:s'),
+                'created_by' => $this->session->userdata('user_id'),
             ];
             $card_data['balance'] = ($this->input->post('amount') + $card->balance);
             // $card_data['value'] = ($this->input->post('amount')+$card->value);
@@ -2536,9 +2553,9 @@ class Sales extends MY_Controller
             $this->session->set_flashdata('message', lang('topup_added'));
             admin_redirect('sales/gift_cards');
         } else {
-            $this->data['error']      = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-            $this->data['modal_js']   = $this->site->modal_js();
-            $this->data['card']       = $card;
+            $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
+            $this->data['modal_js'] = $this->site->modal_js();
+            $this->data['card'] = $card;
             $this->data['page_title'] = lang('topup_gift_card');
             $this->load->view($this->theme . 'sales/topup_gift_card', $this->data);
         }
@@ -2551,7 +2568,7 @@ class Sales extends MY_Controller
 
         if ($this->form_validation->run() == true) {
             $status = $this->input->post('status');
-            $note   = $this->sma->clear_tags($this->input->post('note'));
+            $note = $this->sma->clear_tags($this->input->post('note'));
         } elseif ($this->input->post('update')) {
             $this->session->set_flashdata('error', validation_errors());
             admin_redirect($_SERVER['HTTP_REFERER'] ?? 'sales');
@@ -2561,7 +2578,7 @@ class Sales extends MY_Controller
             $this->session->set_flashdata('message', lang('status_updated'));
             admin_redirect($_SERVER['HTTP_REFERER'] ?? 'sales');
         } else {
-            $this->data['inv']      = $this->sales_model->getInvoiceByID($id);
+            $this->data['inv'] = $this->sales_model->getInvoiceByID($id);
             $this->data['returned'] = false;
             if ($this->data['inv']->sale_status == 'returned' || $this->data['inv']->return_id) {
                 $this->data['returned'] = true;
@@ -2597,25 +2614,25 @@ class Sales extends MY_Controller
             $id = $this->input->get('id');
         }
         $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
-        $inv                 = $this->sales_model->getInvoiceByID($id);
+        $inv = $this->sales_model->getInvoiceByID($id);
         if (!$this->session->userdata('view_right')) {
             $this->sma->view_rights($inv->created_by);
         }
-        $this->data['barcode']     = "<img src='" . admin_url('products/gen_barcode/' . $inv->reference_no) . "' alt='" . $inv->reference_no . "' class='pull-left' />";
-        $this->data['customer']    = $this->site->getCompanyByID($inv->customer_id);
-        $this->data['payments']    = $this->sales_model->getPaymentsForSale($id);
-        $this->data['biller']      = $this->site->getCompanyByID($inv->biller_id);
-        $this->data['created_by']  = $this->site->getUser($inv->created_by);
-        $this->data['updated_by']  = $inv->updated_by ? $this->site->getUser($inv->updated_by) : null;
-        $this->data['warehouse']   = $this->site->getWarehouseByID($inv->warehouse_id);
-        $this->data['inv']         = $inv;
-        $this->data['rows']        = $this->sales_model->getAllInvoiceItems($id);
+        $this->data['barcode'] = "<img src='" . admin_url('products/gen_barcode/' . $inv->reference_no) . "' alt='" . $inv->reference_no . "' class='pull-left' />";
+        $this->data['customer'] = $this->site->getCompanyByID($inv->customer_id);
+        $this->data['payments'] = $this->sales_model->getPaymentsForSale($id);
+        $this->data['biller'] = $this->site->getCompanyByID($inv->biller_id);
+        $this->data['created_by'] = $this->site->getUser($inv->created_by);
+        $this->data['updated_by'] = $inv->updated_by ? $this->site->getUser($inv->updated_by) : null;
+        $this->data['warehouse'] = $this->site->getWarehouseByID($inv->warehouse_id);
+        $this->data['inv'] = $inv;
+        $this->data['rows'] = $this->sales_model->getAllInvoiceItems($id);
         $this->data['return_sale'] = $inv->return_id ? $this->sales_model->getInvoiceByID($inv->return_id) : null;
         $this->data['return_rows'] = $inv->return_id ? $this->sales_model->getAllInvoiceItems($inv->return_id) : null;
-        $this->data['paypal']      = $this->sales_model->getPaypalSettings();
-        $this->data['skrill']      = $this->sales_model->getSkrillSettings();
+        $this->data['paypal'] = $this->sales_model->getPaypalSettings();
+        $this->data['skrill'] = $this->sales_model->getSkrillSettings();
 
-        $bc   = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('view')]];
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => admin_url('sales'), 'page' => lang('sales')], ['link' => '#', 'page' => lang('view')]];
         $meta = ['page_title' => lang('view_sales_details'), 'bc' => $bc];
         $this->page_construct('sales/view', $meta, $this->data);
     }
@@ -2629,16 +2646,16 @@ class Sales extends MY_Controller
         }
 
         $this->data['error'] = (validation_errors() ? validation_errors() : $this->session->flashdata('error'));
-        $deli                = $this->sales_model->getDeliveryByID($id);
-        $sale                = $this->sales_model->getInvoiceByID($deli->sale_id);
+        $deli = $this->sales_model->getDeliveryByID($id);
+        $sale = $this->sales_model->getInvoiceByID($deli->sale_id);
         if (!$sale) {
             $this->session->set_flashdata('error', lang('sale_not_found'));
             $this->sma->md();
         }
-        $this->data['delivery']   = $deli;
-        $this->data['biller']     = $this->site->getCompanyByID($sale->biller_id);
-        $this->data['rows']       = $this->sales_model->getAllInvoiceItemsWithDetails($deli->sale_id);
-        $this->data['user']       = $this->site->getUser($deli->created_by);
+        $this->data['delivery'] = $deli;
+        $this->data['biller'] = $this->site->getCompanyByID($sale->biller_id);
+        $this->data['rows'] = $this->sales_model->getAllInvoiceItemsWithDetails($deli->sale_id);
+        $this->data['user'] = $this->site->getUser($deli->created_by);
         $this->data['page_title'] = lang('delivery_order');
 
         $this->load->view($this->theme . 'sales/view_delivery', $this->data);
@@ -2647,10 +2664,36 @@ class Sales extends MY_Controller
     public function view_gift_card($id = null)
     {
         $this->data['page_title'] = lang('gift_card');
-        $gift_card                = $this->site->getGiftCardByID($id);
-        $this->data['gift_card']  = $this->site->getGiftCardByID($id);
-        $this->data['customer']   = $this->site->getCompanyByID($gift_card->customer_id);
-        $this->data['topups']     = $this->sales_model->getAllGCTopups($id);
+        $gift_card = $this->site->getGiftCardByID($id);
+        $this->data['gift_card'] = $this->site->getGiftCardByID($id);
+        $this->data['customer'] = $this->site->getCompanyByID($gift_card->customer_id);
+        $this->data['topups'] = $this->sales_model->getAllGCTopups($id);
         $this->load->view($this->theme . 'sales/view_gift_card', $this->data);
+    }
+
+//    a.kader
+    public function return_history()
+    {
+        $this->sma->checkPermissions();
+        $this->data['error'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('error');
+        $bc = [['link' => base_url(), 'page' => lang('home')], ['link' => '#', 'page' => lang('Return_History')]];
+        $meta = ['page_title' => lang('Return_History'), 'bc' => $bc];
+        $this->page_construct('sales/return_history', $meta, $this->data);
+    }
+
+
+    public function getReturnHistory()
+    {
+        $this->load->library('datatables');
+        $this->datatables
+            ->select("{$this->db->dbprefix('sales')}.id as id, DATE_FORMAT({$this->db->dbprefix('sale_return_history')}.created_date, '%Y-%m-%d %T') as date, {$this->db->dbprefix('sale_return_history')}.reference_no, {$this->db->dbprefix('sales')}.biller, {$this->db->dbprefix('sales')}.customer, {$this->db->dbprefix('sale_return_history')}.product_code, {$this->db->dbprefix('sale_return_history')}.product_name,{$this->db->dbprefix('sale_return_history')}.return_quantity,   {$this->db->dbprefix('units')}.name as u_name,{$this->db->dbprefix('warehouses')}.name,{$this->db->dbprefix('sales')}.sale_status")
+            ->from('sale_return_history')
+            ->join('sales', 'sales.id=sale_return_history.sale_return_id', 'inner')
+            ->join('sma_warehouses', 'sma_warehouses.id=sale_return_history.warehouse_id', 'inner')
+            ->join('sma_units', 'sma_units.id=sale_return_history.product_unit_id', 'inner');
+        if (!$this->Owner && !$this->Admin && $this->session->userdata('warehouse_id')) {
+            $this->datatables->where('sale_return_history.warehouse_id', $this->session->userdata('warehouse_id'));
+        }
+        echo $this->datatables->generate();
     }
 }

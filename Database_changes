@@ -9,3 +9,31 @@ CREATE TABLE `sma_allergy_facts` (
 ALTER TABLE `sma_products` ADD `margin` DECIMAL(25,4) NOT NULL AFTER `hide_pos`;
 
 ALTER TABLE `sma_products` ADD `upc` VARCHAR(25) NULL DEFAULT NULL AFTER `margin`;
+
+
+CREATE TABLE `sma_sale_return_history` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `sale_return_id` int(11) unsigned NOT NULL,
+ `sale_id` int(11) unsigned NOT NULL,
+ `product_id` int(11) unsigned NOT NULL,
+ `product_code` varchar(55) NOT NULL,
+ `product_name` varchar(255) NOT NULL,
+ `return_quantity` decimal(15,4) NOT NULL,
+ `warehouse_id` int(11) DEFAULT NULL,
+ `reference_no` varchar(255) DEFAULT NULL,
+ `customer_id` int(11) unsigned NOT NULL,
+ `customer` varchar(255) NOT NULL,
+ `created_by` int(11) unsigned NOT NULL,
+ `created_date` datetime DEFAULT NULL,
+ PRIMARY KEY (`id`),
+ KEY `sale_id` (`sale_id`),
+ KEY `product_id` (`product_id`),
+ KEY `sale_return_id` (`sale_return_id`,`sale_id`),
+ KEY `sale_id_2` (`sale_return_id`,`product_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8
+
+
+ALTER TABLE `sma_permissions` ADD `reports-return_history` TINYINT(1) NULL DEFAULT '0' AFTER `reports-tax`;
+ALTER TABLE `sma_permissions` ADD `sales-return_history` TINYINT(1) NULL DEFAULT '0' AFTER `reports-tax`;
+
+ALTER TABLE `sma_sale_return_history` ADD `product_unit_id` INT(11) NOT NULL AFTER `created_date`;

@@ -65,7 +65,7 @@ class Sales_model extends CI_Model
         return false;
     }
 
-    public function addSale($data = [], $items = [], $payment = [], $si_return = [])
+    public function addSale($data = [], $items = [], $payment = [], $si_return = [], $si_return_history = [])
     {
         if (empty($si_return)) {
             $cost = $this->site->costing($items);
@@ -87,16 +87,16 @@ class Sales_model extends CI_Model
                     foreach ($item_costs as $item_cost) {
                         if (isset($item_cost['date']) || isset($item_cost['pi_overselling'])) {
                             $item_cost['sale_item_id'] = $sale_item_id;
-                            $item_cost['sale_id']      = $sale_id;
-                            $item_cost['date']         = date('Y-m-d', strtotime($data['date']));
+                            $item_cost['sale_id'] = $sale_id;
+                            $item_cost['date'] = date('Y-m-d', strtotime($data['date']));
                             if (!isset($item_cost['pi_overselling'])) {
                                 $this->db->insert('costing', $item_cost);
                             }
                         } else {
                             foreach ($item_cost as $ic) {
                                 $ic['sale_item_id'] = $sale_item_id;
-                                $ic['sale_id']      = $sale_id;
-                                $ic['date']         = date('Y-m-d', strtotime($data['date']));
+                                $ic['sale_id'] = $sale_id;
+                                $ic['date'] = date('Y-m-d', strtotime($data['date']));
                                 if (!isset($ic['pi_overselling'])) {
                                     $this->db->insert('costing', $ic);
                                 }
@@ -105,23 +105,25 @@ class Sales_model extends CI_Model
                     }
                 }
             }
-
-            if ($data['sale_status'] == 'completed') {
+//a.kader
+//            just remove purchase item insert at sales overselling time
+            if ($data['sale_status'] == 'completed' && empty($si_return)) {
                 $this->site->syncPurchaseItems($cost);
             }
-
+//a.kader
+//            just remove purchase item insert at sales overselling time
             if (!empty($si_return)) {
-                foreach ($si_return as $return_item) {
-                    $product = $this->site->getProductByID($return_item['product_id']);
-                    if ($product->type == 'combo') {
-                        $combo_items = $this->site->getProductComboItems($return_item['product_id'], $return_item['warehouse_id']);
-                        foreach ($combo_items as $combo_item) {
-                            $this->UpdateCostingAndPurchaseItem($return_item, $combo_item->id, ($return_item['quantity'] * $combo_item->qty));
-                        }
-                    } elseif ($product->type != 'service') {
-                        $this->UpdateCostingAndPurchaseItem($return_item, $return_item['product_id'], $return_item['quantity']);
-                    }
-                }
+//                foreach ($si_return as $return_item) {
+//                    $product = $this->site->getProductByID($return_item['product_id']);
+//                    if ($product->type == 'combo') {
+//                        $combo_items = $this->site->getProductComboItems($return_item['product_id'], $return_item['warehouse_id']);
+//                        foreach ($combo_items as $combo_item) {
+//                            $this->UpdateCostingAndPurchaseItem($return_item, $combo_item->id, ($return_item['quantity'] * $combo_item->qty));
+//                        }
+//                    } elseif ($product->type != 'service') {
+//                        $this->UpdateCostingAndPurchaseItem($return_item, $return_item['product_id'], $return_item['quantity']);
+//                    }
+//                }
                 $this->db->update('sales', ['return_sale_ref' => $data['return_sale_ref'], 'surcharge' => $data['surcharge'], 'return_sale_total' => $data['grand_total'], 'return_id' => $sale_id], ['id' => $data['sale_id']]);
             }
 
@@ -146,9 +148,18 @@ class Sales_model extends CI_Model
                 }
                 $this->site->syncSalePayments($sale_id);
             }
-
-            $this->site->syncQuantity($sale_id);
+//            a.kader
+//            validate if not sales retrun then sync qty
+            if (empty($si_return)) $this->site->syncQuantity($sale_id);
             $this->sma->update_award_points($data['grand_total'], $data['customer_id'], $data['created_by']);
+            if (!empty($si_return) && !empty($si_return_history)) {
+                foreach ($si_return_history as $return_obj) {
+                    $return_obj['sale_return_id'] = $sale_id;
+                    $this->db->insert('sale_return_history', $return_obj);
+                }
+            }
+
+
         }
         $this->db->trans_complete();
         if ($this->db->trans_status() === false) {
@@ -188,7 +199,7 @@ class Sales_model extends CI_Model
                 $gc = $this->site->getGiftCardByNO($opay->cc_no);
                 $this->db->update('gift_cards', ['balance' => ($gc->balance + $opay->amount)], ['card_no' => $opay->cc_no]);
             } elseif ($opay->paid_by == 'deposit') {
-                $sale     = $this->getInvoiceByID($opay->sale_id);
+                $sale = $this->getInvoiceByID($opay->sale_id);
                 $customer = $this->site->getCompanyByID($sale->customer_id);
                 $this->db->update('companies', ['deposit_amount' => ($customer->deposit_amount + $opay->amount)], ['id' => $customer->id]);
             }
@@ -201,10 +212,12 @@ class Sales_model extends CI_Model
     {
         $this->db->trans_start();
         $sale_items = $this->resetSaleActions($id);
+
         $this->site->log('Sale', ['model' => $this->getInvoiceByID($id), 'items' => $sale_items]);
         if ($this->db->delete('sale_items', ['sale_id' => $id]) && $this->db->delete('sales', ['id' => $id]) && $this->db->delete('costing', ['sale_id' => $id])) {
             $this->db->delete('sales', ['sale_id' => $id]);
             $this->db->delete('payments', ['sale_id' => $id]);
+            $this->db->delete('sale_return_history', ['sale_id' => $id]);
             $this->site->syncQuantity(null, null, $sale_items);
         }
         $this->db->trans_complete();
@@ -219,8 +232,8 @@ class Sales_model extends CI_Model
     public function getAllGCTopups($card_id)
     {
         $this->db->select("{$this->db->dbprefix('gift_card_topups')}.*, {$this->db->dbprefix('users')}.first_name, {$this->db->dbprefix('users')}.last_name, {$this->db->dbprefix('users')}.email")
-        ->join('users', 'users.id=gift_card_topups.created_by', 'left')
-        ->order_by('id', 'desc')->limit(10);
+            ->join('users', 'users.id=gift_card_topups.created_by', 'left')
+            ->order_by('id', 'desc')->limit(10);
         $q = $this->db->get_where('gift_card_topups', ['card_id' => $card_id]);
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
@@ -245,6 +258,7 @@ class Sales_model extends CI_Model
         } elseif ($return_id) {
             $this->db->where('sale_id', $return_id);
         }
+
         $q = $this->db->get('sale_items');
         if ($q->num_rows() > 0) {
             foreach (($q->result()) as $row) {
@@ -259,8 +273,8 @@ class Sales_model extends CI_Model
     {
         $this->db->select('sale_items.*, products.details, product_variants.name as variant');
         $this->db->join('products', 'products.id=sale_items.product_id', 'left')
-        ->join('product_variants', 'product_variants.id=sale_items.option_id', 'left')
-        ->group_by('sale_items.id');
+            ->join('product_variants', 'product_variants.id=sale_items.option_id', 'left')
+            ->group_by('sale_items.id');
         $this->db->order_by('id', 'asc');
         $q = $this->db->get_where('sale_items', ['sale_id' => $sale_id]);
         if ($q->num_rows() > 0) {
@@ -647,6 +661,7 @@ class Sales_model extends CI_Model
 
     public function resetSaleActions($id, $return_id = null, $check_return = null)
     {
+
         if ($sale = $this->getInvoiceByID($id)) {
             if ($check_return && $sale->sale_status == 'returned') {
                 $this->session->set_flashdata('warning', lang('sale_x_action'));
@@ -706,7 +721,7 @@ class Sales_model extends CI_Model
         if ($costings = $this->getCostingLines($return_item['id'], $product_id)) {
             foreach ($costings as $costing) {
                 if ($costing->quantity > $bln_quantity && $bln_quantity != 0) {
-                    $qty = $costing->quantity                                                                                     - $bln_quantity;
+                    $qty = $costing->quantity - $bln_quantity;
                     $bln = $costing->quantity_balance && $costing->quantity_balance >= $bln_quantity ? $costing->quantity_balance - $bln_quantity : 0;
                     $this->db->update('costing', ['quantity' => $qty, 'quantity_balance' => $bln], ['id' => $costing->id]);
                     $bln_quantity = 0;
@@ -718,8 +733,10 @@ class Sales_model extends CI_Model
             }
         }
         $clause = ['product_id' => $product_id, 'warehouse_id' => $return_item['warehouse_id'], 'purchase_id' => null, 'transfer_id' => null, 'option_id' => $return_item['option_id']];
-        $this->site->setPurchaseItem($clause, $quantity);
-        $this->site->syncQuantity(null, null, null, $product_id);
+// a.kader
+//            just remove purchase item insert at sales overselling time
+        //       $this->site->setPurchaseItem($clause, $quantity);
+//        $this->site->syncQuantity(null, null, null, $product_id);
     }
 
     public function updateDelivery($id, $data = [])
@@ -760,7 +777,7 @@ class Sales_model extends CI_Model
                 $this->db->update('gift_cards', ['balance' => ($gc->balance + $opay->amount)], ['card_no' => $opay->cc_no]);
             } elseif ($opay->paid_by == 'deposit') {
                 if (!$customer_id) {
-                    $sale        = $this->getInvoiceByID($opay->sale_id);
+                    $sale = $this->getInvoiceByID($opay->sale_id);
                     $customer_id = $sale->customer_id;
                 }
                 $customer = $this->site->getCompanyByID($customer_id);
@@ -802,7 +819,7 @@ class Sales_model extends CI_Model
         $this->resetSaleActions($id, false, true);
         if ($data['sale_status'] == 'completed') {
             $this->Settings->overselling = true;
-            $cost                        = $this->site->costing($items, true);
+            $cost = $this->site->costing($items, true);
         }
         // $this->sma->print_arrays($cost);
 
@@ -816,16 +833,16 @@ class Sales_model extends CI_Model
                     foreach ($item_costs as $item_cost) {
                         if (isset($item_cost['date']) || isset($item_cost['pi_overselling'])) {
                             $item_cost['sale_item_id'] = $sale_item_id;
-                            $item_cost['sale_id']      = $id;
-                            $item_cost['date']         = date('Y-m-d', strtotime($data['date']));
+                            $item_cost['sale_id'] = $id;
+                            $item_cost['date'] = date('Y-m-d', strtotime($data['date']));
                             if (!isset($item_cost['pi_overselling'])) {
                                 $this->db->insert('costing', $item_cost);
                             }
                         } else {
                             foreach ($item_cost as $ic) {
                                 $ic['sale_item_id'] = $sale_item_id;
-                                $ic['sale_id']      = $id;
-                                $item_cost['date']  = date('Y-m-d', strtotime($data['date']));
+                                $ic['sale_id'] = $id;
+                                $item_cost['date'] = date('Y-m-d', strtotime($data['date']));
                                 if (!isset($ic['pi_overselling'])) {
                                     $this->db->insert('costing', $ic);
                                 }
@@ -856,12 +873,12 @@ class Sales_model extends CI_Model
     public function updateStatus($id, $status, $note)
     {
         $this->db->trans_start();
-        $sale  = $this->getInvoiceByID($id);
+        $sale = $this->getInvoiceByID($id);
         $items = $this->getAllInvoiceItems($id);
-        $cost  = [];
+        $cost = [];
         if ($status == 'completed' && $sale->sale_status != 'completed') {
             foreach ($items as $item) {
-                $items_array[] = (array) $item;
+                $items_array[] = (array)$item;
             }
             $cost = $this->site->costing($items_array);
         }
@@ -872,13 +889,13 @@ class Sales_model extends CI_Model
         if ($this->db->update('sales', ['sale_status' => $status, 'note' => $note], ['id' => $id]) && $this->db->delete('costing', ['sale_id' => $id])) {
             if ($status == 'completed' && $sale->sale_status != 'completed') {
                 foreach ($items as $item) {
-                    $item = (array) $item;
+                    $item = (array)$item;
                     if ($this->site->getProductByID($item['product_id'])) {
                         $item_costs = $this->site->item_costing($item);
                         foreach ($item_costs as $item_cost) {
                             $item_cost['sale_item_id'] = $item['id'];
-                            $item_cost['sale_id']      = $id;
-                            $item_cost['date']         = date('Y-m-d', strtotime($sale->date));
+                            $item_cost['sale_id'] = $id;
+                            $item_cost['date'] = date('Y-m-d', strtotime($sale->date));
                             if (!isset($item_cost['pi_overselling'])) {
                                 $this->db->insert('costing', $item_cost);
                             }
@@ -900,4 +917,5 @@ class Sales_model extends CI_Model
         }
         return false;
     }
+
 }

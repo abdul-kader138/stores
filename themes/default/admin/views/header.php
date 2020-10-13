@@ -216,29 +216,6 @@
                         </li>
                         <?php
                     } ?>
-                    <li class="dropdown hidden-sm">
-                        <a class="btn tip" title="<?= lang('styles') ?>" data-placement="bottom" data-toggle="dropdown"
-                           href="#">
-                            <i class="fa fa-css3"></i>
-                        </a>
-                        <ul class="dropdown-menu pull-right">
-                            <li class="bwhite noPadding">
-                                <a href="#" id="fixed" class="">
-                                    <i class="fa fa-angle-double-left"></i>
-                                    <span id="fixedText">Fixed</span>
-                                </a>
-                                <a href="#" id="cssLight" class="grey">
-                                    <i class="fa fa-stop"></i> Grey
-                                </a>
-                                <a href="#" id="cssBlue" class="blue">
-                                    <i class="fa fa-stop"></i> Blue
-                                </a>
-                                <a href="#" id="cssBlack" class="black">
-                                    <i class="fa fa-stop"></i> Black
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                     <li class="dropdown hidden-xs">
                         <a class="btn tip" title="<?= lang('language') ?>" data-placement="bottom"
                            data-toggle="dropdown"
