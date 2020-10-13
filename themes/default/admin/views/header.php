@@ -515,6 +515,12 @@
                                                         <span class="text"> <?= lang('list_gift_cards'); ?></span>
                                                     </a>
                                                 </li>
+                                                <li id="sales_return_history">
+                                                    <a class="submenu" href="<?= admin_url('sales/return_history'); ?>">
+                                                        <i class="fa fa-random"></i>
+                                                        <span class="text"> <?= lang('List_Return_History'); ?></span>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </li>
 
@@ -1007,6 +1013,12 @@
                                                                 class="text"> <?= lang('staff_report'); ?></span>
                                                     </a>
                                                 </li>
+                                                <li id="reports_return_history">
+                                                    <a href="<?= admin_url('reports/return_history') ?>">
+                                                        <i class="fa fa-random"></i><span
+                                                                class="text"> <?= lang('Return_History'); ?></span>
+                                                    </a>
+                                                </li>
                                             </ul>
                                         </li>
                                         <?php if ($Owner && file_exists(APPPATH . 'controllers' . DIRECTORY_SEPARATOR . 'shop' . DIRECTORY_SEPARATOR . 'Shop.php')) {
@@ -1158,8 +1170,8 @@
                                             </li>
                                             <?php
                                         } ?>
-
-                                        <?php if ($GP['sales-index'] || $GP['sales-add'] || $GP['sales-deliveries'] || $GP['sales-gift_cards']) {
+<!--a.kader-->
+                                        <?php if ($GP['sales-index'] || $GP['sales-add'] || $GP['sales-deliveries'] || $GP['sales-gift_cards'] || $GP['sales-return_history']) {
                                             ?>
                                             <li class="mm_sales <?= strtolower($this->router->fetch_method()) == 'sales' ? 'mm_pos' : '' ?>">
                                                 <a class="dropmenu" href="#">
@@ -1215,6 +1227,19 @@
                                                             </a>
                                                         </li>
                                                         <?php
+                                                    } ?>
+                                                   <?php
+//                                                   a.kader
+                                                   if ($GP['sales-return_history']) {
+                                                    ?>
+                                                    <li id="sales_return_history">
+                                                        <a class="submenu"
+                                                           href="<?= admin_url('sales/return_history'); ?>">
+                                                            <i class="fa fa-random"></i><span
+                                                                    class="text"> <?= lang('List_Return_History'); ?></span>
+                                                        </a>
+                                                    </li>
+                                                    <?php
                                                     } ?>
                                                 </ul>
                                             </li>
@@ -1418,7 +1443,7 @@
                                             <?php
                                         } ?>
 
-                                        <?php if ($GP['reports-quantity_alerts'] || $GP['reports-expiry_alerts'] || $GP['reports-products'] || $GP['reports-monthly_sales'] || $GP['reports-sales'] || $GP['reports-payments'] || $GP['reports-purchases'] || $GP['reports-customers'] || $GP['reports-suppliers'] || $GP['reports-staff'] || $GP['reports-expenses']) {
+                                        <?php if ($GP['reports-quantity_alerts'] || $GP['reports-expiry_alerts'] || $GP['reports-products'] || $GP['reports-monthly_sales'] || $GP['reports-sales'] || $GP['reports-payments'] || $GP['reports-purchases'] || $GP['reports-customers'] || $GP['reports-suppliers'] || $GP['reports-staff'] || $GP['reports-expenses'] || $GP['reports-return_history']) {
                                             ?>
                                             <li class="mm_reports">
                                                 <a class="dropmenu" href="#">
@@ -1595,6 +1620,18 @@
                                                             <a href="<?= admin_url('reports/users') ?>">
                                                                 <i class="fa fa-users"></i><span
                                                                         class="text"> <?= lang('staff_report'); ?></span>
+                                                            </a>
+                                                        </li>
+                                                        <?php
+                                                    } ?>
+                                                    <?php
+//                                                    a.kader
+                                                    if ($GP['reports-return_history']) {
+                                                        ?>
+                                                        <li id="reports_return_history">
+                                                            <a href="<?= admin_url('reports/return_history') ?>">
+                                                                <i class="fa fa-random"></i><span
+                                                                        class="text"> <?= lang('Return_History'); ?></span>
                                                             </a>
                                                         </li>
                                                         <?php
